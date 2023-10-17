@@ -3,9 +3,12 @@ package com.example.composejoyride
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,31 +37,29 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 //                    Greeting("Vengeful")
-                    MainInfo(fullname = "Shalomeenko Andrey Alexeevich", groupNumber = "IKBO-07-21")
+                    MainInfo()
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+
 
 @Composable
-fun MainInfo(fullname: String, groupNumber: String, modifier: Modifier = Modifier) {
-    Box {
+fun MainInfo()  {
+    Column (modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally)
+    {
+        Image(painter = painterResource(id = R.drawable.alfa_logo), contentDescription = "App's logo")
         Text(
-            text = "My name is $fullname and the number of my group is $groupNumber!",
+            text = "Привет и добро пожаловать в Poetry Helper v2.0!",
             modifier = Modifier
                 .padding(Dimens.paddingMedium)
-                .align(Alignment.Center),
+                .align(Alignment.CenterHorizontally),
             color = Color.Cyan,
-            fontSize = 32.sp,
+            fontSize = 18.sp,
         )
     }
 
@@ -67,6 +69,6 @@ fun MainInfo(fullname: String, groupNumber: String, modifier: Modifier = Modifie
 @Composable
 fun GreetingPreview() {
     ComposeJoyrideTheme {
-        Greeting("Android")
+        MainInfo()
     }
 }
