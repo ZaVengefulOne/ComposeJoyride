@@ -3,39 +3,17 @@ package com.example.composejoyride
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -47,13 +25,13 @@ import com.example.composejoyride.Screens.Rhyme
 import com.example.composejoyride.Utils.Constants
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Colors
 import androidx.compose.material.Scaffold
 import androidx.navigation.compose.rememberNavController
+import com.example.composejoyride.Screens.Account
 import com.example.composejoyride.Screens.ListLib
+import com.example.composejoyride.Screens.Notes
+import com.example.composejoyride.Screens.Settings
 import com.example.composejoyride.ui.theme.ComposeJoyrideTheme
-import com.example.composejoyride.ui.theme.DarkCyan
-import com.example.composejoyride.ui.theme.Dimens
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,13 +74,13 @@ fun NavHostContainer(
         // Set the padding provided by scaffold
         modifier = Modifier
             .padding(paddingValues = padding)
-            .background(Color.Black),
+            .background(Color(0xff015B6C)),
 
         builder = {
 
             // route : Home
             composable("main") {
-                Main()
+                Main(navController = navController)
             }
 
             // route : search
@@ -118,6 +96,15 @@ fun NavHostContainer(
             composable("list") {
                 ListLib()
             }
+            composable("settings") {
+                Settings()
+            }
+            composable("account") {
+                Account()
+            }
+            composable("notes") {
+                Notes()
+            }
         })
 
 }
@@ -129,7 +116,7 @@ fun BottomNavigationBar(navController: NavHostController) {
     BottomNavigation(
 
         // set background color
-        backgroundColor = Color(0xff00ffff)) {
+        backgroundColor = Color(0xFF028CA6)) {
 
         // observe the backstack
         val navBackStackEntry by navController.currentBackStackEntryAsState()

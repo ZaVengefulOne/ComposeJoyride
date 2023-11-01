@@ -1,12 +1,9 @@
 package com.example.composejoyride.Screens
 
-import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,13 +13,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -33,7 +30,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,24 +45,23 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
-import com.example.composejoyride.MainActivity
 import com.example.composejoyride.R
-import com.example.composejoyride.Utils.MyWorker
 import com.example.composejoyride.ui.theme.Dimens
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
-import java.util.concurrent.TimeUnit
-val CustomFontFamily = FontFamily(Font(R.font.tippytoesbold))
-@Composable
-fun Main()  {
 
-    Column (modifier = Modifier.fillMaxSize(),
+val CustomFontFamily = FontFamily(Font(R.font.tippytoesbold))
+val button_color = Color(0xFF028CA6)
+val button_text = Color.White
+@Composable
+fun Main(navController: NavController)  {
+    val context = LocalContext.current
+    val buttoncolor = ButtonDefaults.buttonColors(button_color)
+    Column (modifier = Modifier
+        .fillMaxSize()
+        .padding(40.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally)
     {
@@ -77,7 +72,7 @@ fun Main()  {
                 .padding(Dimens.paddingMedium)
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(),
-            color = Color.White,
+            color = Color(0xFFFFFFFF),
             textAlign = TextAlign.Center,
             fontFamily = CustomFontFamily,
             fontSize = 22.sp,
@@ -95,69 +90,69 @@ fun Main()  {
             fontSize = 22.sp,
         )
         Button(
-            onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(Color.Gray),
+            onClick = { navController.navigate("rhyme") },
+            colors = buttoncolor,
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)) {
+                .fillMaxWidth()) {
             Icon(painter = painterResource(R.drawable.baseline_library_books_24), contentDescription = "Rhyme Button")
             Text(text = "Генератор рифм",
                 modifier = Modifier.fillMaxWidth(),
                 fontFamily = CustomFontFamily,
-                color = Color.Black,
-                fontSize = 18.sp
+                color = button_text,
+                fontSize = 22.sp
             )
         }
-        Button(onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(Color.Gray),
+        Button(onClick = { navController.navigate("library") },
+            colors = buttoncolor,
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)) {
+                .fillMaxWidth()) {
             Icon(painter = painterResource(R.drawable.baseline_menu_book_24), contentDescription = "Library Button")
             Text(text = "Библиотека статей",
                 modifier = Modifier.fillMaxWidth(),
                 fontFamily = CustomFontFamily,
-                color = Color.Black,
-                fontSize = 18.sp
+                color = button_text,
+                fontSize = 22.sp
             )
         }
-        Button(onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(Color.Gray),
+        Button(onClick = { navController.navigate("notes") },
+            colors = buttoncolor,
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)) {
+                .fillMaxWidth()) {
             Icon(painter = painterResource(R.drawable.baseline_notes_24), contentDescription = "Notes Button")
             Text(text = "Заметки",
                 modifier = Modifier.fillMaxWidth(),
                 fontFamily = CustomFontFamily,
-                color = Color.Black,
-                fontSize = 18.sp
+                color = button_text,
+                fontSize = 22.sp
             )
         }
-        Button(onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(Color.Gray),
+        Button(onClick = { navController.navigate("settings") },
+            colors = buttoncolor,
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)) {
+                .fillMaxWidth()) {
             Icon(painter = painterResource(R.drawable.baseline_settings_24), contentDescription = "Settings Button")
             Text(text = "Настройки",
                 modifier = Modifier.fillMaxWidth(),
                 fontFamily = CustomFontFamily,
-                color = Color.Black,
-                fontSize = 18.sp
+                color = button_text,
+                fontSize = 22.sp
             )
         }
-        Button(onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(Color.Gray),
+        Button(onClick = { navController.navigate("account") },
+            colors = buttoncolor,
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)) {
+                .fillMaxWidth()) {
             Icon(painter = painterResource(R.drawable.baseline_account_circle_24), contentDescription = "Account Button")
             Text(text = "Аккаунт",
                 modifier = Modifier.fillMaxWidth(),
                 fontFamily = CustomFontFamily,
-                color = Color.Black,
-                fontSize = 18.sp
+                color = button_text,
+                fontSize = 22.sp
             )
         }
     }
@@ -178,41 +173,55 @@ fun Library() {
                 .padding(Dimens.paddingMedium)
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(),
-            color = Color.Cyan,
+            color = Color.White,
             textAlign = TextAlign.Center,
             fontFamily = CustomFontFamily,
             fontSize = 22.sp,
         )
-        Button(
-            onClick = {
-                val gfgThread = Thread {
-                    try {
-                        val document =
-                            Jsoup.connect("https://nsaturnia.ru/kak-pisat-stixi/vvodnaya-lekciya/")
-                                .get();
-                        val Titletext = document.title()
-                        val ArticleText = document.getElementsByClass("article-container post").text()
-                        messageTitle.value = Titletext
-                        message.value = ArticleText
-                    } catch (e: Exception) {
-                        messageTitle.value = "Ошибка! Название статьи не найдено!"
-                        message.value = "Ошибка! Статья не найдена!"
+            Button(
+                onClick = {
+                    val gfgThread = Thread {
+                        try {
+                            val document =
+                                Jsoup.connect("https://nsaturnia.ru/kak-pisat-stixi/vvodnaya-lekciya/")
+                                    .get()
+                            val Titletext = document.title()
+                            val ArticleText =
+                                document.getElementsByClass("article-container post").text()
+                            messageTitle.value = Titletext
+                            message.value = ArticleText
+                        } catch (e: Exception) {
+                            messageTitle.value = "Ошибка! Название статьи не найдено!"
+                            message.value = "Ошибка! Статья не найдена!"
+                        }
                     }
-                }
-                gfgThread.start()
-                val  myWorkRequest = PeriodicWorkRequestBuilder<MyWorker>(10, TimeUnit.MINUTES, 10, TimeUnit.MINUTES).build()
-                WorkManager.getInstance().enqueue(myWorkRequest)
-            },
-            colors = ButtonDefaults.buttonColors(Color.Gray),
-            modifier = Modifier.fillMaxWidth()) {
-            Icon(painter = painterResource(R.drawable.baseline_download_24), contentDescription = "Article Download Button")
-            Text(text = "Получить статью дня",
+                    gfgThread.start()
+                },
+                colors = ButtonDefaults.buttonColors(button_color),
+                shape = CircleShape,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_download_24),
+                    contentDescription = "Article Download Button"
+                )
+            }
+            Text(
+                text = messageTitle.value,
                 modifier = Modifier.fillMaxWidth(),
                 fontFamily = CustomFontFamily,
-                color = Color.Black)
-        }
-        Text(text = messageTitle.value, modifier = Modifier.fillMaxWidth(), fontFamily = CustomFontFamily, fontSize = 28.sp, color = Color.White)
-        Text(text = message.value, modifier = Modifier.fillMaxWidth(), fontFamily = CustomFontFamily, fontSize = 20.sp, color = Color.White)
+                fontSize = 28.sp,
+                color = Color.White
+            )
+            Text(
+                text = message.value,
+                modifier = Modifier.fillMaxWidth(),
+                fontFamily = CustomFontFamily,
+                fontSize = 20.sp,
+                color = Color.White
+            )
+
     }
 }
 
@@ -231,8 +240,8 @@ fun Rhyme()
             .fillMaxWidth()
             .padding(Dimens.paddingMedium)
             .align(Alignment.CenterHorizontally)
-            .fillMaxWidth(), color = Color.Cyan, fontFamily = CustomFontFamily, fontSize = 28.sp)
-        TextField(value = message.value, onValueChange = {newText -> message.value = newText}, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri) )
+            .fillMaxWidth(), color = Color.White, fontFamily = CustomFontFamily, fontSize = 28.sp)
+        TextField(value = message.value, modifier = Modifier.fillMaxWidth(), onValueChange = { newText -> message.value = newText}, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri))
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(message.value)
@@ -258,7 +267,7 @@ fun ListLib()
             Text(text = "Всего статей:${message.intValue} \nСписок статей: ", modifier = Modifier
                 .fillMaxWidth()
                 .padding(Dimens.paddingMedium)
-                .fillMaxWidth(), color = Color.Cyan, fontFamily = CustomFontFamily, fontSize = 28.sp, textAlign = TextAlign.Center)
+                .fillMaxWidth(), color = Color.White, fontFamily = CustomFontFamily, fontSize = 28.sp, textAlign = TextAlign.Center)
             Row (modifier = Modifier.padding(start = 120.dp)) {
 
                 IconButton(
@@ -270,7 +279,7 @@ fun ListLib()
                     Icon(
                         imageVector = Icons.Filled.AddCircle,
                         contentDescription = "Add",
-                        tint = Color.Cyan
+                        tint = Color.White
                     )
                 }
                 IconButton(
@@ -282,7 +291,7 @@ fun ListLib()
                     Icon(
                         imageVector = Icons.Filled.Close,
                         contentDescription = "Remove",
-                        tint = Color.Cyan
+                        tint = Color.White
                     )
                 }
             }
@@ -293,8 +302,8 @@ fun ListLib()
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp), elevation = CardDefaults.cardElevation(
-                    defaultElevation = 6.dp
-                ),  border = BorderStroke(3.dp, Color.White)
+                    defaultElevation = 12.dp
+                ),  border = BorderStroke(1.dp, Color.Black)
             ) {
                 Row {
                     Image(
@@ -302,7 +311,7 @@ fun ListLib()
                         contentDescription = "Article Icon",
                         modifier = Modifier
                             .size(80.dp)
-                            .background(Color.Cyan),
+                            .background(button_color),
                     )
                     Column {
                         Text(
@@ -326,4 +335,40 @@ fun ListLib()
             }
         }
     }
+}
+
+@Composable
+fun Notes()
+{
+    Image(
+        painter = painterResource(R.drawable.baseline_done_24),
+        contentDescription = "Article Icon",
+        modifier = Modifier
+            .size(80.dp)
+            .background(button_color),
+    )
+}
+
+@Composable
+fun Account()
+{
+    Image(
+        painter = painterResource(R.drawable.baseline_notes_24),
+        contentDescription = "Article Icon",
+        modifier = Modifier
+            .size(80.dp)
+            .background(button_color),
+    )
+}
+
+@Composable
+fun Settings()
+{
+    Image(
+        painter = painterResource(R.drawable.baseline_download_24),
+        contentDescription = "Article Icon",
+        modifier = Modifier
+            .size(80.dp)
+            .background(button_color),
+    )
 }
