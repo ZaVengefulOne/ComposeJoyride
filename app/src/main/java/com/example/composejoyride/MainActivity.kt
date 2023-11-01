@@ -19,18 +19,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.composejoyride.Screens.Library
-import com.example.composejoyride.Screens.Main
-import com.example.composejoyride.Screens.Rhyme
+import com.example.composejoyride.screens.Library
+import com.example.composejoyride.screens.Main
+import com.example.composejoyride.screens.Rhyme
 import com.example.composejoyride.Utils.Constants
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Scaffold
 import androidx.navigation.compose.rememberNavController
-import com.example.composejoyride.Screens.Account
-import com.example.composejoyride.Screens.ListLib
-import com.example.composejoyride.Screens.Notes
-import com.example.composejoyride.Screens.Settings
+import com.example.composejoyride.screens.Account
+import com.example.composejoyride.screens.ListLib
+import com.example.composejoyride.screens.Notes
+import com.example.composejoyride.screens.Settings
 import com.example.composejoyride.ui.theme.ComposeJoyrideTheme
 
 class MainActivity : ComponentActivity() {
