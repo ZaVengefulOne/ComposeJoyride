@@ -1,10 +1,12 @@
 package com.example.composejoyride.Screens
 
 import android.net.Uri
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,9 +21,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -57,22 +62,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import java.util.concurrent.TimeUnit
-
+val CustomFontFamily = FontFamily(Font(R.font.tippytoesbold))
 @Composable
 fun Main()  {
-    val CustomFontFamily = FontFamily(Font(R.font.ds_moster))
+
     Column (modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally)
     {
-        Image(painter = painterResource(id = R.drawable.alfa_logo), contentDescription = "App's logo", modifier = Modifier.fillMaxWidth())
+//        Image(painter = painterResource(id = R.drawable.alfa_logo), contentDescription = "App's logo", modifier = Modifier.fillMaxWidth())
         Text(
             text = "Привет и добро пожаловать в Poetry Helper v2.0!",
             modifier = Modifier
                 .padding(Dimens.paddingMedium)
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(),
-            color = Color.Cyan,
+            color = Color.White,
             textAlign = TextAlign.Center,
             fontFamily = CustomFontFamily,
             fontSize = 22.sp,
@@ -84,55 +89,75 @@ fun Main()  {
                 .padding(Dimens.paddingMedium)
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(),
-            color = Color.Cyan,
+            color = Color.White,
             textAlign = TextAlign.Center,
             fontFamily = CustomFontFamily,
             fontSize = 22.sp,
         )
         Button(
             onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(Color.Cyan),
-            modifier = Modifier.fillMaxWidth()) {
+            colors = ButtonDefaults.buttonColors(Color.Gray),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)) {
             Icon(painter = painterResource(R.drawable.baseline_library_books_24), contentDescription = "Rhyme Button")
             Text(text = "Генератор рифм",
                 modifier = Modifier.fillMaxWidth(),
-                fontFamily = FontFamily(Font(R.font.ds_moster))
+                fontFamily = CustomFontFamily,
+                color = Color.Black,
+                fontSize = 18.sp
             )
         }
         Button(onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(Color.Cyan),
-            modifier = Modifier.fillMaxWidth()) {
+            colors = ButtonDefaults.buttonColors(Color.Gray),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)) {
             Icon(painter = painterResource(R.drawable.baseline_menu_book_24), contentDescription = "Library Button")
             Text(text = "Библиотека статей",
                 modifier = Modifier.fillMaxWidth(),
-                fontFamily = FontFamily(Font(R.font.ds_moster))
+                fontFamily = CustomFontFamily,
+                color = Color.Black,
+                fontSize = 18.sp
             )
         }
         Button(onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(Color.Cyan),
-            modifier = Modifier.fillMaxWidth()) {
+            colors = ButtonDefaults.buttonColors(Color.Gray),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)) {
             Icon(painter = painterResource(R.drawable.baseline_notes_24), contentDescription = "Notes Button")
             Text(text = "Заметки",
                 modifier = Modifier.fillMaxWidth(),
-                fontFamily = FontFamily(Font(R.font.ds_moster))
+                fontFamily = CustomFontFamily,
+                color = Color.Black,
+                fontSize = 18.sp
             )
         }
         Button(onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(Color.Cyan),
-            modifier = Modifier.fillMaxWidth()) {
+            colors = ButtonDefaults.buttonColors(Color.Gray),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)) {
             Icon(painter = painterResource(R.drawable.baseline_settings_24), contentDescription = "Settings Button")
             Text(text = "Настройки",
                 modifier = Modifier.fillMaxWidth(),
-                fontFamily = FontFamily(Font(R.font.ds_moster))
+                fontFamily = CustomFontFamily,
+                color = Color.Black,
+                fontSize = 18.sp
             )
         }
         Button(onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(Color.Cyan),
-            modifier = Modifier.fillMaxWidth()) {
+            colors = ButtonDefaults.buttonColors(Color.Gray),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)) {
             Icon(painter = painterResource(R.drawable.baseline_account_circle_24), contentDescription = "Account Button")
             Text(text = "Аккаунт",
                 modifier = Modifier.fillMaxWidth(),
-                fontFamily = FontFamily(Font(R.font.ds_moster))
+                fontFamily = CustomFontFamily,
+                color = Color.Black,
+                fontSize = 18.sp
             )
         }
     }
@@ -140,7 +165,6 @@ fun Main()  {
 
 @Composable
 fun Library() {
-    val CustomFontFamily = FontFamily(Font(R.font.ds_moster))
     val messageTitle = remember{ mutableStateOf("") }
     val message = remember{ mutableStateOf("") }
     Column (modifier = Modifier
@@ -179,16 +203,16 @@ fun Library() {
                 val  myWorkRequest = PeriodicWorkRequestBuilder<MyWorker>(10, TimeUnit.MINUTES, 10, TimeUnit.MINUTES).build()
                 WorkManager.getInstance().enqueue(myWorkRequest)
             },
-            colors = ButtonDefaults.buttonColors(Color.Cyan),
+            colors = ButtonDefaults.buttonColors(Color.Gray),
             modifier = Modifier.fillMaxWidth()) {
             Icon(painter = painterResource(R.drawable.baseline_download_24), contentDescription = "Article Download Button")
             Text(text = "Получить статью дня",
                 modifier = Modifier.fillMaxWidth(),
-                fontFamily = FontFamily(Font(R.font.ds_moster)),
+                fontFamily = CustomFontFamily,
                 color = Color.Black)
         }
-        Text(text = messageTitle.value, modifier = Modifier.fillMaxWidth(), fontFamily = FontFamily(Font(R.font.ds_moster)), fontSize = 28.sp, color = Color.White)
-        Text(text = message.value, modifier = Modifier.fillMaxWidth(), fontFamily = FontFamily(Font(R.font.ds_moster)), fontSize = 20.sp, color = Color.White)
+        Text(text = messageTitle.value, modifier = Modifier.fillMaxWidth(), fontFamily = CustomFontFamily, fontSize = 28.sp, color = Color.White)
+        Text(text = message.value, modifier = Modifier.fillMaxWidth(), fontFamily = CustomFontFamily, fontSize = 20.sp, color = Color.White)
     }
 }
 
@@ -207,7 +231,7 @@ fun Rhyme()
             .fillMaxWidth()
             .padding(Dimens.paddingMedium)
             .align(Alignment.CenterHorizontally)
-            .fillMaxWidth(), color = Color.Cyan, fontFamily = FontFamily(Font(R.font.ds_moster)), fontSize = 28.sp)
+            .fillMaxWidth(), color = Color.Cyan, fontFamily = CustomFontFamily, fontSize = 28.sp)
         TextField(value = message.value, onValueChange = {newText -> message.value = newText}, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri) )
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -231,56 +255,73 @@ fun ListLib()
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 48.dp)
     ) {
         item {
-            IconButton(
-                onClick = { message.intValue += 1 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .size(128.dp),
+            Text(text = "Всего статей:${message.intValue} \nСписок статей: ", modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimens.paddingMedium)
+                .fillMaxWidth(), color = Color.Cyan, fontFamily = CustomFontFamily, fontSize = 28.sp, textAlign = TextAlign.Center)
+            Row (modifier = Modifier.padding(start = 120.dp)) {
+
+                IconButton(
+                    onClick = { message.intValue += 1 },
+                    modifier = Modifier
+                        .size(64.dp),
 //                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9C27B0))
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.AddCircle,
-                    contentDescription = "Add",
-                    tint = Color.Cyan
-                )
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.AddCircle,
+                        contentDescription = "Add",
+                        tint = Color.Cyan
+                    )
+                }
+                IconButton(
+                    onClick = { message.intValue -= 1 },
+                    modifier = Modifier
+                        .size(64.dp),
+//                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9C27B0))
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = "Remove",
+                        tint = Color.Cyan
+                    )
+                }
             }
         }
 
         items(message.intValue) { index ->
-            Row(
+            Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(4.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(4.dp), elevation = CardDefaults.cardElevation(
+                    defaultElevation = 6.dp
+                ),  border = BorderStroke(3.dp, Color.White)
             ) {
-                Image(
-                    painter = painterResource(R.drawable.baseline_notes_24),
-                    contentDescription = "Article Icon",
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(Color.Cyan),
-                )
-
-                Column(
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .weight(1f)
-                ) {
-                    Text(
-                        text = "Название статьи. Всего статей:${message.intValue}",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        color = Color.White,
-                        fontFamily = FontFamily(Font(R.font.ds_moster))
+                Row {
+                    Image(
+                        painter = painterResource(R.drawable.baseline_notes_24),
+                        contentDescription = "Article Icon",
+                        modifier = Modifier
+                            .size(80.dp)
+                            .background(Color.Cyan),
                     )
-                    Text(
-                        text = "Первые строки статьи",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        color = Color.White,
-                        fontFamily = FontFamily(Font(R.font.ds_moster)),
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
+                    Column {
+                        Text(
+                            text = "Название статьи",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 28.sp,
+                            color = Color.White,
+                            fontFamily = CustomFontFamily,
+                            textAlign = TextAlign.Center
+                        )
+                        Text(
+                            text = "Первые строки статьи",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 28.sp,
+                            color = Color.White,
+                            fontFamily = CustomFontFamily,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
         }

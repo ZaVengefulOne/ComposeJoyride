@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = Color.Black
+                    color = Color.White
                 ) {
                     // Scaffold Component
                     Scaffold(
@@ -129,7 +129,7 @@ fun BottomNavigationBar(navController: NavHostController) {
     BottomNavigation(
 
         // set background color
-        backgroundColor = Color(0xff0f7c96)) {
+        backgroundColor = Color(0xff00ffff)) {
 
         // observe the backstack
         val navBackStackEntry by navController.currentBackStackEntryAsState()
