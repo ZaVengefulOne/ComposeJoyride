@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -70,7 +71,7 @@ fun Main(navController: NavController)  {
     {
 //        Image(painter = painterResource(id = R.drawable.alfa_logo), contentDescription = "App's logo", modifier = Modifier.fillMaxWidth())
         Text(
-            text = "Привет и добро пожаловать в Poetry Helper v2.0!",
+            text = stringResource(id = R.string.welcome),
             modifier = Modifier
                 .padding(Dimens.paddingMedium)
                 .align(Alignment.CenterHorizontally)
@@ -81,8 +82,7 @@ fun Main(navController: NavController)  {
             fontSize = 22.sp,
         )
         Text(
-            text = "Данное приложение призвано помочь начинающим поэтам," +
-                    " стихотворцам и прочим заинтересованным в стихосложении людям.",
+            text = stringResource(id = R.string.entry),
             modifier = Modifier
                 .padding(Dimens.paddingMedium)
                 .align(Alignment.CenterHorizontally)
@@ -99,7 +99,7 @@ fun Main(navController: NavController)  {
             modifier = Modifier
                 .fillMaxWidth()) {
             Icon(painter = painterResource(R.drawable.baseline_library_books_24), contentDescription = "Rhyme Button")
-            Text(text = "Генератор рифм",
+            Text(text = stringResource(id = R.string.welcome),
                 modifier = Modifier.fillMaxWidth(),
                 fontFamily = CustomFontFamily,
                 color = button_text,
@@ -112,7 +112,7 @@ fun Main(navController: NavController)  {
             modifier = Modifier
                 .fillMaxWidth()) {
             Icon(painter = painterResource(R.drawable.baseline_menu_book_24), contentDescription = "Library Button")
-            Text(text = "Библиотека статей",
+            Text(text = stringResource(id = R.string.library),
                 modifier = Modifier.fillMaxWidth(),
                 fontFamily = CustomFontFamily,
                 color = button_text,
@@ -125,7 +125,7 @@ fun Main(navController: NavController)  {
             modifier = Modifier
                 .fillMaxWidth()) {
             Icon(painter = painterResource(R.drawable.baseline_notes_24), contentDescription = "Notes Button")
-            Text(text = "Заметки",
+            Text(text = stringResource(id = R.string.notes),
                 modifier = Modifier.fillMaxWidth(),
                 fontFamily = CustomFontFamily,
                 color = button_text,
@@ -138,7 +138,7 @@ fun Main(navController: NavController)  {
             modifier = Modifier
                 .fillMaxWidth()) {
             Icon(painter = painterResource(R.drawable.baseline_settings_24), contentDescription = "Settings Button")
-            Text(text = "Настройки",
+            Text(text = stringResource(id = R.string.settings),
                 modifier = Modifier.fillMaxWidth(),
                 fontFamily = CustomFontFamily,
                 color = button_text,
@@ -151,7 +151,7 @@ fun Main(navController: NavController)  {
             modifier = Modifier
                 .fillMaxWidth()) {
             Icon(painter = painterResource(R.drawable.baseline_account_circle_24), contentDescription = "Account Button")
-            Text(text = "Аккаунт",
+            Text(text = stringResource(id = R.string.account),
                 modifier = Modifier.fillMaxWidth(),
                 fontFamily = CustomFontFamily,
                 color = button_text,
@@ -168,6 +168,8 @@ fun Library() {
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+    val errNameText = stringResource(id = R.string.error_name_not_found)
+    val errTopicText = stringResource(id = R.string.error_topic_not_found)
     Column (modifier = Modifier
         .fillMaxSize()
         .verticalScroll(rememberScrollState(), reverseScrolling = true),
@@ -177,7 +179,7 @@ fun Library() {
             Image(painter = painterResource(id = R.drawable.baseline_done_24), contentDescription = "for scrolling", modifier = Modifier.align(
                 Alignment.BottomStart))
         Text(
-            text = "Нажмите на кнопку ниже, чтобы отобразить сегодняшнюю статью дня",
+            text = stringResource(id = R.string.press_the_button),
             modifier = Modifier
                 .padding(Dimens.paddingMedium)
                 .align(Alignment.Center)
@@ -217,8 +219,8 @@ fun Library() {
                             message.value = articleText
 
                         } catch (e: Exception) {
-                            messageTitle.value = "Ошибка! Название статьи не найдено!"
-                            message.value = "Ошибка! Статья не найдена!"
+                            messageTitle.value = errNameText
+                            message.value = errTopicText
                         }
                     }
                     gfgThread.start()
@@ -264,7 +266,7 @@ fun Rhyme()
         .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "Введите ссылку на картинку в поле ниже:", modifier = Modifier
+        Text(text = stringResource(id = R.string.enter_rhyming_word), modifier = Modifier
             .fillMaxWidth()
             .padding(Dimens.paddingMedium)
             .align(Alignment.CenterHorizontally)
@@ -343,7 +345,8 @@ fun ListLib()
                     )
                     Column {
                         Text(
-                            text = "Название статьи",
+//                            modifier = Modifier.padding(Dimens.paddingMedium),
+                            text = stringResource(id = R.string.topic_name),
                             fontWeight = FontWeight.Bold,
                             fontSize = 28.sp,
                             color = Color.White,
@@ -351,7 +354,8 @@ fun ListLib()
                             textAlign = TextAlign.Center
                         )
                         Text(
-                            text = "Первые строки статьи",
+//                            modifier = Modifier.padding(Dimens.paddingMedium),
+                            text = stringResource(id = R.string.first_words),
                             fontWeight = FontWeight.Bold,
                             fontSize = 28.sp,
                             color = Color.White,

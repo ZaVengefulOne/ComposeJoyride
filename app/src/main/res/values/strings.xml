@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Poetry Helper v2.0</string>
+    <string name="welcome">Привет и добро пожаловать в Poetry Helper v2.0!</string>
+    <string name="entry">Данное приложение призвано помочь начинающим поэтам, стихотворцам и прочим заинтересованным в стихосложении людям.</string>
+    <string name="generator">Генератор рифм</string>
+    <string name="notes">Заметки</string>
+    <string name="settings">Настройки</string>
+    <string name="account">Аккаунт</string>
+    <string name="library">Библиотека статей</string>
+    <string name="press_the_button">Нажмите на кнопку ниже, чтобы отобразить сегодняшнюю статью дня</string>
+    <string name="topic_name">Название статьи</string>
+    <string name="first_words">Первые строки статьи</string>
+    <string name="enter_rhyming_word">Введите слово для подбора рифмы:</string>
+    <string name="error_name_not_found">Ошибка! Название статьи не найдено!</string>
+    <string name="error_topic_not_found">Введите слово для подбора рифмы:</string>
 </resources>
