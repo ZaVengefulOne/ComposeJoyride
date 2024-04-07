@@ -2,32 +2,38 @@ package com.example.composejoyride.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.composejoyride.R
+
+val ttFamily = FontFamily(
+    Font(R.font.tippytoesbold, FontWeight.Normal),
+)
+
 
 val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.ExtraBold,
-        fontSize = 18.sp,
+    bodyMedium = TextStyle(
+        fontFamily = ttFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 22.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.9.sp
-    )
-    /* Other default text styles to override
+    ),
     titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = ttFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 22.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
     labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = ttFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 11.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     )
-    */
+
 )

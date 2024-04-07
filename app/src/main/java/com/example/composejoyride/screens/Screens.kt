@@ -8,19 +8,24 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -28,6 +33,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -35,12 +42,15 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -57,12 +67,13 @@ import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 
 val CustomFontFamily = FontFamily(Font(R.font.tippytoesbold))
-val button_color = Color(0xFF028CA6)
-val button_text = Color.White
+
+
 @Composable
 fun Main(navController: NavController)  {
-    val context = LocalContext.current
+    val button_color = colorScheme.secondary
     val buttoncolor = ButtonDefaults.buttonColors(button_color)
+    val button_text = colorScheme.tertiary
     Column (modifier = Modifier
         .fillMaxSize()
         .padding(40.dp),
@@ -76,7 +87,7 @@ fun Main(navController: NavController)  {
                 .padding(Dimens.paddingMedium)
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(),
-            color = Color(0xFFFFFFFF),
+            color = colorScheme.primary,
             textAlign = TextAlign.Center,
             fontFamily = CustomFontFamily,
             fontSize = 22.sp,
@@ -87,7 +98,7 @@ fun Main(navController: NavController)  {
                 .padding(Dimens.paddingMedium)
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(),
-            color = Color.White,
+            color = colorScheme.primary,
             textAlign = TextAlign.Center,
             fontFamily = CustomFontFamily,
             fontSize = 22.sp,
@@ -99,7 +110,7 @@ fun Main(navController: NavController)  {
             modifier = Modifier
                 .fillMaxWidth()) {
             Icon(painter = painterResource(R.drawable.baseline_library_books_24), contentDescription = "Rhyme Button")
-            Text(text = stringResource(id = R.string.welcome),
+            Text(text = stringResource(id = R.string.generator),
                 modifier = Modifier.fillMaxWidth(),
                 fontFamily = CustomFontFamily,
                 color = button_text,
@@ -168,6 +179,8 @@ fun Library() {
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+    val button_color = colorScheme.secondary
+    val button_text = colorScheme.tertiary
     val errNameText = stringResource(id = R.string.error_name_not_found)
     val errTopicText = stringResource(id = R.string.error_topic_not_found)
     Column (modifier = Modifier
@@ -184,7 +197,7 @@ fun Library() {
                 .padding(Dimens.paddingMedium)
                 .align(Alignment.Center)
                 .fillMaxWidth(),
-            color = Color.White,
+            color = button_text,
             textAlign = TextAlign.Center,
             fontFamily = CustomFontFamily,
             fontSize = 22.sp,
@@ -195,14 +208,14 @@ fun Library() {
                 modifier = Modifier.fillMaxWidth(),
                 fontFamily = CustomFontFamily,
                 fontSize = 28.sp,
-                color = Color.White
+                color = button_text
             )
             Text(
                 text = message.value,
                 modifier = Modifier.fillMaxWidth(),
                 fontFamily = CustomFontFamily,
                 fontSize = 20.sp,
-                color = Color.White
+                color = button_text
             )
         Box (modifier = Modifier.fillMaxWidth()){
             Button(
@@ -283,52 +296,70 @@ fun Rhyme()
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListLib()
 {
-    val message = remember{ mutableIntStateOf(0) }
-    message.intValue = 1
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 48.dp)
-    ) {
-        item {
-            Text(text = "Всего статей:${message.intValue} \nСписок статей: ", modifier = Modifier
-                .fillMaxWidth()
-                .padding(Dimens.paddingMedium)
-                .fillMaxWidth(), color = Color.White, fontFamily = CustomFontFamily, fontSize = 28.sp, textAlign = TextAlign.Center)
-            Row (modifier = Modifier.padding(start = 120.dp)) {
+    val topics_amount = remember{ mutableIntStateOf(0) }
+    val topicsList = remember { mutableStateOf(listOf(
+        "Вводная лекция",
+        "Что такое ритм?",
+        "Двусложные и четырехсложные размеры в силлабо-тонике",
+        "Трехсложные размеры в силлабо-тонике",
+        "Работа с ритмом",
+        "Чем отличается стих от прозы?",
+        "Стихопроза: признаки и разновидности"
+    )) }
+    var searchText = rememberSaveable { mutableStateOf("") }
+    val filteredTopicsList = rememberSaveable { mutableStateOf(topicsList.value) }
 
-                IconButton(
-                    onClick = { message.intValue += 1 },
-                    modifier = Modifier
-                        .size(64.dp),
-//                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9C27B0))
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.AddCircle,
-                        contentDescription = "Add",
-                        tint = Color.White
-                    )
+    topics_amount.intValue = 1
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        TextField(
+            value = searchText.value,
+            onValueChange = { searchText.value = it },
+            modifier = Modifier.padding(16.dp),
+            placeholder = { Text("Поиск...", color = Color.Black, fontFamily = CustomFontFamily) },
+            shape = RoundedCornerShape(16.dp),
+            singleLine = true,
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    if (searchText.value.isEmpty()) {
+                        filteredTopicsList.value = topicsList.value
+                    } else {
+                        filteredTopicsList.value = topicsList.value.filter {
+                            it.contains(searchText.value, true)
+                        }
+                    }
                 }
-                IconButton(
-                    onClick = { message.intValue -= 1 },
-                    modifier = Modifier
-                        .size(64.dp),
-//                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9C27B0))
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = "Remove",
-                        tint = Color.White
-                    )
+            )
+        )
+
+
+//        Spacer(modifier = Modifier.height(16.dp))
+
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            content = {
+                items(filteredTopicsList.value) { topicItem ->
+                    TopicItem(topicItem)
                 }
             }
-        }
+        )
+    }
+}
 
-        items(message.intValue) { index ->
-            Card(
+
+@Composable
+fun TopicItem(topicItem: String){
+    val button_color = colorScheme.secondary
+    val button_text = Color.White
+        Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp), elevation = CardDefaults.cardElevation(
@@ -346,19 +377,19 @@ fun ListLib()
                     Column {
                         Text(
 //                            modifier = Modifier.padding(Dimens.paddingMedium),
-                            text = stringResource(id = R.string.topic_name),
+                            text = topicItem,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 28.sp,
-                            color = Color.White,
+                            fontSize = 20.sp,
+                            color = button_text,
                             fontFamily = CustomFontFamily,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Start
                         )
                         Text(
 //                            modifier = Modifier.padding(Dimens.paddingMedium),
                             text = stringResource(id = R.string.first_words),
                             fontWeight = FontWeight.Bold,
-                            fontSize = 28.sp,
-                            color = Color.White,
+                            fontSize = 14.sp,
+                            color = button_text,
                             fontFamily = CustomFontFamily,
                             textAlign = TextAlign.Center
                         )
@@ -366,12 +397,11 @@ fun ListLib()
                 }
             }
         }
-    }
-}
 
 @Composable
 fun Notes()
 {
+    val button_color = colorScheme.secondary
     Image(
         painter = painterResource(R.drawable.baseline_done_24),
         contentDescription = "Article Icon",
@@ -384,6 +414,7 @@ fun Notes()
 @Composable
 fun Account()
 {
+    val button_color = colorScheme.secondary
     Image(
         painter = painterResource(R.drawable.baseline_notes_24),
         contentDescription = "Article Icon",
@@ -396,6 +427,7 @@ fun Account()
 @Composable
 fun Settings()
 {
+    val button_color = colorScheme.secondary
     Image(
         painter = painterResource(R.drawable.baseline_download_24),
         contentDescription = "Article Icon",

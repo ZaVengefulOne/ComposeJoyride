@@ -26,6 +26,7 @@ import com.example.composejoyride.Utils.Constants
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Scaffold
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.navigation.compose.rememberNavController
 import com.example.composejoyride.screens.Account
 import com.example.composejoyride.screens.ListLib
@@ -42,7 +43,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = Color.White
+                    color = colorScheme.background
                 ) {
                     // Scaffold Component
                     Scaffold(
@@ -74,7 +75,7 @@ fun NavHostContainer(
         // Set the padding provided by scaffold
         modifier = Modifier
             .padding(paddingValues = padding)
-            .background(Color(0xff015B6C)),
+            .background(colorScheme.background),
 
         builder = {
 

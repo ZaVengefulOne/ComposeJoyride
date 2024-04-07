@@ -12,5 +12,5 @@
     <string name="first_words">Первые строки статьи</string>
     <string name="enter_rhyming_word">Введите слово для подбора рифмы:</string>
     <string name="error_name_not_found">Ошибка! Название статьи не найдено!</string>
-    <string name="error_topic_not_found">Введите слово для подбора рифмы:</string>
+    <string name="error_topic_not_found">Ошибка! Статья не найдена!</string>
 </resources>
