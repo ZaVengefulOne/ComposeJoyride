@@ -1,8 +1,10 @@
 package com.example.composejoyride.screens
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,19 +32,23 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.SearchBar
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -169,13 +175,21 @@ fun Main(navController: NavController)  {
                 fontSize = 22.sp
             )
         }
+//        val checkedState = remember { mutableStateOf(true) }
+//        Row{
+//            Checkbox(
+//                checked = AppCompatDelegate.setD,
+//                onCheckedChange = { checkedState.value = it }
+//            )
+//            Text("Выбрано", fontSize = 28.sp, modifier = Modifier.padding(4.dp))
+//        }
     }
 }
 
 @Composable
 fun Library() {
-    val messageTitle = remember{ mutableStateOf("") }
-    val message = remember{ mutableStateOf("") }
+    val messageTitle = rememberSaveable{ mutableStateOf("") }
+    val message = rememberSaveable{ mutableStateOf("") }
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -183,14 +197,15 @@ fun Library() {
     val button_text = colorScheme.tertiary
     val errNameText = stringResource(id = R.string.error_name_not_found)
     val errTopicText = stringResource(id = R.string.error_topic_not_found)
+    val linksList = arrayListOf("https://nsaturnia.ru/kak-pisat-stixi/vvodnaya-lekciya/","https://nsaturnia.ru/kak-pisat-stixi/chto-takoe-ritm/",
+        "https://nsaturnia.ru/kak-pisat-stixi/dvuslozhnye-razmery/", "https://nsaturnia.ru/kak-pisat-stixi/chto-takoe-rifma/", "https://nsaturnia.ru/kak-pisat-stixi/vidy-rifmy/",
+        "https://nsaturnia.ru/kak-pisat-stixi/sistemy-rifmovki/", "https://nsaturnia.ru/kak-pisat-stixi/vidy-sravnenij/")
     Column (modifier = Modifier
         .fillMaxSize()
         .verticalScroll(rememberScrollState(), reverseScrolling = true),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally) {
         Box {
-            Image(painter = painterResource(id = R.drawable.baseline_done_24), contentDescription = "for scrolling", modifier = Modifier.align(
-                Alignment.BottomStart))
         Text(
             text = stringResource(id = R.string.press_the_button),
             modifier = Modifier
@@ -217,59 +232,62 @@ fun Library() {
                 fontSize = 20.sp,
                 color = button_text
             )
-        Box (modifier = Modifier.fillMaxWidth()){
-            Button(
-                onClick = {
-                    val gfgThread = Thread {
-                        try {
-                            val document =
-                                Jsoup.connect("https://nsaturnia.ru/kak-pisat-stixi/vvodnaya-lekciya/")
-                                    .get()
-                            val titletext = document.title()
-                            val articleText =
-                                document.getElementsByClass("article-container post").text()
-                            messageTitle.value = titletext
-                            message.value = articleText
+        Box (modifier = Modifier.fillMaxWidth()) {
+            var isLoaded by remember { mutableStateOf(false) }
+            if (!isLoaded) {
+                ExtendedFloatingActionButton(
+                    onClick = {
+                        val gfgThread = Thread {
+                            try {
+                                val document =
+                                    Jsoup.connect(linksList.random())
+                                        .get()
+                                val titletext = document.title()
+                                val articleText =
+                                    document.getElementsByClass("article-container post").text()
+                                messageTitle.value = titletext
+                                message.value = articleText
 
-                        } catch (e: Exception) {
-                            messageTitle.value = errNameText
-                            message.value = errTopicText
+                            } catch (e: Exception) {
+                                messageTitle.value = errNameText
+                                message.value = errTopicText
+                            }
                         }
-                    }
-                    gfgThread.start()
-                },
-                colors = ButtonDefaults.buttonColors(button_color),
-                shape = CircleShape,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.baseline_download_24),
-                    contentDescription = "Article Download Button"
-                )
-            }
-            Button(onClick = {
-                coroutineScope.launch {
-                    scrollState.scrollTo(0)
-                    Toast.makeText(context,"Dostal!", Toast.LENGTH_LONG).show()
+                        gfgThread.start()
+                        isLoaded = true
+                    },
+                    shape = CircleShape,
+                    containerColor = colorScheme.secondary,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_download_24),
+                        contentDescription = "Article Download Button"
+                    )
+                    Text(text = "Загрузить статью")
                 }
-                             }, modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(horizontal = 50.dp),
-                colors = ButtonDefaults.buttonColors(button_color),
-                shape = CircleShape,)
-            {
-                Icon(
-                    painter = painterResource(R.drawable.baseline_keyboard_arrow_up_24),
-                    contentDescription = "Article Scroll Button"
-                )
+//            Button(onClick = {
+//                coroutineScope.launch {
+//                    scrollState.scrollTo(0)
+//                }
+//                             }, modifier = Modifier
+//                .align(Alignment.BottomStart)
+//                .padding(horizontal = 50.dp),
+//                colors = ButtonDefaults.buttonColors(button_color),
+//                shape = CircleShape,)
+//            {
+//                Icon(
+//                    painter = painterResource(R.drawable.baseline_keyboard_arrow_up_24),
+//                    contentDescription = "Article Scroll Button"
+//                )
+//            }
             }
         }
     }
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Rhyme()
 {
@@ -312,34 +330,46 @@ fun ListLib()
     )) }
     var searchText = rememberSaveable { mutableStateOf("") }
     val filteredTopicsList = rememberSaveable { mutableStateOf(topicsList.value) }
-
+    val trailingIconView = @Composable {
+        IconButton(onClick = {
+            searchText.value = ""
+            filteredTopicsList.value = topicsList.value
+        }) {
+            Icon(Icons.Filled.Close, contentDescription = "Close Button", modifier = Modifier.size(25.dp), tint = Color.Black)
+        }
+    }
+//    var closeEnabled = false
     topics_amount.intValue = 1
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TextField(
-            value = searchText.value,
-            onValueChange = { searchText.value = it },
-            modifier = Modifier.padding(16.dp),
-            placeholder = { Text("Поиск...", color = Color.Black, fontFamily = CustomFontFamily) },
-            shape = RoundedCornerShape(16.dp),
-            singleLine = true,
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    if (searchText.value.isEmpty()) {
-                        filteredTopicsList.value = topicsList.value
-                    } else {
-                        filteredTopicsList.value = topicsList.value.filter {
-                            it.contains(searchText.value, true)
+        Row {
+            OutlinedTextField(
+                value = searchText.value,
+                onValueChange = { searchText.value = it },
+                modifier = Modifier.padding(16.dp),
+                placeholder = { Text("Поиск...", color = Color.Black, fontFamily = CustomFontFamily) },
+                shape = RoundedCornerShape(16.dp),
+                singleLine = true,
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        if (searchText.value.isEmpty()) {
+                            filteredTopicsList.value = topicsList.value
+//                            closeEnabled = false
+                        } else {
+                            filteredTopicsList.value = topicsList.value.filter {
+                                it.contains(searchText.value, true)
+                            }
+//                            closeEnabled = true
                         }
                     }
-                }
+                ),
+                trailingIcon = if (!searchText.value.isEmpty()) trailingIconView else null
             )
-        )
-
-
+        }
+//        Text(text = "Количество статей: ${topics_amount.intValue}", color = Color.Black, fontFamily = CustomFontFamily)
 //        Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(
@@ -355,6 +385,7 @@ fun ListLib()
 }
 
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun TopicItem(topicItem: String){
     val button_color = colorScheme.secondary
