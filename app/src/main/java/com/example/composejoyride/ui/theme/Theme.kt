@@ -10,12 +10,17 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.example.composejoyride.Utils.DarkTheme
 
+//val LocalTheme = compositionLocalOf { DarkTheme() }
+var LocalTheme = mutableStateOf(false)
 private val DarkColorScheme = darkColorScheme(
     primary = Color.Black,
     secondary = DarkCyan,
@@ -43,13 +48,13 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun ComposeJoyrideTheme(
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    darkTheme: Boolean = true,
     content: @Composable () -> Unit
 )
 {
 
     MaterialTheme(
-        colorScheme = if (isSystemInDarkTheme()) DarkColorScheme else LightColorScheme,
+        colorScheme = if (!LocalTheme.value) DarkColorScheme else LightColorScheme,
         typography = Typography,
         content = content
     )

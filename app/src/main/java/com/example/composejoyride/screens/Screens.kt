@@ -1,19 +1,17 @@
 package com.example.composejoyride.screens
 import android.annotation.SuppressLint
-import android.widget.Toast
+import android.content.SharedPreferences
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,18 +23,19 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -55,7 +54,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -64,11 +62,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.edit
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.composejoyride.R
+import com.example.composejoyride.Utils.DarkTheme
+import com.example.composejoyride.Utils.EDIT_KEY
+import com.example.composejoyride.Utils.PREFERENCES
+import com.example.composejoyride.Utils.SEARCH_SET_KEY
+import com.example.composejoyride.ui.theme.Dark
 import com.example.composejoyride.ui.theme.Dimens
+import com.example.composejoyride.ui.theme.LocalTheme
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 
@@ -76,105 +81,149 @@ val CustomFontFamily = FontFamily(Font(R.font.tippytoesbold))
 
 
 @Composable
-fun Main(navController: NavController)  {
-    val button_color = colorScheme.secondary
-    val buttoncolor = ButtonDefaults.buttonColors(button_color)
-    val button_text = colorScheme.tertiary
-    Column (modifier = Modifier
-        .fillMaxSize()
-        .padding(40.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally)
-    {
+fun Main(navController: NavController, preferences: SharedPreferences)  {
+    //CompositionLocalProvider(LocalTheme provides DarkTheme()) {
+
+        val button_color = colorScheme.secondary
+        val buttoncolor = ButtonDefaults.buttonColors(button_color)
+        val button_text = colorScheme.tertiary
+        val context = LocalContext.current
+        LocalTheme.value = preferences.getBoolean(EDIT_KEY,false)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(40.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        )
+        {
 //        Image(painter = painterResource(id = R.drawable.alfa_logo), contentDescription = "App's logo", modifier = Modifier.fillMaxWidth())
-        Text(
-            text = stringResource(id = R.string.welcome),
-            modifier = Modifier
-                .padding(Dimens.paddingMedium)
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth(),
-            color = colorScheme.primary,
-            textAlign = TextAlign.Center,
-            fontFamily = CustomFontFamily,
-            fontSize = 22.sp,
-        )
-        Text(
-            text = stringResource(id = R.string.entry),
-            modifier = Modifier
-                .padding(Dimens.paddingMedium)
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth(),
-            color = colorScheme.primary,
-            textAlign = TextAlign.Center,
-            fontFamily = CustomFontFamily,
-            fontSize = 22.sp,
-        )
-        Button(
-            onClick = { navController.navigate("rhyme") },
-            colors = buttoncolor,
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()) {
-            Icon(painter = painterResource(R.drawable.baseline_library_books_24), contentDescription = "Rhyme Button")
-            Text(text = stringResource(id = R.string.generator),
-                modifier = Modifier.fillMaxWidth(),
+            Text(
+                text = stringResource(id = R.string.welcome),
+                modifier = Modifier
+                    .padding(Dimens.paddingMedium)
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth(),
+                color = colorScheme.primary,
+                textAlign = TextAlign.Center,
                 fontFamily = CustomFontFamily,
-                color = button_text,
-                fontSize = 22.sp
+                fontSize = 22.sp,
             )
-        }
-        Button(onClick = { navController.navigate("library") },
-            colors = buttoncolor,
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()) {
-            Icon(painter = painterResource(R.drawable.baseline_menu_book_24), contentDescription = "Library Button")
-            Text(text = stringResource(id = R.string.library),
-                modifier = Modifier.fillMaxWidth(),
+            Text(
+                text = stringResource(id = R.string.entry),
+                modifier = Modifier
+                    .padding(Dimens.paddingMedium)
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth(),
+                color = colorScheme.primary,
+                textAlign = TextAlign.Center,
                 fontFamily = CustomFontFamily,
-                color = button_text,
-                fontSize = 22.sp
+                fontSize = 22.sp,
             )
-        }
-        Button(onClick = { navController.navigate("notes") },
-            colors = buttoncolor,
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()) {
-            Icon(painter = painterResource(R.drawable.baseline_notes_24), contentDescription = "Notes Button")
-            Text(text = stringResource(id = R.string.notes),
-                modifier = Modifier.fillMaxWidth(),
-                fontFamily = CustomFontFamily,
-                color = button_text,
-                fontSize = 22.sp
-            )
-        }
-        Button(onClick = { navController.navigate("settings") },
-            colors = buttoncolor,
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()) {
-            Icon(painter = painterResource(R.drawable.baseline_settings_24), contentDescription = "Settings Button")
-            Text(text = stringResource(id = R.string.settings),
-                modifier = Modifier.fillMaxWidth(),
-                fontFamily = CustomFontFamily,
-                color = button_text,
-                fontSize = 22.sp
-            )
-        }
-        Button(onClick = { navController.navigate("account") },
-            colors = buttoncolor,
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()) {
-            Icon(painter = painterResource(R.drawable.baseline_account_circle_24), contentDescription = "Account Button")
-            Text(text = stringResource(id = R.string.account),
-                modifier = Modifier.fillMaxWidth(),
-                fontFamily = CustomFontFamily,
-                color = button_text,
-                fontSize = 22.sp
-            )
-        }
+            Button(
+                onClick = { navController.navigate("rhyme") },
+                colors = buttoncolor,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_library_books_24),
+                    contentDescription = "Rhyme Button"
+                )
+                Text(
+                    text = stringResource(id = R.string.generator),
+                    modifier = Modifier.fillMaxWidth(),
+                    fontFamily = CustomFontFamily,
+                    color = button_text,
+                    fontSize = 22.sp
+                )
+            }
+            Button(
+                onClick = { navController.navigate("library") },
+                colors = buttoncolor,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_menu_book_24),
+                    contentDescription = "Library Button"
+                )
+                Text(
+                    text = stringResource(id = R.string.library),
+                    modifier = Modifier.fillMaxWidth(),
+                    fontFamily = CustomFontFamily,
+                    color = button_text,
+                    fontSize = 22.sp
+                )
+            }
+            Button(
+                onClick = { navController.navigate("notes") },
+                colors = buttoncolor,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_notes_24),
+                    contentDescription = "Notes Button"
+                )
+                Text(
+                    text = stringResource(id = R.string.notes),
+                    modifier = Modifier.fillMaxWidth(),
+                    fontFamily = CustomFontFamily,
+                    color = button_text,
+                    fontSize = 22.sp
+                )
+            }
+            Button(
+                onClick = { navController.navigate("settings") },
+                colors = buttoncolor,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_settings_24),
+                    contentDescription = "Settings Button"
+                )
+                Text(
+                    text = stringResource(id = R.string.settings),
+                    modifier = Modifier.fillMaxWidth(),
+                    fontFamily = CustomFontFamily,
+                    color = button_text,
+                    fontSize = 22.sp
+                )
+            }
+            Button(
+                onClick = { navController.navigate("account") },
+                colors = buttoncolor,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_account_circle_24),
+                    contentDescription = "Account Button"
+                )
+                Text(
+                    text = stringResource(id = R.string.account),
+                    modifier = Modifier.fillMaxWidth(),
+                    fontFamily = CustomFontFamily,
+                    color = button_text,
+                    fontSize = 22.sp
+                )
+            }
+            IconButton(onClick = {
+                LocalTheme.value = !LocalTheme.value
+                preferences.edit().putBoolean(EDIT_KEY, LocalTheme.value).apply()
+            }) {
+                Icon(
+                    painter = painterResource(if (!LocalTheme.value) R.drawable.baseline_dark_mode_24 else R.drawable.baseline_light_mode_24),
+                    contentDescription = "theme switcher"
+                )
+            }
 //        val checkedState = remember { mutableStateOf(true) }
 //        Row{
 //            Checkbox(
@@ -183,8 +232,9 @@ fun Main(navController: NavController)  {
 //            )
 //            Text("Выбрано", fontSize = 28.sp, modifier = Modifier.padding(4.dp))
 //        }
+        }
     }
-}
+//}
 
 @Composable
 fun Library() {
@@ -195,8 +245,10 @@ fun Library() {
     val context = LocalContext.current
     val button_color = colorScheme.secondary
     val button_text = colorScheme.tertiary
+    var isLoaded by remember { mutableStateOf(false) }
     val errNameText = stringResource(id = R.string.error_name_not_found)
     val errTopicText = stringResource(id = R.string.error_topic_not_found)
+    val showPB = remember { mutableStateOf(false)}
     val linksList = arrayListOf("https://nsaturnia.ru/kak-pisat-stixi/vvodnaya-lekciya/","https://nsaturnia.ru/kak-pisat-stixi/chto-takoe-ritm/",
         "https://nsaturnia.ru/kak-pisat-stixi/dvuslozhnye-razmery/", "https://nsaturnia.ru/kak-pisat-stixi/chto-takoe-rifma/", "https://nsaturnia.ru/kak-pisat-stixi/vidy-rifmy/",
         "https://nsaturnia.ru/kak-pisat-stixi/sistemy-rifmovki/", "https://nsaturnia.ru/kak-pisat-stixi/vidy-sravnenij/")
@@ -206,17 +258,19 @@ fun Library() {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally) {
         Box {
-        Text(
-            text = stringResource(id = R.string.press_the_button),
-            modifier = Modifier
-                .padding(Dimens.paddingMedium)
-                .align(Alignment.Center)
-                .fillMaxWidth(),
-            color = button_text,
-            textAlign = TextAlign.Center,
-            fontFamily = CustomFontFamily,
-            fontSize = 22.sp,
-        )
+            if (!isLoaded) {
+                Text(
+                    text = stringResource(id = R.string.press_the_button),
+                    modifier = Modifier
+                        .padding(Dimens.paddingMedium)
+                        .align(Alignment.Center)
+                        .fillMaxWidth(),
+                    color = button_text,
+                    textAlign = TextAlign.Center,
+                    fontFamily = CustomFontFamily,
+                    fontSize = 22.sp,
+                )
+            }
         }
             Text(
                 text = messageTitle.value,
@@ -233,10 +287,10 @@ fun Library() {
                 color = button_text
             )
         Box (modifier = Modifier.fillMaxWidth()) {
-            var isLoaded by remember { mutableStateOf(false) }
             if (!isLoaded) {
                 ExtendedFloatingActionButton(
                     onClick = {
+                        showPB.value = true
                         val gfgThread = Thread {
                             try {
                                 val document =
@@ -247,6 +301,8 @@ fun Library() {
                                     document.getElementsByClass("article-container post").text()
                                 messageTitle.value = titletext
                                 message.value = articleText
+                                isLoaded = true
+                                showPB.value = false
 
                             } catch (e: Exception) {
                                 messageTitle.value = errNameText
@@ -254,7 +310,6 @@ fun Library() {
                             }
                         }
                         gfgThread.start()
-                        isLoaded = true
                     },
                     shape = CircleShape,
                     containerColor = colorScheme.secondary,
@@ -267,6 +322,8 @@ fun Library() {
                     )
                     Text(text = "Загрузить статью")
                 }
+
+
 //            Button(onClick = {
 //                coroutineScope.launch {
 //                    scrollState.scrollTo(0)
@@ -284,10 +341,14 @@ fun Library() {
 //            }
             }
         }
+        if (showPB.value){
+            CircularProgressIndicator()
+        }
     }
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Rhyme()
 {
@@ -316,7 +377,7 @@ fun Rhyme()
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListLib()
+fun ListLib(preferences: SharedPreferences)
 {
     val topics_amount = remember{ mutableIntStateOf(0) }
     val topicsList = remember { mutableStateOf(listOf(
@@ -328,17 +389,21 @@ fun ListLib()
         "Чем отличается стих от прозы?",
         "Стихопроза: признаки и разновидности"
     )) }
-    var searchText = rememberSaveable { mutableStateOf("") }
+    val searchText = rememberSaveable { mutableStateOf("") }
     val filteredTopicsList = rememberSaveable { mutableStateOf(topicsList.value) }
+    var localItems = mutableSetOf<String>()
+    var items = preferences.getStringSet(SEARCH_SET_KEY, mutableSetOf())
     val trailingIconView = @Composable {
         IconButton(onClick = {
             searchText.value = ""
             filteredTopicsList.value = topicsList.value
+            preferences.edit().clear().apply()
         }) {
             Icon(Icons.Filled.Close, contentDescription = "Close Button", modifier = Modifier.size(25.dp), tint = Color.Black)
         }
     }
-//    var closeEnabled = false
+    var expanded = remember{ mutableStateOf(false)}
+    //    var closeEnabled = false
     topics_amount.intValue = 1
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -346,28 +411,50 @@ fun ListLib()
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row {
-            OutlinedTextField(
-                value = searchText.value,
-                onValueChange = { searchText.value = it },
-                modifier = Modifier.padding(16.dp),
-                placeholder = { Text("Поиск...", color = Color.Black, fontFamily = CustomFontFamily) },
-                shape = RoundedCornerShape(16.dp),
-                singleLine = true,
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        if (searchText.value.isEmpty()) {
-                            filteredTopicsList.value = topicsList.value
+                OutlinedTextField(
+                    value = searchText.value,
+                    onValueChange = {
+                        searchText.value = it
+                        //expanded.value = false
+                    },
+                    modifier = Modifier.padding(16.dp),
+                    placeholder = {
+                        Text(
+                            "Поиск...",
+                            modifier = Modifier.clickable { expanded.value = true },
+                            color = Color.Black,
+                            fontFamily = CustomFontFamily
+                        )
+                    },
+                    shape = RoundedCornerShape(16.dp),
+                    singleLine = true,
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            if (searchText.value.isEmpty()) {
+                                filteredTopicsList.value = topicsList.value
 //                            closeEnabled = false
-                        } else {
-                            filteredTopicsList.value = topicsList.value.filter {
-                                it.contains(searchText.value, true)
+                            } else {
+                                filteredTopicsList.value = topicsList.value.filter {
+                                    it.contains(searchText.value, true)
+                                }
+                                localItems.add(searchText.value)
+                                preferences.edit().putStringSet(SEARCH_SET_KEY, localItems).apply()
                             }
-//                            closeEnabled = true
                         }
-                    }
-                ),
-                trailingIcon = if (!searchText.value.isEmpty()) trailingIconView else null
-            )
+                    ),
+                    trailingIcon = if (!searchText.value.isEmpty()) trailingIconView else null
+                )
+
+            DropdownMenu(expanded = expanded.value, onDismissRequest = { expanded.value = false }) {
+                items?.forEach { item ->
+                    DropdownMenuItem(text = {
+                        Text(text = item)
+                    }, onClick = {
+                        searchText.value = item // Обработка выбора элемента
+                        expanded.value = false // Скрытие меню
+                    })
+                }
+            }
         }
 //        Text(text = "Количество статей: ${topics_amount.intValue}", color = Color.Black, fontFamily = CustomFontFamily)
 //        Spacer(modifier = Modifier.height(16.dp))

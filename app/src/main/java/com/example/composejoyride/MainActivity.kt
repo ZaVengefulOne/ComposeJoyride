@@ -1,5 +1,7 @@
 package com.example.composejoyride
 
+import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,6 +30,8 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.navigation.compose.rememberNavController
+import com.example.composejoyride.Utils.PREFERENCES
+
 import com.example.composejoyride.screens.Account
 import com.example.composejoyride.screens.ListLib
 import com.example.composejoyride.screens.Notes
@@ -35,28 +39,32 @@ import com.example.composejoyride.screens.Settings
 import com.example.composejoyride.ui.theme.ComposeJoyrideTheme
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ComposeJoyrideTheme {
-                val navController = rememberNavController()
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = colorScheme.background
-                ) {
-                    // Scaffold Component
-                    Scaffold(
-                        // Bottom navigation
-                        bottomBar = {
-                            BottomNavigationBar(navController = navController)
-                        }, content = { padding ->
-                            // Navhost: where screens are placed
-                            NavHostContainer(navController = navController, padding = padding)
-                        }
-                    )
+            val sharedPrefs = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
+                ComposeJoyrideTheme() {
+                    val navController = rememberNavController()
+                    // A surface container using the 'background' color from the theme
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = colorScheme.background
+                    ) {
+                        // Scaffold Component
+                        Scaffold(
+                            // Bottom navigation
+                            bottomBar = {
+                                BottomNavigationBar(navController = navController)
+                            }, content = { padding ->
+                                // Navhost: where screens are placed
+                                NavHostContainer(navController = navController, padding = padding, preferences = sharedPrefs)
+                            }
+                        )
+                    }
                 }
-            }
+
+
         }
     }
 }
@@ -65,6 +73,7 @@ class MainActivity : ComponentActivity() {
 fun NavHostContainer(
     navController: NavHostController,
     padding: PaddingValues,
+    preferences: SharedPreferences,
 ) {
 
     NavHost(
@@ -81,7 +90,7 @@ fun NavHostContainer(
 
             // route : Home
             composable("main") {
-                Main(navController = navController)
+                Main(navController = navController, preferences = preferences)
             }
 
             // route : search
@@ -95,7 +104,7 @@ fun NavHostContainer(
             }
 
             composable("list") {
-                ListLib()
+                ListLib(preferences = preferences)
             }
             composable("settings") {
                 Settings()

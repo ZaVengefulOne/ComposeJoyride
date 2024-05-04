@@ -8,6 +8,10 @@ import androidx.compose.material.icons.filled.Star
 import com.example.composejoyride.R
 import com.example.composejoyride.models.BottomNavItem
 
+const val PREFERENCES = "vengeful_preferences"
+const val EDIT_KEY = "dark_theme"
+const val SEARCH_SET_KEY = "search_key"
+
 object Constants {
     val BottomNavItems = listOf(
         BottomNavItem(
