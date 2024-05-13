@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,6 +26,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -76,6 +78,7 @@ import com.example.composejoyride.ui.theme.Dimens
 import com.example.composejoyride.ui.theme.LocalTheme
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
+import org.w3c.dom.Element
 
 val CustomFontFamily = FontFamily(Font(R.font.tippytoesbold))
 
@@ -354,6 +357,9 @@ fun Rhyme()
 {
     
     val message = remember{ mutableStateOf("") }
+    val result1 = remember { mutableStateOf("")}
+    val result2 = remember { mutableStateOf("")}
+    var resultArray = remember { mutableListOf("")}
     Column (modifier = Modifier
         .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
@@ -363,17 +369,57 @@ fun Rhyme()
             .padding(Dimens.paddingMedium)
             .align(Alignment.CenterHorizontally)
             .fillMaxWidth(), color = Color.White, fontFamily = CustomFontFamily, fontSize = 28.sp)
-        TextField(value = message.value, modifier = Modifier.fillMaxWidth(), onValueChange = { newText -> message.value = newText}, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri))
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(message.value)
-                .crossfade(true)
-                .build(),
-            placeholder = painterResource(R.drawable.baseline_done_24),
-            contentDescription = "",
-        )
+            TextField(
+                value = message.value,
+                onValueChange = { newText -> message.value = newText },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri)
+            )
+//        AsyncImage(
+//            model = ImageRequest.Builder(LocalContext.current)
+//                .data(message.value)
+//                .crossfade(true)
+//                .build(),
+//            placeholder = painterResource(R.drawable.baseline_done_24),
+//            contentDescription = "",
+//        )
+            Button(
+                onClick = {
+                    val gfgThread = Thread {
+                        try {
+                            var document =
+                                Jsoup.connect("https://rifme.net/r/${message.value}/0")
+                                    .get()
+                            var rhyme = document.getElementsByClass("riLi")
+                            result1.value = rhyme.text()
+                            resultArray = rhyme.text().split(" ").toMutableList()
+//                            document = Jsoup.connect("https://rifme.net/r/${message.value}/1")
+//                                .get()
+//                            rhyme = document.getElementsByClass("rifmypodryad").text()
+//                            result2.value = rhyme
+                        } catch (e: Exception) {
+                            result1.value = "Ошибка!"
+                        }
+                    }
+                    gfgThread.start()
+                },
+                colors = ButtonDefaults.buttonColors(colorScheme.secondary),
+                shape = RoundedCornerShape(12.dp),
+            ) {
+                Text(text = "Подобрать рифму", color = Color.White, fontFamily = CustomFontFamily, fontSize = 28.sp)
+            }
+//        Text(text = "Рифмы к слову ${message.value}: \n ${result1.value}", color = Color.White, fontFamily = CustomFontFamily)
+//LazyColumn {
+//    modifier = Modifier.fillMaxSize(),
+//    verticalArrangement = Arrangement.Top,
+//    content = {
+//        items(filteredTopicsList.value) { topicItem ->
+//            TopicItem(topicItem)
+//        }
+//    }
+//}
     }
-}
+    }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
