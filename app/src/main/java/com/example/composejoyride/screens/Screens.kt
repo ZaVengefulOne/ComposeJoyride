@@ -1,6 +1,7 @@
 package com.example.composejoyride.screens
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -76,9 +77,12 @@ import com.example.composejoyride.Utils.SEARCH_SET_KEY
 import com.example.composejoyride.ui.theme.Dark
 import com.example.composejoyride.ui.theme.Dimens
 import com.example.composejoyride.ui.theme.LocalTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import org.w3c.dom.Element
+import kotlin.coroutines.EmptyCoroutineContext
 
 val CustomFontFamily = FontFamily(Font(R.font.tippytoesbold))
 
@@ -325,23 +329,6 @@ fun Library() {
                     )
                     Text(text = "Загрузить статью")
                 }
-
-
-//            Button(onClick = {
-//                coroutineScope.launch {
-//                    scrollState.scrollTo(0)
-//                }
-//                             }, modifier = Modifier
-//                .align(Alignment.BottomStart)
-//                .padding(horizontal = 50.dp),
-//                colors = ButtonDefaults.buttonColors(button_color),
-//                shape = CircleShape,)
-//            {
-//                Icon(
-//                    painter = painterResource(R.drawable.baseline_keyboard_arrow_up_24),
-//                    contentDescription = "Article Scroll Button"
-//                )
-//            }
             }
         }
         if (showPB.value){
@@ -358,30 +345,17 @@ fun Rhyme()
     
     val message = remember{ mutableStateOf("") }
     val result1 = remember { mutableStateOf("")}
-    val result2 = remember { mutableStateOf("")}
-    var resultArray = remember { mutableListOf("")}
+    //val result2 = remember { mutableStateOf("")}
+    var resultArray = remember { mutableStateOf(listOf<String>()) }
     Column (modifier = Modifier
         .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = stringResource(id = R.string.enter_rhyming_word), modifier = Modifier
-            .fillMaxWidth()
-            .padding(Dimens.paddingMedium)
-            .align(Alignment.CenterHorizontally)
-            .fillMaxWidth(), color = Color.White, fontFamily = CustomFontFamily, fontSize = 28.sp)
             TextField(
                 value = message.value,
                 onValueChange = { newText -> message.value = newText },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri)
             )
-//        AsyncImage(
-//            model = ImageRequest.Builder(LocalContext.current)
-//                .data(message.value)
-//                .crossfade(true)
-//                .build(),
-//            placeholder = painterResource(R.drawable.baseline_done_24),
-//            contentDescription = "",
-//        )
             Button(
                 onClick = {
                     val gfgThread = Thread {
@@ -390,12 +364,9 @@ fun Rhyme()
                                 Jsoup.connect("https://rifme.net/r/${message.value}/0")
                                     .get()
                             var rhyme = document.getElementsByClass("riLi")
-                            result1.value = rhyme.text()
-                            resultArray = rhyme.text().split(" ").toMutableList()
-//                            document = Jsoup.connect("https://rifme.net/r/${message.value}/1")
-//                                .get()
-//                            rhyme = document.getElementsByClass("rifmypodryad").text()
-//                            result2.value = rhyme
+                                //result1.value = rhyme.text()
+                            resultArray.value = rhyme.map { it.text().toString() }
+                            Log.d("VNIMANIE", resultArray.value.toString())
                         } catch (e: Exception) {
                             result1.value = "Ошибка!"
                         }
@@ -407,16 +378,26 @@ fun Rhyme()
             ) {
                 Text(text = "Подобрать рифму", color = Color.White, fontFamily = CustomFontFamily, fontSize = 28.sp)
             }
-//        Text(text = "Рифмы к слову ${message.value}: \n ${result1.value}", color = Color.White, fontFamily = CustomFontFamily)
-//LazyColumn {
-//    modifier = Modifier.fillMaxSize(),
-//    verticalArrangement = Arrangement.Top,
-//    content = {
-//        items(filteredTopicsList.value) { topicItem ->
-//            TopicItem(topicItem)
-//        }
-//    }
-//}
+        Text(text = "Найдено слов: ${resultArray.value.size}", modifier = Modifier
+            .fillMaxWidth()
+            .padding(Dimens.paddingMedium)
+            .align(Alignment.CenterHorizontally)
+            .fillMaxWidth(), color = Color.White, fontFamily = CustomFontFamily, fontSize = 28.sp)
+        Log.d("VNIMANIE", resultArray.value.toString())
+        //Text(text = "Рифмы к слову ${message.value}: \n ${resultArray.value}", color = Color.White, fontFamily = CustomFontFamily)
+        LazyColumn (
+            content = {
+                items(resultArray.value) { rhymeItem ->
+                    Card(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp), elevation = CardDefaults.cardElevation(
+                        defaultElevation = 12.dp
+                    ),  border = BorderStroke(1.dp, Color.Black)) {
+                        Text(text = rhymeItem, color = Color.White, fontFamily = CustomFontFamily, fontSize = 28.sp, modifier = Modifier.align(Alignment.CenterHorizontally))
+                    }
+                }
+            }, modifier = Modifier.fillMaxWidth()
+        )
     }
     }
 
@@ -443,7 +424,7 @@ fun ListLib(preferences: SharedPreferences)
         IconButton(onClick = {
             searchText.value = ""
             filteredTopicsList.value = topicsList.value
-            preferences.edit().clear().apply()
+            //preferences.edit().clear().apply()
         }) {
             Icon(Icons.Filled.Close, contentDescription = "Close Button", modifier = Modifier.size(25.dp), tint = Color.Black)
         }
@@ -483,8 +464,7 @@ fun ListLib(preferences: SharedPreferences)
                                 filteredTopicsList.value = topicsList.value.filter {
                                     it.contains(searchText.value, true)
                                 }
-                                localItems.add(searchText.value)
-                                preferences.edit().putStringSet(SEARCH_SET_KEY, localItems).apply()
+                                saveSearchHistory(searchText.value, preferences)
                             }
                         }
                     ),
@@ -492,7 +472,7 @@ fun ListLib(preferences: SharedPreferences)
                 )
 
             DropdownMenu(expanded = expanded.value, onDismissRequest = { expanded.value = false }) {
-                items?.forEach { item ->
+                localItems?.forEach { item ->
                     DropdownMenuItem(text = {
                         Text(text = item)
                     }, onClick = {
@@ -517,6 +497,25 @@ fun ListLib(preferences: SharedPreferences)
     }
 }
 
+private fun saveSearchHistory(query: String, sharedPreferences: SharedPreferences) {
+    val historySet =
+        sharedPreferences.getStringSet("search_key", mutableSetOf())?.toMutableSet()
+            ?: mutableSetOf()
+    if (historySet.contains(query)) {
+        historySet.remove(query)
+    }
+    historySet.add(query)
+    if (historySet.size > 10) {
+        val iterator = historySet.iterator()
+        for (i in 1..historySet.size - 10) {
+            iterator.next()
+            iterator.remove()
+        }
+    }
+    sharedPreferences.edit {
+        putStringSet("search_history", historySet)
+    }
+}
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
