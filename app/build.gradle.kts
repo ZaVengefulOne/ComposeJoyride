@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -40,7 +41,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
     packaging {
         resources {
@@ -48,8 +49,24 @@ android {
         }
     }
 }
+allprojects {
+    configurations.all {
+        resolutionStrategy {
+            force( "org.xerial:sqlite-jdbc:3.34.0")
+        }
+    }
+}
+
 
 dependencies {
+    //room
+    val room_version = "2.6.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.5")
+
+
     implementation("androidx.navigation:navigation-compose:2.7.4")
     implementation("androidx.compose.material:material:1.5.4")
     implementation("io.coil-kt:coil-compose:2.4.0")

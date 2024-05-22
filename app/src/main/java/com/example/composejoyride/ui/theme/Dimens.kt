@@ -12,8 +12,5 @@ object Dimens {
     val textSizeMedium = 16.sp
     val textSizeLarge = 20.sp
 
-    // Добавьте свои дополнительные размеры и отступы здесь
 
-    // Пример использования:
-    // val myPadding = Dimens.paddingMedium
 }

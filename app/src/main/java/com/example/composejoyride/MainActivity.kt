@@ -21,21 +21,24 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.composejoyride.screens.Library
-import com.example.composejoyride.screens.Main
-import com.example.composejoyride.screens.Rhyme
-import com.example.composejoyride.Utils.Constants
+import com.example.composejoyride.ui.screens.Main
+import com.example.composejoyride.ui.screens.Rhyme
+import com.example.composejoyride.data.utils.Constants
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BottomNavigation
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BottomNavigationItem
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.navigation.compose.rememberNavController
-import com.example.composejoyride.Utils.PREFERENCES
+import com.example.composejoyride.data.utils.PREFERENCES
 
-import com.example.composejoyride.screens.Account
-import com.example.composejoyride.screens.ListLib
-import com.example.composejoyride.screens.Notes
-import com.example.composejoyride.screens.Settings
+import com.example.composejoyride.ui.screens.AOTD
+import com.example.composejoyride.ui.screens.ListLib
+import com.example.composejoyride.ui.screens.Notes
+import com.example.composejoyride.ui.screens.Settings
+import com.example.composejoyride.ui.screens.Topic
 import com.example.composejoyride.ui.theme.ComposeJoyrideTheme
 
 class MainActivity : ComponentActivity() {
@@ -44,7 +47,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val sharedPrefs = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
-                ComposeJoyrideTheme() {
+                ComposeJoyrideTheme {
                     val navController = rememberNavController()
                     // A surface container using the 'background' color from the theme
                     Surface(
@@ -94,8 +97,8 @@ fun NavHostContainer(
             }
 
             // route : search
-            composable("library") {
-                Library()
+            composable("aotd") {
+                AOTD()
             }
 
             // route : profile
@@ -104,16 +107,16 @@ fun NavHostContainer(
             }
 
             composable("list") {
-                ListLib(preferences = preferences)
+                ListLib(navController = navController,preferences = preferences)
             }
             composable("settings") {
-                Settings()
-            }
-            composable("account") {
-                Account()
+                Settings(preferences)
             }
             composable("notes") {
                 Notes()
+            }
+            composable("topic"){
+                Topic(navController = navController, preferences = preferences)
             }
         })
 
