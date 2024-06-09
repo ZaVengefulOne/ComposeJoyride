@@ -9,16 +9,16 @@ import androidx.compose.ui.graphics.Color
 
 var LocalTheme = mutableStateOf(false)
 private val DarkColorScheme = darkColorScheme(
-    primary = Color.Black,
+    primary = Dark,
     secondary = DarkCyan,
-    tertiary = Color.Black,
+    tertiary = White,
     background = DarkerCyan
 )
 private val LightColorScheme = lightColorScheme(
-    primary = Color.LightGray,
-    secondary = Cyan,
-    tertiary = Color.Black,
-    background = DarkCyan
+    primary = SlavaPrimary,
+    secondary = SlavaSecondary,
+    tertiary = SlavaTetrtiary,
+    background = SlavaBackground
 )
 
 @Composable

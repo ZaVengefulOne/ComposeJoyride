@@ -1,18 +1,23 @@
 package com.example.composejoyride.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.CustomFontFamily
@@ -94,37 +100,32 @@ fun AOTD() {
         )
         Box (modifier = Modifier.fillMaxWidth()) {
             if (!isLoaded) {
-                ExtendedFloatingActionButton(
-                    onClick = {
-                        showPB.value = true
-                        val gfgThread = Thread {
-                            try {
-                                val document =
-                                    Jsoup.connect(topicsLinks.value.random())
-                                        .get()
-                                val titletext = document.title()
-                                messageTitle.value = titletext
-                                message.value = document.select("article").text()
-                                isLoaded = true
-                                showPB.value = false
+                OutlinedIconButton(onClick = {
+                    showPB.value = true
+                    val gfgThread = Thread {
+                        try {
+                            val document =
+                                Jsoup.connect(topicsLinks.value.random())
+                                    .get()
+                            val titletext = document.title()
+                            messageTitle.value = titletext
+                            message.value = document.select("article").text()
+                            isLoaded = true
+                            showPB.value = false
 
-                            } catch (e: Exception) {
-                                messageTitle.value = errNameText
-                                message.value = errTopicText
-                            }
+                        } catch (e: Exception) {
+                            messageTitle.value = errNameText
+                            message.value = errTopicText
                         }
-                        gfgThread.start()
-                    },
+                    }
+                    gfgThread.start()},
+                    modifier= Modifier
+                        .size(100.dp)
+                        .padding(10.dp).align(Alignment.Center),  //avoid the oval shape
                     shape = CircleShape,
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
+                    border= BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary),
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_download_24),
-                        contentDescription = "Article Download Button"
-                    )
-                    Text(text = "Загрузить статью")
+                    androidx.compose.material.Icon(painter = painterResource(id = R.drawable.baseline_download_24), contentDescription = "content description", tint = MaterialTheme.colorScheme.tertiary)
                 }
             }
         }

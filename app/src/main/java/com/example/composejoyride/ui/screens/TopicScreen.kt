@@ -73,7 +73,7 @@ fun Topic(navController: NavController, preferences: SharedPreferences){
             modifier = Modifier
                 .fillMaxWidth()
         ){
-            Text(text = "Назад", color = Color.White,
+            Text(text = "Назад", color = MaterialTheme.colorScheme.tertiary,
                 fontFamily = CustomFontFamily)
         }
     }

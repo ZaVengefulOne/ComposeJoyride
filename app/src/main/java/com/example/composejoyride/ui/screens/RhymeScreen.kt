@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
@@ -24,6 +25,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -34,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,13 +57,11 @@ fun Rhyme()
         .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally) {
-        TextField(
+        OutlinedTextField(
             value = message.value,
             onValueChange = { newText -> message.value = newText },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri)
-        )
-        Button(
-            onClick = {
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri, imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = {
                 val gfgThread = Thread {
                     try {
                         val document =
@@ -74,17 +75,22 @@ fun Rhyme()
                     }
                 }
                 gfgThread.start()
-            },
-            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
-            shape = RoundedCornerShape(12.dp),
-        ) {
-            Text(text = "Подобрать рифму", color = Color.White, fontFamily = CustomFontFamily, fontSize = 28.sp)
-        }
+            }), singleLine = true
+        )
+//        Button(
+//            onClick = {
+//
+//            },
+//            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
+//            shape = RoundedCornerShape(12.dp),
+//        ) {
+//            Text(text = "Подобрать рифму", color = MaterialTheme.colorScheme.tertiary, fontFamily = CustomFontFamily, fontSize = 28.sp)
+//        }
         Text(text = "Найдено слов: ${resultArray.value.size}", modifier = Modifier
             .fillMaxWidth()
             .padding(Dimens.paddingMedium)
             .align(Alignment.CenterHorizontally)
-            .fillMaxWidth(), color = Color.White, fontFamily = CustomFontFamily, fontSize = 28.sp)
+            .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary, fontFamily = CustomFontFamily, fontSize = 28.sp)
         Log.d("VNIMANIE", resultArray.value.toString())
         LazyColumn (
             content = {
@@ -93,11 +99,11 @@ fun Rhyme()
                         .fillMaxWidth()
                         .padding(4.dp), elevation = CardDefaults.cardElevation(
                         defaultElevation = 12.dp
-                    ),  border = BorderStroke(1.dp, Color.Black)
+                    ),  border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                     ) {
                         Row {
-                            Text(text = rhymeItem, color = Color.White, fontFamily = CustomFontFamily, fontSize = 28.sp, modifier = Modifier.align(
-                                Alignment.CenterVertically).weight(0.9f))
+                            Text(text = rhymeItem, color = MaterialTheme.colorScheme.tertiary, fontFamily = CustomFontFamily, fontSize = 28.sp, modifier = Modifier.align(
+                                Alignment.CenterVertically).weight(0.9f).padding(start = 10.dp))
                             IconButton(onClick = {
                                 val clipboardManager =
                                     context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager

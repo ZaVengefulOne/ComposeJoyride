@@ -31,6 +31,7 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Scaffold
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
@@ -39,13 +40,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.composejoyride.data.utils.PREFERENCES
 
 import com.example.composejoyride.ui.screens.AOTD
-import com.example.composejoyride.ui.screens.ListLib
-import com.example.composejoyride.ui.screens.Notes
+import com.example.composejoyride.ui.screens.LibraryViewModelFactory
+import com.example.composejoyride.ui.screens.Library
 import com.example.composejoyride.ui.screens.NotesSetup
 import com.example.composejoyride.ui.screens.NotesViewModelFactory
 import com.example.composejoyride.ui.screens.Settings
 import com.example.composejoyride.ui.screens.Topic
 import com.example.composejoyride.ui.theme.ComposeJoyrideTheme
+import com.example.composejoyride.ui.viewModels.LibraryViewModel
 import com.example.composejoyride.ui.viewModels.NotesViewModel
 
 class MainActivity : ComponentActivity() {
@@ -77,6 +79,15 @@ class MainActivity : ComponentActivity() {
                                                     as Application
                                         )
                                     )
+                                },libraryViewModel = LocalViewModelStoreOwner.current?.let {
+                                    viewModel(
+                                        it,
+                                        "LibraryViewModel",
+                                        LibraryViewModelFactory(
+                                            LocalContext.current.applicationContext
+                                                    as Application
+                                        )
+                                    )
                                 })
                             }
                         )
@@ -93,7 +104,8 @@ fun NavHostContainer(
     navController: NavHostController,
     padding: PaddingValues,
     preferences: SharedPreferences,
-    notesViewModel: NotesViewModel?
+    notesViewModel: NotesViewModel?,
+    libraryViewModel: LibraryViewModel?
 ) {
 
     NavHost(
@@ -124,7 +136,9 @@ fun NavHostContainer(
             }
 
             composable("list") {
-                ListLib(navController = navController,preferences = preferences)
+                if (libraryViewModel != null) {
+                    Library(navController = navController,preferences = preferences, viewModel = libraryViewModel)
+                }
             }
             composable("settings") {
                 Settings(preferences)
@@ -148,7 +162,7 @@ fun BottomNavigationBar(navController: NavHostController) {
     BottomNavigation(
 
         // set background color
-        backgroundColor = Color(0xFF028CA6)) {
+        backgroundColor = MaterialTheme.colorScheme.secondary) {
 
         // observe the backstack
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -178,9 +192,9 @@ fun BottomNavigationBar(navController: NavHostController) {
 
                 // label
                 label = {
-                    Text(text = navItem.label, fontSize = 12.sp)
+                    Text(text = navItem.label, fontSize = 10.sp)
                 },
-                alwaysShowLabel = false
+                alwaysShowLabel = true
             )
         }
     }

@@ -1,4 +1,4 @@
-package com.example.composejoyride.data.models
+package com.example.composejoyride.data.utils
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

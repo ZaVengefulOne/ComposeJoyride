@@ -8,10 +8,10 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.composejoyride.R
-import com.example.composejoyride.data.models.BottomNavItem
 
 const val PREFERENCES = "vengeful_preferences"
 const val EDIT_KEY = "dark_theme"
+const val SEARCH_KEY = "search_key"
 val CustomFontFamily = FontFamily(Font(R.font.tippytoesbold))
 
 object Constants {
@@ -22,17 +22,17 @@ object Constants {
             route = "main"
         ),
         BottomNavItem(
-            label = "Статья дня",
+            label = "Статья",
             icon = Icons.AutoMirrored.Filled.List,
             route = "aotd"
         ),
         BottomNavItem(
-            label = "Генератор рифм",
+            label = "Генератор",
             icon = Icons.Filled.Star,
             route = "rhyme"
         ),
         BottomNavItem(
-            label = "Список статей",
+            label = "Библиотека",
             icon = Icons.Filled.Menu,
             route = "list"
         )

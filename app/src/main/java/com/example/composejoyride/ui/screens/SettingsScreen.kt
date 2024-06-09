@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.composejoyride.R
+import com.example.composejoyride.data.utils.CustomFontFamily
 import com.example.composejoyride.data.utils.EDIT_KEY
 import com.example.composejoyride.ui.theme.Dimens
 import com.example.composejoyride.ui.theme.LocalTheme
@@ -42,35 +43,37 @@ fun Settings(preferences: SharedPreferences)
     Column(modifier = Modifier.fillMaxSize()) {
         if(!isInfoOpen.value) {
             Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Text(text = "Переключатель темы: ")
+                Text(text = "Переключатель темы: ", fontFamily = CustomFontFamily, color = MaterialTheme.colorScheme.tertiary)
                 IconButton(onClick = {
                     LocalTheme.value = !LocalTheme.value
                     preferences.edit().putBoolean(EDIT_KEY, LocalTheme.value).apply()
                 }) {
                     Icon(
                         painter = painterResource(if (!LocalTheme.value) R.drawable.baseline_dark_mode_24 else R.drawable.baseline_light_mode_24),
-                        contentDescription = "theme switcher"
+                        contentDescription = "theme switcher",
+                        tint = MaterialTheme.colorScheme.tertiary
                     )
                 }
             }
             Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Text(text = "О приложении: ")
+                Text(text = "О приложении: ", fontFamily = CustomFontFamily, color = MaterialTheme.colorScheme.tertiary)
                 IconButton(onClick = { isInfoOpen.value = true }) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_info_outline_24),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.tertiary
                     )
                 }
             }
         }
         else{
-            Text(text = stringResource(id = R.string.aboutApp), textAlign = TextAlign.Center, modifier = Modifier.padding(
-                Dimens.paddingMedium))
+            Text(text = stringResource(id = R.string.aboutApp), textAlign = TextAlign.Center, fontFamily = CustomFontFamily, modifier = Modifier.padding(
+                Dimens.paddingMedium), color = MaterialTheme.colorScheme.tertiary)
             Button(onClick = { isInfoOpen.value = false }, colors = buttonColor,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()) {
-                Text(text = "Назад")
+                Text(text = "Назад", fontFamily = CustomFontFamily, color = MaterialTheme.colorScheme.tertiary)
             }
         }
     }
