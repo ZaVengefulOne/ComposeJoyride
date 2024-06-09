@@ -60,9 +60,9 @@ fun Library(navController: NavController, preferences: SharedPreferences, viewMo
 {
     val buttonColor = MaterialTheme.colorScheme.secondary
     val buttonText = MaterialTheme.colorScheme.tertiary
-    val topicsList = remember { mutableStateOf(listOf<String>()) }
-    val topicsLinks = remember { mutableStateOf(listOf<String>())}
-    val topics = remember { mutableStateOf( topicsList.value.zip(topicsLinks.value) {topic, link -> listOf(topic, link)})}
+    val topicsList = rememberSaveable { mutableStateOf(listOf<String>()) }
+    val topicsLinks = rememberSaveable { mutableStateOf(listOf<String>())}
+    val topics = rememberSaveable { mutableStateOf( topicsList.value.zip(topicsLinks.value) {topic, link -> listOf(topic, link)})}
     val gfgThread = Thread {
         try {
             val document =
@@ -82,7 +82,7 @@ fun Library(navController: NavController, preferences: SharedPreferences, viewMo
     val filteredTopicsList = rememberSaveable { mutableStateOf(topics.value) }
     val localItems = rememberSaveable {mutableStateOf(preferences.getStringSet(SEARCH_KEY, mutableSetOf())?.toMutableSet()
         ?: mutableSetOf())}
-    val expanded = remember{ mutableStateOf(false) }
+    val expanded = rememberSaveable{ mutableStateOf(false) }
     val trailingIconView = @Composable { if (searchText.value.isNotEmpty()){
         IconButton(onClick = {
             searchText.value = ""

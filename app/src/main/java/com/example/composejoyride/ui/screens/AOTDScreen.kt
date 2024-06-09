@@ -46,11 +46,11 @@ fun AOTD() {
 //    val context = LocalContext.current
 //    val buttonColor = MaterialTheme.colorScheme.secondary
     val buttonText = MaterialTheme.colorScheme.tertiary
-    var isLoaded by remember { mutableStateOf(false) }
+    var isLoaded by rememberSaveable { mutableStateOf(false) }
     val errNameText = stringResource(id = R.string.error_name_not_found)
     val errTopicText = stringResource(id = R.string.error_topic_not_found)
-    val showPB = remember { mutableStateOf(false) }
-    val topicsLinks = remember { mutableStateOf(listOf<String>())}
+    val showPB = rememberSaveable { mutableStateOf(false) }
+    val topicsLinks = rememberSaveable { mutableStateOf(listOf<String>())}
     val getLinksThread = Thread {
         try {
             val document =

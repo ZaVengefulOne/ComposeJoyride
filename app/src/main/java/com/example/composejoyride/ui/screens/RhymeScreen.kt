@@ -31,6 +31,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composejoyride.R
@@ -49,10 +51,10 @@ import org.jsoup.Jsoup
 fun Rhyme()
 {
     val context = LocalContext.current
-    val message = remember{ mutableStateOf("") }
-    val result1 = remember { mutableStateOf("") }
+    val message = rememberSaveable{ mutableStateOf("") }
+    val result1 = rememberSaveable { mutableStateOf("") }
     //val result2 = remember { mutableStateOf("")}
-    val resultArray = remember { mutableStateOf(listOf<String>()) }
+    val resultArray = rememberSaveable { mutableStateOf(listOf<String>()) }
     Column (modifier = Modifier
         .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
@@ -90,7 +92,7 @@ fun Rhyme()
             .fillMaxWidth()
             .padding(Dimens.paddingMedium)
             .align(Alignment.CenterHorizontally)
-            .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary, fontFamily = CustomFontFamily, fontSize = 28.sp)
+            .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary, fontFamily = CustomFontFamily, fontSize = 28.sp, textAlign = TextAlign.Center)
         Log.d("VNIMANIE", resultArray.value.toString())
         LazyColumn (
             content = {

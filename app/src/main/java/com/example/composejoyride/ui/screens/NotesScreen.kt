@@ -45,6 +45,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,13 +74,13 @@ fun NotesSetup (viewModel: NotesViewModel){
 @Composable
 fun Notes(allNotes: List<Note>, searchResults: List<Note>, viewModel: NotesViewModel)
 {
-    var noteName by remember { mutableStateOf("")}
-    var noteText by remember { mutableStateOf("") }
-    var selectedNoteId by remember { mutableStateOf(0) }
+    var noteName by rememberSaveable { mutableStateOf("")}
+    var noteText by rememberSaveable { mutableStateOf("") }
+    var selectedNoteId by rememberSaveable { mutableStateOf(0) }
     val onNoteNameChange = { text: String -> noteName = text }
     val onNoteTextChange = { text: String -> noteText = text }
-    var isNoteMenuVisible by remember { mutableStateOf(false)}
-    var openedForEditing by remember { mutableStateOf(false)}
+    var isNoteMenuVisible by rememberSaveable { mutableStateOf(false)}
+    var openedForEditing by rememberSaveable { mutableStateOf(false)}
         Column(modifier = Modifier.fillMaxSize()) {
             if (!isNoteMenuVisible) {
                 LazyVerticalStaggeredGrid(
