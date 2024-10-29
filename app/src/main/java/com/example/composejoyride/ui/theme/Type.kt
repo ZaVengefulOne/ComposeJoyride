@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.sp
 import com.example.composejoyride.R
 
 val ttFamily = FontFamily(
-    Font(R.font.tippytoesbold, FontWeight.Normal),
+    Font(R.font.schist_regular, FontWeight.Normal),
 )
 
 

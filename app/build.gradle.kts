@@ -59,6 +59,7 @@ allprojects {
 
 
 dependencies {
+    implementation("androidx.lifecycle:lifecycle-viewmodel-android:2.8.0")
     //room
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
