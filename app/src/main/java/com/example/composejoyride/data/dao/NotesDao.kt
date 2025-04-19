@@ -1,11 +1,9 @@
 package com.example.composejoyride.data.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import com.example.composejoyride.data.entitites.Note
 
 @Dao
@@ -24,7 +22,7 @@ interface NotesDao {
     fun getItem(name: String): List<Note>
 
     @Query("SELECT * from notes")
-    fun getAllItems(): LiveData<List<Note>>
+    fun getAllItems(): List<Note>
 
     @Query("DELETE FROM notes")
     fun deleteAll()

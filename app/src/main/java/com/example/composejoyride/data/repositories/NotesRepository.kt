@@ -1,53 +1,52 @@
 package com.example.composejoyride.data.repositories
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.composejoyride.data.dao.NotesDao
 import com.example.composejoyride.data.entitites.Note
+import com.example.composejoyride.data.repositories.interfaces.INotesRepository
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class NotesRepository(private val notesDao: NotesDao) {
+class NotesRepository(private val notesDao: NotesDao): INotesRepository {
 
-    val allNotes: LiveData<List<Note>> = notesDao.getAllItems()
-    val searchResults = MutableLiveData<List<Note>>()
+//    override val allNotes: List<Note> = notesDao.getAllItems()
+    override val searchResults = MutableLiveData<List<Note>>()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
-    fun insertNote(newNote: Note){
+
+    override suspend fun getNotes(): List<Note> {
+        return notesDao.getAllItems()
+    }
+
+
+    override suspend fun insertNote(newNote: Note){
         coroutineScope.launch (Dispatchers.IO){
             notesDao.insert(newNote)
         }
     }
 
-    fun updateNote(id: Int, newName: String, newText: String) {
+    override suspend fun updateNote(id: Int, newName: String, newText: String) {
         coroutineScope.launch(Dispatchers.IO) {
             notesDao.update(id, newName, newText)
         }
     }
 
-    fun deleteNote(name: String) {
+    override suspend fun deleteNote(name: String) {
         coroutineScope.launch(Dispatchers.IO) {
             notesDao.delete(name)
         }
     }
 
-    fun findNote(name: String) {
-        coroutineScope.launch(Dispatchers.Main) {
-            searchResults.value = asyncFind(name).await()
-        }
+    override suspend fun findNote(name: String) {
+            searchResults.value = asyncFind(name)
     }
 
-    fun deleteAll(){
-        coroutineScope.launch(Dispatchers.IO) {
+    override suspend fun deleteAll(){
             notesDao.deleteAll()
-        }
     }
 
-    private fun asyncFind(name: String): Deferred<List<Note>?> =
-        coroutineScope.async(Dispatchers.IO) {
-            return@async notesDao.getItem(name)
-        }
+    override suspend fun asyncFind(name: String): List<Note> {
+        return notesDao.getItem(name)
+    }
 }

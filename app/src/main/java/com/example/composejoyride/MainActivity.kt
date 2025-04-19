@@ -1,94 +1,70 @@
 package com.example.composejoyride
 
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
 import android.annotation.SuppressLint
-import android.app.Application
 import android.content.SharedPreferences
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.composejoyride.ui.screens.Main
-import com.example.composejoyride.ui.screens.Rhyme
-import com.example.composejoyride.data.utils.Constants
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BottomNavigation
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BottomNavigationItem
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Scaffold
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.composejoyride.data.utils.Constants
 import com.example.composejoyride.data.utils.PREFERENCES
-
 import com.example.composejoyride.ui.screens.AOTD
-import com.example.composejoyride.ui.screens.LibraryViewModelFactory
 import com.example.composejoyride.ui.screens.Library
-import com.example.composejoyride.ui.screens.NotesSetup
-import com.example.composejoyride.ui.screens.NotesViewModelFactory
+import com.example.composejoyride.ui.screens.Main
+import com.example.composejoyride.ui.screens.Notes
+import com.example.composejoyride.ui.screens.Rhyme
 import com.example.composejoyride.ui.screens.Settings
 import com.example.composejoyride.ui.screens.Topic
 import com.example.composejoyride.ui.theme.ComposeJoyrideTheme
-import com.example.composejoyride.ui.viewModels.LibraryViewModel
-import com.example.composejoyride.ui.viewModels.NotesViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
         setContent {
             val sharedPrefs = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
                 ComposeJoyrideTheme {
                     val navController = rememberNavController()
-                    // A surface container using the 'background' color from the theme
                     Surface(
                         modifier = Modifier.fillMaxSize(),
                         color = colorScheme.background
                     ) {
-                        // Scaffold Component
                         Scaffold(
-                            // Bottom navigation
                             bottomBar = {
                                 BottomNavigationBar(navController = navController)
                             }, content = { padding ->
-                                // Navhost: where screens are placed
-                                NavHostContainer(navController = navController, padding = padding, preferences = sharedPrefs, notesViewModel = LocalViewModelStoreOwner.current?.let {
-                                    viewModel(
-                                        it,
-                                        "NotesViewModel",
-                                        NotesViewModelFactory(
-                                            LocalContext.current.applicationContext
-                                                    as Application
-                                        )
-                                    )
-                                },libraryViewModel = LocalViewModelStoreOwner.current?.let {
-                                    viewModel(
-                                        it,
-                                        "LibraryViewModel",
-                                        LibraryViewModelFactory(
-                                            LocalContext.current.applicationContext
-                                                    as Application
-                                        )
-                                    )
-                                })
+                                NavHostContainer(navController = navController, padding = padding, preferences = sharedPrefs)
                             }
                         )
                     }
@@ -104,8 +80,6 @@ fun NavHostContainer(
     navController: NavHostController,
     padding: PaddingValues,
     preferences: SharedPreferences,
-    notesViewModel: NotesViewModel?,
-    libraryViewModel: LibraryViewModel?
 ) {
 
     NavHost(
@@ -120,33 +94,26 @@ fun NavHostContainer(
 
         builder = {
 
-            // route : Home
             composable("main") {
                 Main(navController = navController, preferences = preferences)
             }
 
-            // route : search
             composable("aotd") {
                 AOTD()
             }
 
-            // route : profile
             composable("rhyme") {
                 Rhyme()
             }
 
             composable("list") {
-                if (libraryViewModel != null) {
-                    Library(navController = navController,preferences = preferences, viewModel = libraryViewModel)
-                }
+                Library(navController = navController, preferences = preferences)
             }
             composable("settings") {
                 Settings(preferences)
             }
             composable("notes") {
-                if (notesViewModel != null) {
-                    NotesSetup(notesViewModel)
-                }
+                Notes()
             }
             composable("topic"){
                 Topic(navController = navController, preferences = preferences)
@@ -161,40 +128,30 @@ fun BottomNavigationBar(navController: NavHostController) {
 
     BottomNavigation(
 
-        // set background color
-        backgroundColor = MaterialTheme.colorScheme.secondary) {
+        backgroundColor = colorScheme.secondary) {
 
-        // observe the backstack
         val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-        // observe current route to change the icon
-        // color,label color when navigated
         val currentRoute = navBackStackEntry?.destination?.route
 
-        // Bottom nav items we declared
         Constants.BottomNavItems.forEach { navItem ->
 
-            // Place the bottom nav items
             BottomNavigationItem(
 
-                // it currentRoute is equal then its selected route
                 selected = currentRoute == navItem.route,
 
-                // navigate on click
                 onClick = {
                     navController.navigate(navItem.route)
                 },
 
-                // Icon of navItem
                 icon = {
                     Icon(imageVector = navItem.icon, contentDescription = navItem.label)
                 },
 
-                // label
                 label = {
                     Text(text = navItem.label, fontSize = 10.sp)
                 },
-                alwaysShowLabel = true
+                alwaysShowLabel = false
             )
         }
     }

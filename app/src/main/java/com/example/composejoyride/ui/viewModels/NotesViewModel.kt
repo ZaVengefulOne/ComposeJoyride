@@ -1,43 +1,63 @@
 package com.example.composejoyride.ui.viewModels
 
-import android.app.Application
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.composejoyride.data.databases.NotesDatabase
+import androidx.lifecycle.viewModelScope
 import com.example.composejoyride.data.entitites.Note
 import com.example.composejoyride.data.repositories.NotesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class NotesViewModel(application: Application) : ViewModel() {
-    val allNotes: LiveData<List<Note>>
-    private val repository : NotesRepository
-    val searchResults: MutableLiveData<List<Note>>
-    init {
-        val noteDb = NotesDatabase.getDatabase(application)
-        val notesDao = noteDb.notesDao()
-        repository = NotesRepository(notesDao)
+@HiltViewModel
+class NotesViewModel @Inject constructor(private val repository: NotesRepository) : ViewModel() {
+    private val _allNotes = MutableStateFlow<List<Note>>(emptyList())
+    val allNotes: StateFlow<List<Note>> get() = _allNotes
 
-        allNotes = repository.allNotes
-        searchResults = repository.searchResults
+    private val _searchResults = MutableStateFlow<List<Note>>(emptyList())
+    val searchResults: StateFlow<List<Note>> get() = _searchResults
+
+
+    fun clearNotes() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAll()
+        }
     }
 
-    fun insertNote(note: Note){
-        repository.insertNote(note)
+    private suspend fun getNotes(): List<Note>{
+            val notes = repository.getNotes()
+        return notes
     }
 
-    fun findNote(name: String){
-        repository.findNote(name)
+    fun loadNotes(){
+        viewModelScope.launch(Dispatchers.IO) {
+            _allNotes.value = getNotes()
+        }
     }
 
-    fun deleteNote(name: String){
-        repository.deleteNote(name)
+    fun insertNote(note: Note) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.insertNote(note)
+        }
     }
 
-    fun deleteAll(){
-        repository.deleteAll()
+    fun findNote(name: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.findNote(name)
+        }
     }
 
-    fun updateNote(id: Int, newName: String, newText: String){
-        repository.updateNote(id, newName,newText)
+    fun deleteNote(name: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteNote(name)
+        }
+    }
+
+    fun updateNote(id: Int, newName: String, newText: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateNote(id, newName, newText)
+        }
     }
 }

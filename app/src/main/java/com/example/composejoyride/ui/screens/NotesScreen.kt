@@ -1,11 +1,8 @@
 package com.example.composejoyride.ui.screens
 
 import android.annotation.SuppressLint
-import android.app.Application
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,32 +16,26 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ButtonDefaults
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material3.TextField
-import androidx.compose.material.TextFieldColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Button
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -56,31 +47,30 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.composejoyride.data.entitites.Note
 import com.example.composejoyride.data.utils.CustomFontFamily
 import com.example.composejoyride.ui.viewModels.NotesViewModel
 
-@Composable
-fun NotesSetup (viewModel: NotesViewModel){
-    val allNotes by viewModel.allNotes.observeAsState(listOf())
-    val searchResults by viewModel.searchResults.observeAsState(listOf())
-
-    Notes(allNotes = allNotes, searchResults = searchResults, viewModel = viewModel)
-}
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun Notes(allNotes: List<Note>, searchResults: List<Note>, viewModel: NotesViewModel)
+fun Notes(viewModel: NotesViewModel = hiltViewModel())
 {
+    val allNotes by viewModel.allNotes.collectAsState()
+    val searchResults by viewModel.searchResults.collectAsState()
+
+    viewModel.loadNotes()
     var noteName by rememberSaveable { mutableStateOf("")}
     var noteText by rememberSaveable { mutableStateOf("") }
-    var selectedNoteId by rememberSaveable { mutableStateOf(0) }
+    var selectedNoteId by rememberSaveable { mutableIntStateOf(0) }
     val onNoteNameChange = { text: String -> noteName = text }
     val onNoteTextChange = { text: String -> noteText = text }
     var isNoteMenuVisible by rememberSaveable { mutableStateOf(false)}
     var openedForEditing by rememberSaveable { mutableStateOf(false)}
+
+
+
         Column(modifier = Modifier.fillMaxSize()) {
             if (!isNoteMenuVisible) {
                 LazyVerticalStaggeredGrid(
@@ -178,7 +168,9 @@ fun Notes(allNotes: List<Note>, searchResults: List<Note>, viewModel: NotesViewM
                         isNoteMenuVisible = false
                         noteName = ""
                         noteText = ""
-                    }},
+                    }
+                        viewModel.loadNotes()
+                                                 },
                         modifier= Modifier
                             .size(100.dp)
                             .padding(10.dp),  //avoid the oval shape
@@ -189,7 +181,8 @@ fun Notes(allNotes: List<Note>, searchResults: List<Note>, viewModel: NotesViewM
                     }
                     OutlinedIconButton(onClick = {
                         viewModel.deleteNote(noteName)
-                        isNoteMenuVisible = false},
+                        isNoteMenuVisible = false
+                        viewModel.loadNotes()},
                         modifier= Modifier
                             .size(100.dp)
                             .padding(10.dp),
@@ -204,9 +197,9 @@ fun Notes(allNotes: List<Note>, searchResults: List<Note>, viewModel: NotesViewM
         }
 
 
-class NotesViewModelFactory(val application: Application):
-        ViewModelProvider.Factory{
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return NotesViewModel(application) as T
-    }
-        }
+//class NotesViewModelFactory(val application: Application):
+//        ViewModelProvider.Factory{
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        return NotesViewModel(application) as T
+//    }
+//        }

@@ -1,6 +1,6 @@
 package com.example.composejoyride.ui.screens
 
-import android.app.Application
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -17,11 +17,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material.SnackbarDefaults.backgroundColor
+//noinspection UsingMaterialAndMaterial3Libraries
+import androidx.compose.material.Card
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -30,23 +29,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.edit
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.CustomFontFamily
@@ -55,8 +48,9 @@ import com.example.composejoyride.ui.theme.Dimens
 import com.example.composejoyride.ui.viewModels.LibraryViewModel
 import org.jsoup.Jsoup
 
+@SuppressLint("MutableCollectionMutableState")
 @Composable
-fun Library(navController: NavController, preferences: SharedPreferences, viewModel: LibraryViewModel)
+fun Library(navController: NavController, preferences: SharedPreferences, viewModel: LibraryViewModel = hiltViewModel())
 {
     val buttonColor = MaterialTheme.colorScheme.secondary
     val buttonText = MaterialTheme.colorScheme.tertiary
@@ -159,12 +153,12 @@ fun Library(navController: NavController, preferences: SharedPreferences, viewMo
                             .padding(4.dp)
                             .clickable {
                                 preferences
-                                    .edit()
-                                    .putString(
-                                        "topicURL",
-                                        topicItem[1]
-                                    )
-                                    .apply()
+                                    .edit() {
+                                        putString(
+                                            "topicURL",
+                                            topicItem[1]
+                                        )
+                                    }
                                 navController.navigate("topic")
                             }, elevation = 12.dp, backgroundColor = MaterialTheme.colorScheme.secondary ,border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                     ) {
@@ -198,9 +192,3 @@ fun Library(navController: NavController, preferences: SharedPreferences, viewMo
 
 
 
-class LibraryViewModelFactory(val application: Application):
-    ViewModelProvider.Factory{
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return LibraryViewModel(application) as T
-    }
-}
