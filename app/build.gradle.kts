@@ -68,7 +68,7 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.hilt.work)
-    implementation(libs.androidx.work.runtime.ktx.v281)
+    implementation(libs.work.runtime.ktx)
 
 
     implementation(libs.lifecycle.viewmodel.android)
@@ -91,7 +91,7 @@ dependencies {
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
-    implementation(libs.work.runtime.ktx)
+
 
     implementation(libs.material3.android)
     implementation(libs.androidx.material.icons.extended)
@@ -99,7 +99,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(platform(libs.compose.bom.v20230300))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
