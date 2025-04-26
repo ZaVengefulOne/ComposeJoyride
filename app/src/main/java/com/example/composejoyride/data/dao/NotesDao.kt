@@ -18,8 +18,8 @@ interface NotesDao {
     @Query("DELETE FROM notes WHERE note_name = :name")
     fun delete(name: String)
 
-    @Query("SELECT * from notes WHERE note_name = :name")
-    fun getItem(name: String): List<Note>
+    @Query("SELECT * from notes WHERE note_name = :name LIMIT 1")
+    fun getItem(name: String): Note
 
     @Query("SELECT * from notes")
     fun getAllItems(): List<Note>

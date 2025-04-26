@@ -1,6 +1,5 @@
 package com.example.composejoyride.data.repositories
 
-import androidx.lifecycle.MutableLiveData
 import com.example.composejoyride.data.dao.NotesDao
 import com.example.composejoyride.data.entitites.Note
 import com.example.composejoyride.data.repositories.interfaces.INotesRepository
@@ -11,7 +10,7 @@ import kotlinx.coroutines.launch
 class NotesRepository(private val notesDao: NotesDao): INotesRepository {
 
 //    override val allNotes: List<Note> = notesDao.getAllItems()
-    override val searchResults = MutableLiveData<List<Note>>()
+//    override val searchResults: MutableLiveData<Note> =
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
 
@@ -38,15 +37,15 @@ class NotesRepository(private val notesDao: NotesDao): INotesRepository {
         }
     }
 
-    override suspend fun findNote(name: String) {
-            searchResults.value = asyncFind(name)
+    override suspend fun findNote(name: String): Note {
+            return asyncFind(name)
     }
 
     override suspend fun deleteAll(){
             notesDao.deleteAll()
     }
 
-    override suspend fun asyncFind(name: String): List<Note> {
+    override suspend fun asyncFind(name: String): Note {
         return notesDao.getItem(name)
     }
 }

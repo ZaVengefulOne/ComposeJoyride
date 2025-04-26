@@ -9,7 +9,6 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,10 +33,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.composejoyride.data.utils.Constants
+import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.data.utils.PREFERENCES
 import com.example.composejoyride.ui.screens.AOTD
 import com.example.composejoyride.ui.screens.Library
 import com.example.composejoyride.ui.screens.Main
+import com.example.composejoyride.ui.screens.Note
 import com.example.composejoyride.ui.screens.Notes
 import com.example.composejoyride.ui.screens.Rhyme
 import com.example.composejoyride.ui.screens.Settings
@@ -50,7 +51,6 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
         setContent {
             val sharedPrefs = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
@@ -84,39 +84,38 @@ fun NavHostContainer(
 
     NavHost(
         navController = navController,
-        // set the start destination as home
-        startDestination = "main",
-
-        // Set the padding provided by scaffold
+        startDestination = NoteGraph.MAIN_SCREEN,
         modifier = Modifier
             .padding(paddingValues = padding)
             .background(colorScheme.background),
-
         builder = {
 
-            composable("main") {
-                Main(navController = navController, preferences = preferences)
+            composable(NoteGraph.MAIN_SCREEN) {
+                Main(navController, preferences)
             }
 
-            composable("aotd") {
+            composable(NoteGraph.AOTD_SCREEN) {
                 AOTD()
             }
 
-            composable("rhyme") {
+            composable(NoteGraph.GENERATOR_SCREEN) {
                 Rhyme()
             }
 
-            composable("list") {
-                Library(navController = navController, preferences = preferences)
+            composable(NoteGraph.LIBRARY_SCREEN) {
+                Library(navController,preferences)
             }
-            composable("settings") {
+            composable(NoteGraph.SETTINGS_SCREEN) {
                 Settings(preferences)
             }
-            composable("notes") {
-                Notes()
+            composable(NoteGraph.NOTES_SCREEN) {
+                Notes(navController)
             }
-            composable("topic"){
-                Topic(navController = navController, preferences = preferences)
+            composable(NoteGraph.TOPIC_SCREEN){
+                Topic(navController, preferences)
+            }
+            composable(NoteGraph.NOTE_SCREEN){
+                Note(navController, {navController.navigate(NoteGraph.NOTES_SCREEN)})
             }
         })
 

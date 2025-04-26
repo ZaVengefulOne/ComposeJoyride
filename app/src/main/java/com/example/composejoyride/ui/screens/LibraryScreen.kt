@@ -39,19 +39,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.edit
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.CustomFontFamily
 import com.example.composejoyride.data.utils.SEARCH_KEY
+import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Dimens
 import com.example.composejoyride.ui.viewModels.LibraryViewModel
 import org.jsoup.Jsoup
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun Library(navController: NavController, preferences: SharedPreferences, viewModel: LibraryViewModel = hiltViewModel())
+fun Library(navController: NavController, preferences: SharedPreferences)
 {
+    val viewModel: LibraryViewModel = sharedViewModel(navController)
     val buttonColor = MaterialTheme.colorScheme.secondary
     val buttonText = MaterialTheme.colorScheme.tertiary
     val topicsList = rememberSaveable { mutableStateOf(listOf<String>()) }
@@ -153,7 +154,7 @@ fun Library(navController: NavController, preferences: SharedPreferences, viewMo
                             .padding(4.dp)
                             .clickable {
                                 preferences
-                                    .edit() {
+                                    .edit {
                                         putString(
                                             "topicURL",
                                             topicItem[1]

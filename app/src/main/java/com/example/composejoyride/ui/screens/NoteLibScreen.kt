@@ -1,6 +1,7 @@
 package com.example.composejoyride.ui.screens
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,10 +33,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,28 +50,38 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.composejoyride.data.entitites.Note
 import com.example.composejoyride.data.utils.CustomFontFamily
+import com.example.composejoyride.data.utils.NoteGraph
+import com.example.composejoyride.data.utils.sharedViewModel
+import com.example.composejoyride.ui.viewModels.NoteViewModel
 import com.example.composejoyride.ui.viewModels.NotesViewModel
+import kotlinx.coroutines.launch
 
 
-@SuppressLint("SuspiciousIndentation")
+@SuppressLint("SuspiciousIndentation", "UnrememberedGetBackStackEntry")
 @Composable
-fun Notes(viewModel: NotesViewModel = hiltViewModel())
+fun Notes(navController: NavController)
 {
-    val allNotes by viewModel.allNotes.collectAsState()
-    val searchResults by viewModel.searchResults.collectAsState()
+    val notesViewModel: NotesViewModel = sharedViewModel(navController)
+    val noteViewModel: NoteViewModel = sharedViewModel(navController)
 
-    viewModel.loadNotes()
+    val allNotes by notesViewModel.allNotes.collectAsState()
+    val searchResults by notesViewModel.searchResults.collectAsState()
+
+    notesViewModel.loadNotes()
+    val newNote = Note(0, "Новая заметка", "")
     var noteName by rememberSaveable { mutableStateOf("")}
     var noteText by rememberSaveable { mutableStateOf("") }
-    var selectedNoteId by rememberSaveable { mutableIntStateOf(0) }
     val onNoteNameChange = { text: String -> noteName = text }
     val onNoteTextChange = { text: String -> noteText = text }
+    val selectedNoteId by rememberSaveable { mutableIntStateOf(0) }
     var isNoteMenuVisible by rememberSaveable { mutableStateOf(false)}
     var openedForEditing by rememberSaveable { mutableStateOf(false)}
 
+    val scope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
 
 
         Column(modifier = Modifier.fillMaxSize()) {
@@ -89,11 +102,14 @@ fun Notes(viewModel: NotesViewModel = hiltViewModel())
                                 .padding(4.dp)
                                 .fillMaxWidth()
                                 .clickable {
-                                    isNoteMenuVisible = true
-                                    openedForEditing = true
-                                    noteName = index.note_name
-                                    noteText = index.note_text
-                                    selectedNoteId = index.id
+//                                    isNoteMenuVisible = true
+//                                    openedForEditing = true
+//                                    noteName = index.note_name
+//                                    noteText = index.note_text
+//                                    selectedNoteId = index.id
+                                    Log.d("HASHCODE_VENGEFUL1", noteViewModel.hashCode().toString())
+                                    noteViewModel.setNote(index.note_name)
+                                    navController.navigate(NoteGraph.NOTE_SCREEN)
                                 },
                             elevation = 8.dp,
                         ) {
@@ -109,7 +125,11 @@ fun Notes(viewModel: NotesViewModel = hiltViewModel())
                     }
                 }
                 Row (modifier = Modifier.align(Alignment.End)){
-                OutlinedIconButton(onClick = { isNoteMenuVisible = true},
+                OutlinedIconButton(onClick = {
+                    noteViewModel.insertNote(newNote)
+                    noteViewModel.setNote(newNote.note_name)
+                    navController.navigate(NoteGraph.NOTE_SCREEN)
+                },
                     modifier= Modifier
                         .size(100.dp)
                         .padding(10.dp),  //avoid the oval shape
@@ -119,6 +139,11 @@ fun Notes(viewModel: NotesViewModel = hiltViewModel())
                     Icon(Icons.Default.Add, contentDescription = "content description", tint = MaterialTheme.colorScheme.tertiary)
                 }}
             } else {
+                LaunchedEffect(scrollState) {
+                    scope.launch {
+                        scrollState.scrollTo(0)
+                    }
+                }
                     TextField(
                         value = noteName,
                         onValueChange = { onNoteNameChange(it) },
@@ -153,23 +178,23 @@ fun Notes(viewModel: NotesViewModel = hiltViewModel())
                         maxLines = 50, modifier = Modifier
                             .weight(1f)
                             .fillMaxSize()
-                            .verticalScroll(rememberScrollState(), reverseScrolling = true)
+                            .verticalScroll(scrollState, reverseScrolling = false)
                     )
                 Row (horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()){
                     OutlinedIconButton(onClick = {
                         if (openedForEditing){
-                        viewModel.updateNote(selectedNoteId,noteName,noteText)
+                        noteViewModel.updateNote(selectedNoteId,noteName,noteText)
                         openedForEditing = false
                         isNoteMenuVisible = false
                         noteName = ""
                         noteText = ""
                     } else {
-                        viewModel.insertNote(Note(0, noteName, noteText))
+                        noteViewModel.insertNote(Note(0, noteName, noteText))
                         isNoteMenuVisible = false
                         noteName = ""
                         noteText = ""
                     }
-                        viewModel.loadNotes()
+                        notesViewModel.loadNotes()
                                                  },
                         modifier= Modifier
                             .size(100.dp)
@@ -180,9 +205,9 @@ fun Notes(viewModel: NotesViewModel = hiltViewModel())
                         Icon(Icons.Default.Check, contentDescription = "content description", tint = MaterialTheme.colorScheme.tertiary)
                     }
                     OutlinedIconButton(onClick = {
-                        viewModel.deleteNote(noteName)
+                        noteViewModel.deleteNote(noteName)
                         isNoteMenuVisible = false
-                        viewModel.loadNotes()},
+                        notesViewModel.loadNotes()},
                         modifier= Modifier
                             .size(100.dp)
                             .padding(10.dp),
@@ -196,10 +221,3 @@ fun Notes(viewModel: NotesViewModel = hiltViewModel())
             }
         }
 
-
-//class NotesViewModelFactory(val application: Application):
-//        ViewModelProvider.Factory{
-//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//        return NotesViewModel(application) as T
-//    }
-//        }
