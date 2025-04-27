@@ -6,16 +6,20 @@ import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.composejoyride.data.entitites.Note
 import com.example.composejoyride.data.repositories.RhymeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 import org.jsoup.Jsoup
 import javax.inject.Inject
 
 @HiltViewModel
-class RhymeViewModel @Inject constructor(repository: RhymeRepository): ViewModel() {
+class RhymeViewModel @Inject constructor(private val repository: RhymeRepository): ViewModel() {
 
     private val _input = MutableStateFlow("")
     val input: StateFlow<String> get() = _input
@@ -28,20 +32,16 @@ class RhymeViewModel @Inject constructor(repository: RhymeRepository): ViewModel
         _input.value = newInput
     }
 
-    fun findRhymes() {
-        val gfgThread = Thread {
+    fun findRhymes(stress: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val document =
-                    Jsoup.connect("https://rifme.net/r/${input.value}/0")
-                        .get()
-                val rhyme = document.getElementsByClass("riLi")
-                _result.value = rhyme.map { it.text().toString() }
+                _result.value = repository.getRhymes(input.value, stress)
             } catch (e: Exception) {
                 _result.value = listOf("Ошибка!")
             }
         }
-        gfgThread.start()
     }
+
 
     fun copyToClipBoard(context: Context, rhymeItem: String) {
         val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager

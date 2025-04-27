@@ -15,3 +15,7 @@ inline fun <reified VM : ViewModel> sharedViewModel(
     val parentEntry = remember { navController.getBackStackEntry(NoteGraph.MAIN_SCREEN) }
     return hiltViewModel(parentEntry)
 }
+
+fun countRussianVowels(word: String): Int {
+    return word.count { it in Constants.vowels }
+}

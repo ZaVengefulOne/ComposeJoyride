@@ -40,4 +40,7 @@ object Constants {
     const val PREFERENCES = "vengeful_preferences"
     const val EDIT_KEY = "dark_theme"
     const val SEARCH_KEY = "search_key"
+    const val BASE_RHYMES_URL = "https://rifme.net/r/"
+    val vowels = setOf('а', 'е', 'ё', 'и', 'о', 'у', 'ы', 'э', 'ю', 'я',
+        'А', 'Е', 'Ё', 'И', 'О', 'У', 'Ы', 'Э', 'Ю', 'Я')
 }
