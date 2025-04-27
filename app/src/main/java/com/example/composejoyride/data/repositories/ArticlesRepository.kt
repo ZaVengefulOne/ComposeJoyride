@@ -12,7 +12,7 @@ class ArticlesRepository @Inject constructor(private val interactor: ParseIntera
     }
 
     override suspend fun getArticles(): List<List<String>> {
-        TODO("Not yet implemented")
+        return interactor.getArticles()
     }
 
     override suspend fun getArticle(url: String): List<String> {

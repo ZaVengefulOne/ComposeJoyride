@@ -33,7 +33,14 @@ class ParseInteractor: IParseInteractor {
         }
 
     override suspend fun getArticles(): List<List<String>> {
-        TODO("Not yet implemented")
+        val document =
+            Jsoup.connect(Constants.BASE_ARTICLES_URL)
+                .get()
+        val rhyme = document.select("h3")
+        val links = document.select("h3 > a")
+        val articleList = rhyme.map { it.text().toString() }.dropLast(1)
+        val articleLinks = links.map {it.attr("href").toString()}.dropLast(1)
+        return articleList.zip(articleLinks) {topic, link -> listOf(topic, link)}
     }
 
     override suspend fun getArticle(url: String): List<String> {
