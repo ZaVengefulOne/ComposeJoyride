@@ -11,13 +11,15 @@ private val DarkColorScheme = darkColorScheme(
     primary = Dark,
     secondary = DarkCyan,
     tertiary = White,
-    background = DarkerCyan
+    background = DarkerCyan,
+    error = Red
 )
 private val LightColorScheme = lightColorScheme(
     primary = LightPrimary,
     secondary = LightSecondary,
     tertiary = LightTertiary,
-    background = LightBackground
+    background = LightBackground,
+    error = Red
 )
 
 @Composable

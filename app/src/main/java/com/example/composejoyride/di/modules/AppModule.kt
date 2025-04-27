@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.composejoyride.data.dao.NotesDao
 import com.example.composejoyride.data.databases.NotesDatabase
 import com.example.composejoyride.data.repositories.NotesRepository
+import com.example.composejoyride.data.repositories.RhymeRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,6 +37,12 @@ object AppModule {
     @Singleton
     fun provideNotesRepository(notesDao: NotesDao): NotesRepository {
         return NotesRepository(notesDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRhymeRepository(): RhymeRepository{
+        return RhymeRepository()
     }
 
 //    @Provides

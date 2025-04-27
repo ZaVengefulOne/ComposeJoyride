@@ -64,6 +64,7 @@ fun Settings(preferences: SharedPreferences)
                     )
                 }
             }
+
         }
         else{
             Text(text = stringResource(id = R.string.aboutApp), textAlign = TextAlign.Center, fontFamily = CustomFontFamily, modifier = Modifier.padding(

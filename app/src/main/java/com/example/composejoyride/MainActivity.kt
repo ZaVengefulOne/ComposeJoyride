@@ -9,6 +9,11 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,8 +30,10 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -60,16 +67,22 @@ class MainActivity : ComponentActivity() {
             val sharedPrefs = getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE)
                 ComposeJoyrideTheme {
                     val navController = rememberNavController()
-                    var selectedRoute by rememberSaveable { mutableStateOf(NoteGraph.MAIN_SCREEN) }
+                    val isBottomBarVisible = remember { mutableStateOf(true) } // на будущее
                     Surface(
                         modifier = Modifier.fillMaxSize(),
                         color = colorScheme.background
                     ) {
                         Scaffold(
                             bottomBar = {
-                                BottomNavigationBar(navController = navController)
+                                BottomNavigationBar(navController = navController,
+                                    visibility = isBottomBarVisible)
                             }, content = { padding ->
-                                NavHostContainer(navController = navController, padding = padding, preferences = sharedPrefs)
+                                NavHostContainer(
+                                    navController = navController,
+                                    padding = padding,
+                                    preferences = sharedPrefs,
+                                    bottomBarVisibility = isBottomBarVisible
+                                )
                             }
                         )
                     }
@@ -85,6 +98,7 @@ fun NavHostContainer(
     navController: NavHostController,
     padding: PaddingValues,
     preferences: SharedPreferences,
+    bottomBarVisibility: MutableState<Boolean>
 ) {
 
     NavHost(
@@ -104,11 +118,12 @@ fun NavHostContainer(
             }
 
             composable(NoteGraph.GENERATOR_SCREEN) {
-                Rhyme()
+                Rhyme(navController, bottomBarVisibility
+                )
             }
 
             composable(NoteGraph.LIBRARY_SCREEN) {
-                Library(navController,preferences)
+                Library(navController,preferences, bottomBarVisibility)
             }
             composable(NoteGraph.SETTINGS_SCREEN) {
                 Settings(preferences)
@@ -120,7 +135,7 @@ fun NavHostContainer(
                 Topic(navController, preferences)
             }
             composable(NoteGraph.NOTE_SCREEN){
-                Note(navController, {navController.navigate(NoteGraph.NOTES_SCREEN)})
+                Note(navController, {navController.navigate(NoteGraph.NOTES_SCREEN)}, bottomBarVisibility)
             }
         })
 
@@ -128,41 +143,52 @@ fun NavHostContainer(
 
 
 @Composable
-fun BottomNavigationBar(navController: NavHostController) {
-    Surface(
-        tonalElevation = 8.dp, // Подъём над фоном
-        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 24.dp, bottomEnd = 24.dp), // Округление краёв
-        shadowElevation = 8.dp, // Тень
-        modifier = Modifier.background(color = colorScheme.background)
+fun BottomNavigationBar(navController: NavHostController, visibility: MutableState<Boolean>) {
+    AnimatedVisibility(
+        visible = visibility.value,
+        enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+        exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
     ) {
-        BottomNavigation(
-            elevation = 5.dp,
-            backgroundColor = colorScheme.secondary
+        Surface(
+            tonalElevation = 8.dp, // Подъём над фоном
+            shape = RoundedCornerShape(
+                topStart = 24.dp,
+                topEnd = 24.dp,
+                bottomStart = 24.dp,
+                bottomEnd = 24.dp
+            ), // Округление краёв
+            shadowElevation = 8.dp, // Тень
+            modifier = Modifier.background(color = colorScheme.background)
         ) {
+            BottomNavigation(
+                elevation = 5.dp,
+                backgroundColor = colorScheme.secondary
+            ) {
 
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-            val currentRoute = navBackStackEntry?.destination?.route
+                val currentRoute = navBackStackEntry?.destination?.route
 
-            Constants.BottomNavItems.forEach { navItem ->
+                Constants.BottomNavItems.forEach { navItem ->
 
-                BottomNavigationItem(
+                    BottomNavigationItem(
 
-                    selected = currentRoute == navItem.route,
+                        selected = currentRoute == navItem.route,
 
-                    onClick = {
-                        navController.navigate(navItem.route)
-                    },
+                        onClick = {
+                            navController.navigate(navItem.route)
+                        },
 
-                    icon = {
-                        Icon(imageVector = navItem.icon, contentDescription = navItem.label)
-                    },
+                        icon = {
+                            Icon(imageVector = navItem.icon, contentDescription = navItem.label)
+                        },
 
-                    label = {
-                        Text(text = navItem.label, fontSize = 10.sp)
-                    },
-                    alwaysShowLabel = false
-                )
+                        label = {
+                            Text(text = navItem.label, fontSize = 10.sp)
+                        },
+                        alwaysShowLabel = false
+                    )
+                }
             }
         }
     }

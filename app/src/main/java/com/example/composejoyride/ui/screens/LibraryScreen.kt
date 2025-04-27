@@ -9,14 +9,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
 import androidx.compose.material.icons.Icons
@@ -29,12 +32,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,8 +60,15 @@ import org.jsoup.Jsoup
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun Library(navController: NavController, preferences: SharedPreferences)
+fun Library(navController: NavController, preferences: SharedPreferences, isBottomBarVisible: MutableState<Boolean>)
 {
+    val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
+    val keyboardController = LocalSoftwareKeyboardController.current
+    LaunchedEffect(imeVisible) {
+        isBottomBarVisible.value = !imeVisible
+    }
+
+
     val viewModel: LibraryViewModel = sharedViewModel(navController)
     val buttonColor = MaterialTheme.colorScheme.secondary
     val buttonText = MaterialTheme.colorScheme.tertiary
@@ -104,7 +121,8 @@ fun Library(navController: NavController, preferences: SharedPreferences)
                     searchText.value = it
                     //expanded.value = false
                 },
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(16.dp)
+                    .onFocusChanged { if (it.isFocused) isBottomBarVisible.value = false },
                 placeholder = {
                     Text(
                         "Поиск...",
@@ -127,8 +145,12 @@ fun Library(navController: NavController, preferences: SharedPreferences)
                             localItems.value = preferences.getStringSet(Constants.SEARCH_KEY, mutableSetOf())?.toMutableSet()
                                 ?: mutableSetOf()
                         }
+                        isBottomBarVisible.value = true
+                        keyboardController?.hide()
                     }
                 ),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done),
                 trailingIcon = trailingIconView
             )
             DropdownMenu(expanded = expanded.value, onDismissRequest = { expanded.value = false }) {
