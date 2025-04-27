@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Abc
+import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.composejoyride.R
+import com.example.composejoyride.data.utils.Constants
 import com.example.composejoyride.data.utils.CustomFontFamily
-import com.example.composejoyride.data.utils.EDIT_KEY
 import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.ui.theme.Dimens
 import com.example.composejoyride.ui.theme.LocalTheme
@@ -35,7 +37,7 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
 
     val buttonColor = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
     val buttonText = MaterialTheme.colorScheme.tertiary
-    LocalTheme.value = preferences.getBoolean(EDIT_KEY,false)
+    LocalTheme.value = preferences.getBoolean(Constants.EDIT_KEY,false)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -67,14 +69,14 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
             fontSize = 22.sp,
         )
         Button(
-            onClick = { navController.navigate("rhyme") },
+            onClick = { navController.navigate(NoteGraph.GENERATOR_SCREEN) },
             colors = buttonColor,
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .fillMaxWidth().height(48.dp).padding(vertical = 4.dp)
         ) {
             Icon(
-                painter = painterResource(R.drawable.baseline_library_books_24),
+                Icons.Filled.Abc,
                 contentDescription = "Rhyme Button",
                 tint = MaterialTheme.colorScheme.tertiary
             )
@@ -94,7 +96,7 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
                 .fillMaxWidth().height(48.dp).padding(vertical = Dimens.paddingSmall)
         ) {
             Icon(
-                painter = painterResource(R.drawable.baseline_menu_book_24),
+                Icons.Filled.AutoStories,
                 contentDescription = "Library Button",
                 tint = MaterialTheme.colorScheme.tertiary
             )
@@ -107,7 +109,7 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
             )
         }
         Button(
-            onClick = { navController.navigate("notes") },
+            onClick = { navController.navigate(NoteGraph.NOTES_SCREEN) },
             colors = buttonColor,
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
@@ -127,7 +129,7 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
             )
         }
         Button(
-            onClick = { navController.navigate("settings") },
+            onClick = { navController.navigate(NoteGraph.SETTINGS_SCREEN) },
             colors = buttonColor,
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier

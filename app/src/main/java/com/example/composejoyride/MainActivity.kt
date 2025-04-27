@@ -13,6 +13,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BottomNavigation
 //noinspection UsingMaterialAndMaterial3Libraries
@@ -25,7 +26,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -34,7 +39,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.composejoyride.data.utils.Constants
 import com.example.composejoyride.data.utils.NoteGraph
-import com.example.composejoyride.data.utils.PREFERENCES
 import com.example.composejoyride.ui.screens.AOTD
 import com.example.composejoyride.ui.screens.Library
 import com.example.composejoyride.ui.screens.Main
@@ -53,9 +57,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
         setContent {
-            val sharedPrefs = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
+            val sharedPrefs = getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE)
                 ComposeJoyrideTheme {
                     val navController = rememberNavController()
+                    var selectedRoute by rememberSaveable { mutableStateOf(NoteGraph.MAIN_SCREEN) }
                     Surface(
                         modifier = Modifier.fillMaxSize(),
                         color = colorScheme.background
@@ -124,34 +129,41 @@ fun NavHostContainer(
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
+    Surface(
+        tonalElevation = 8.dp, // Подъём над фоном
+        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 24.dp, bottomEnd = 24.dp), // Округление краёв
+        shadowElevation = 8.dp, // Тень
+        modifier = Modifier.background(color = colorScheme.background)
+    ) {
+        BottomNavigation(
+            elevation = 5.dp,
+            backgroundColor = colorScheme.secondary
+        ) {
 
-    BottomNavigation(
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-        backgroundColor = colorScheme.secondary) {
+            val currentRoute = navBackStackEntry?.destination?.route
 
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
+            Constants.BottomNavItems.forEach { navItem ->
 
-        val currentRoute = navBackStackEntry?.destination?.route
+                BottomNavigationItem(
 
-        Constants.BottomNavItems.forEach { navItem ->
+                    selected = currentRoute == navItem.route,
 
-            BottomNavigationItem(
+                    onClick = {
+                        navController.navigate(navItem.route)
+                    },
 
-                selected = currentRoute == navItem.route,
+                    icon = {
+                        Icon(imageVector = navItem.icon, contentDescription = navItem.label)
+                    },
 
-                onClick = {
-                    navController.navigate(navItem.route)
-                },
-
-                icon = {
-                    Icon(imageVector = navItem.icon, contentDescription = navItem.label)
-                },
-
-                label = {
-                    Text(text = navItem.label, fontSize = 10.sp)
-                },
-                alwaysShowLabel = false
-            )
+                    label = {
+                        Text(text = navItem.label, fontSize = 10.sp)
+                    },
+                    alwaysShowLabel = false
+                )
+            }
         }
     }
 }

@@ -41,8 +41,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.edit
 import androidx.navigation.NavController
 import com.example.composejoyride.R
+import com.example.composejoyride.data.utils.Constants
 import com.example.composejoyride.data.utils.CustomFontFamily
-import com.example.composejoyride.data.utils.SEARCH_KEY
 import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Dimens
 import com.example.composejoyride.ui.viewModels.LibraryViewModel
@@ -75,7 +75,7 @@ fun Library(navController: NavController, preferences: SharedPreferences)
     gfgThread.start()
     val searchText = rememberSaveable { mutableStateOf("") }
     val filteredTopicsList = rememberSaveable { mutableStateOf(topics.value) }
-    val localItems = rememberSaveable {mutableStateOf(preferences.getStringSet(SEARCH_KEY, mutableSetOf())?.toMutableSet()
+    val localItems = rememberSaveable {mutableStateOf(preferences.getStringSet(Constants.SEARCH_KEY, mutableSetOf())?.toMutableSet()
         ?: mutableSetOf())}
     val expanded = rememberSaveable{ mutableStateOf(false) }
     val trailingIconView = @Composable { if (searchText.value.isNotEmpty()){
@@ -124,7 +124,7 @@ fun Library(navController: NavController, preferences: SharedPreferences)
                                 it[0].contains(searchText.value, true)
                             }
                             viewModel.saveSearchHistory(searchText.value, preferences)
-                            localItems.value = preferences.getStringSet(SEARCH_KEY, mutableSetOf())?.toMutableSet()
+                            localItems.value = preferences.getStringSet(Constants.SEARCH_KEY, mutableSetOf())?.toMutableSet()
                                 ?: mutableSetOf()
                         }
                     }
