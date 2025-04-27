@@ -126,7 +126,7 @@ fun NavHostContainer(
                 Library(navController,preferences, bottomBarVisibility)
             }
             composable(NoteGraph.SETTINGS_SCREEN) {
-                Settings(preferences)
+                Settings(navController, preferences)
             }
             composable(NoteGraph.NOTES_SCREEN) {
                 Notes(navController)

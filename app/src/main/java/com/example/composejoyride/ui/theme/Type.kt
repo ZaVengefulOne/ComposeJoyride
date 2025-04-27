@@ -8,10 +8,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.composejoyride.R
 
-val ttFamily = FontFamily(
+var ttFamily = FontFamily(
     Font(R.font.schist_regular, FontWeight.Normal),
 )
 
+val schistFont = FontFamily(Font(R.font.schist_regular, FontWeight.Normal))
+val tippyToesFont = FontFamily(Font(R.font.tippytoes, FontWeight.Normal))
 
 val Typography = Typography(
     bodyMedium = TextStyle(

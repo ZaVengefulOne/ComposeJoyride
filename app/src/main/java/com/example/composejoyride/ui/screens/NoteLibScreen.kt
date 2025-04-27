@@ -43,6 +43,7 @@ import com.example.composejoyride.data.entitites.Note
 import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.AlertDialog
+import com.example.composejoyride.ui.theme.ttFamily
 import com.example.composejoyride.ui.viewModels.NoteViewModel
 import com.example.composejoyride.ui.viewModels.NotesViewModel
 
@@ -100,8 +101,8 @@ fun Notes(navController: NavController)
                         ) {
                             Text(
                                 text = index.note_name,
-                                fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp,
+                                fontFamily = ttFamily,
                                 color = MaterialTheme.colorScheme.tertiary,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(16.dp)

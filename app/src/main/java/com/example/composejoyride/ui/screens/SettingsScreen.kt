@@ -7,9 +7,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ButtonDefaults
@@ -19,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -27,22 +31,31 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.Constants
 import com.example.composejoyride.data.utils.CustomFontFamily
+import com.example.composejoyride.data.utils.NoteGraph
+import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Dimens
 import com.example.composejoyride.ui.theme.LocalTheme
+import com.example.composejoyride.ui.theme.schistFont
+import com.example.composejoyride.ui.theme.tippyToesFont
+import com.example.composejoyride.ui.theme.ttFamily
+import com.example.composejoyride.ui.viewModels.SettingsViewModel
 
 @Composable
-fun Settings(preferences: SharedPreferences)
+fun Settings(navController: NavController, preferences: SharedPreferences)
 {
+    val viewModel = sharedViewModel<SettingsViewModel>(navController)
     val isInfoOpen = rememberSaveable { mutableStateOf(false)}
-    val buttonColor = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
     LocalTheme.value = preferences.getBoolean(Constants.EDIT_KEY,false)
+    key(ttFamily){
     Column(modifier = Modifier.fillMaxSize()) {
         if(!isInfoOpen.value) {
             Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Text(text = "Переключатель темы: ", fontFamily = CustomFontFamily, color = MaterialTheme.colorScheme.tertiary)
+                Text(text = "Переключатель темы: ", fontFamily = ttFamily, color = MaterialTheme.colorScheme.tertiary)
                 IconButton(onClick = {
                     LocalTheme.value = !LocalTheme.value
                     preferences.edit().putBoolean(Constants.EDIT_KEY, LocalTheme.value).apply()
@@ -55,7 +68,7 @@ fun Settings(preferences: SharedPreferences)
                 }
             }
             Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Text(text = "О приложении: ", fontFamily = CustomFontFamily, color = MaterialTheme.colorScheme.tertiary)
+                Text(text = "О приложении: ", fontFamily = ttFamily, color = MaterialTheme.colorScheme.tertiary)
                 IconButton(onClick = { isInfoOpen.value = true }) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_info_outline_24),
@@ -64,7 +77,52 @@ fun Settings(preferences: SharedPreferences)
                     )
                 }
             }
-
+            Button(
+                onClick = {
+                    viewModel.setFont(schistFont)
+                    navController.navigate(NoteGraph.MAIN_SCREEN)
+                },
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth().height(48.dp).padding(vertical = Dimens.paddingSmall)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_settings_24),
+                    contentDescription = "Settings Button",
+                    tint = MaterialTheme.colorScheme.tertiary
+                )
+                Text(
+                    text = "Выбрать этот шрифт",
+                    modifier = Modifier.fillMaxWidth().padding(start = Dimens.paddingLarge),
+                    fontFamily = schistFont,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontSize = 22.sp
+                )
+            }
+            Button(
+                onClick = {
+                    viewModel.setFont(tippyToesFont)
+                    navController.navigate(NoteGraph.MAIN_SCREEN)
+                          },
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth().height(48.dp).padding(vertical = Dimens.paddingSmall)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_settings_24),
+                    contentDescription = "Settings Button",
+                    tint = MaterialTheme.colorScheme.tertiary
+                )
+                Text(
+                    text = "Или этот",
+                    modifier = Modifier.fillMaxWidth().padding(start = Dimens.paddingLarge),
+                    fontFamily = tippyToesFont,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontSize = 22.sp
+                )
+            }
         }
         else{
             Text(text = stringResource(id = R.string.aboutApp), textAlign = TextAlign.Center, fontFamily = CustomFontFamily, modifier = Modifier.padding(
@@ -78,7 +136,7 @@ fun Settings(preferences: SharedPreferences)
                     shape = CircleShape,
                     border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary),
                 ) {
-                    androidx.compose.material.Icon(
+                    Icon(
                         Icons.Default.Close,
                         contentDescription = "content description",
                         tint = MaterialTheme.colorScheme.tertiary
@@ -87,4 +145,4 @@ fun Settings(preferences: SharedPreferences)
             }
         }
     }
-}
+}}

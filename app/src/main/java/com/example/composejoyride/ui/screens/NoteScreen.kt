@@ -39,12 +39,15 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Typography
+import com.example.composejoyride.ui.theme.ttFamily
 import com.example.composejoyride.ui.viewModels.NoteViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -78,6 +81,7 @@ fun Note(
             OutlinedButton(
                 onClick = {
                     noteViewModel.updateNote()
+                    isBottomBarVisible.value = true
                     onDone()
                 },
             ) {
@@ -87,6 +91,7 @@ fun Note(
             OutlinedButton(
                 onClick = {
                     noteViewModel.deleteNote()
+                    isBottomBarVisible.value = true
                     onDone()
                 },
                 colors = ButtonDefaults.outlinedButtonColors(contentColor =
@@ -104,7 +109,7 @@ fun Note(
             label = { Text("Название") },
             modifier = Modifier.fillMaxWidth()
                 .onFocusChanged { if (it.isFocused) isBottomBarVisible.value = false },
-            textStyle = Typography.titleLarge,
+            textStyle = TextStyle(fontFamily = ttFamily, fontSize = 22.sp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = {
@@ -120,7 +125,7 @@ fun Note(
         BasicTextField(
             value = note.note_text ?: "",
             onValueChange = { noteViewModel.updateNoteText(it) },
-            textStyle = Typography.bodyMedium,
+            textStyle = TextStyle(fontFamily = ttFamily, fontSize = 18.sp),
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
