@@ -11,11 +11,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -27,42 +31,31 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.CustomFontFamily
+import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Dimens
+import com.example.composejoyride.ui.theme.ttFamily
+import com.example.composejoyride.ui.viewModels.AOTDViewModel
 import org.jsoup.Jsoup
 
 @Composable
-fun AOTD() {
-    val messageTitle = rememberSaveable{ mutableStateOf("") }
-    val message = rememberSaveable{ mutableStateOf("") }
-//    val scrollState = rememberScrollState()
-//    val coroutineScope = rememberCoroutineScope()
-//    val context = LocalContext.current
-//    val buttonColor = MaterialTheme.colorScheme.secondary
+fun AOTD(navController: NavController) {
+
+    val viewModel = sharedViewModel<AOTDViewModel>(navController)
+
+    val articleName = viewModel.randomArcticleName.collectAsState().value
+    val articleText = viewModel.randomArcticleText.collectAsState().value
+    val isLoaded = viewModel.isLoaded.collectAsState().value
+    val showPB = viewModel.showPB.collectAsState().value
+
     val buttonText = MaterialTheme.colorScheme.tertiary
-    var isLoaded by rememberSaveable { mutableStateOf(false) }
-    val errNameText = stringResource(id = R.string.error_name_not_found)
-    val errTopicText = stringResource(id = R.string.error_topic_not_found)
-    val showPB = rememberSaveable { mutableStateOf(false) }
-    val topicsLinks = rememberSaveable { mutableStateOf(listOf<String>())}
-    val getLinksThread = Thread {
-        try {
-            val document =
-                Jsoup.connect("https://nsaturnia.ru/kak-pisat-stixi/")
-                    .get()
-            val rhyme = document.select("h3")
-            val links = document.select("h3 > a")
-            topicsLinks.value = links.map {it.attr("href").toString()}.dropLast(1)
-        } catch (e: Exception) {
-            topicsLinks.value = listOf("Ошибка! Отсутствует подключение к сети!")
-        }
-    }
-    getLinksThread.start()
+
     val scrollState = rememberScrollState()
     Column (modifier = Modifier
         .fillMaxSize()
-        .verticalScroll(scrollState, reverseScrolling = true),
+        .verticalScroll(scrollState, reverseScrolling = false),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally) {
         Box {
@@ -75,57 +68,42 @@ fun AOTD() {
                         .fillMaxWidth(),
                     color = buttonText,
                     textAlign = TextAlign.Center,
-                    fontFamily = CustomFontFamily,
+                    fontFamily = ttFamily,
                     fontSize = 22.sp,
                 )
             }
         }
-        Text(
-            text = messageTitle.value,
-            modifier = Modifier.fillMaxWidth(),
-            fontFamily = CustomFontFamily,
-            fontSize = 28.sp,
-            color = buttonText
-        )
-        Text(
-            text = message.value,
-            modifier = Modifier.fillMaxWidth(),
-            fontFamily = CustomFontFamily,
-            fontSize = 20.sp,
-            color = buttonText
-        )
+        if (isLoaded) {
+            Text(
+                text = articleName,
+                modifier = Modifier.fillMaxWidth(),
+                fontFamily = ttFamily,
+                fontSize = 28.sp,
+                color = buttonText
+            )
+            Text(
+                text = articleText,
+                modifier = Modifier.fillMaxWidth(),
+                fontFamily = ttFamily,
+                fontSize = 20.sp,
+                color = buttonText
+            )
+        }
         Box (modifier = Modifier.fillMaxWidth()) {
             if (!isLoaded) {
-                OutlinedIconButton(onClick = {
-                    showPB.value = true
-                    val gfgThread = Thread {
-                        try {
-                            val document =
-                                Jsoup.connect(topicsLinks.value.random())
-                                    .get()
-                            val titletext = document.title()
-                            messageTitle.value = titletext
-                            message.value = document.select("article").text()
-                            isLoaded = true
-                            showPB.value = false
-
-                        } catch (e: Exception) {
-                            messageTitle.value = errNameText
-                            message.value = errTopicText
-                        }
-                    }
-                    gfgThread.start()},
+                OutlinedIconButton(onClick = { viewModel.getRandomArticle() },
                     modifier= Modifier
                         .size(100.dp)
                         .padding(10.dp).align(Alignment.Center),  //avoid the oval shape
                     shape = CircleShape,
                     border= BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary),
                 ) {
-                    androidx.compose.material.Icon(painter = painterResource(id = R.drawable.baseline_download_24), contentDescription = "content description", tint = MaterialTheme.colorScheme.tertiary)
+                    Icon(Icons.Filled.Download, contentDescription = "content description",
+                        tint = MaterialTheme.colorScheme.tertiary)
                 }
             }
         }
-        if (showPB.value){
+        if (showPB){
             CircularProgressIndicator()
         }
     }

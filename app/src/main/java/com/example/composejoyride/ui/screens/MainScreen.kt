@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Abc
 import androidx.compose.material.icons.filled.AutoStories
+import androidx.compose.material.icons.filled.ContactPage
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -69,6 +70,26 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
             fontSize = 22.sp,
         )
         Button(
+            onClick = { navController.navigate(NoteGraph.AOTD_SCREEN) },
+            colors = buttonColor,
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier
+                .fillMaxWidth().height(48.dp).padding(vertical = Dimens.paddingSmall)
+        ) {
+            Icon(
+                Icons.Filled.ContactPage,
+                contentDescription = "AOTD Button",
+                tint = MaterialTheme.colorScheme.tertiary
+            )
+            Text(
+                text = stringResource(id = R.string.aotd),
+                modifier = Modifier.fillMaxWidth().padding(start = Dimens.paddingLarge),
+                fontFamily = CustomFontFamily,
+                color = buttonText,
+                fontSize = 22.sp
+            )
+        }
+        Button(
             onClick = { navController.navigate(NoteGraph.GENERATOR_SCREEN) },
             colors = buttonColor,
             shape = RoundedCornerShape(12.dp),
@@ -102,26 +123,6 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
             )
             Text(
                 text = stringResource(id = R.string.library),
-                modifier = Modifier.fillMaxWidth().padding(start = Dimens.paddingLarge),
-                fontFamily = CustomFontFamily,
-                color = buttonText,
-                fontSize = 22.sp
-            )
-        }
-        Button(
-            onClick = { navController.navigate(NoteGraph.NOTES_SCREEN) },
-            colors = buttonColor,
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth().height(48.dp).padding(vertical = Dimens.paddingSmall)
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.baseline_notes_24),
-                contentDescription = "Notes Button",
-                tint = MaterialTheme.colorScheme.tertiary
-            )
-            Text(
-                text = stringResource(id = R.string.notes),
                 modifier = Modifier.fillMaxWidth().padding(start = Dimens.paddingLarge),
                 fontFamily = CustomFontFamily,
                 color = buttonText,

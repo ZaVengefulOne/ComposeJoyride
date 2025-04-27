@@ -2,6 +2,7 @@ package com.example.composejoyride.di.modules
 
 import android.content.Context
 import androidx.room.Room
+import com.example.composejoyride.data.Interactors.ParseInteractor
 import com.example.composejoyride.data.dao.NotesDao
 import com.example.composejoyride.data.databases.NotesDatabase
 import com.example.composejoyride.data.repositories.NotesRepository
@@ -41,8 +42,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRhymeRepository(): RhymeRepository{
-        return RhymeRepository()
+    fun provideRhymeRepository(interactor: ParseInteractor): RhymeRepository{
+        return RhymeRepository(interactor)
+    }
+
+    @Provides
+    @Singleton
+    fun provideInteractor(): ParseInteractor{
+        return ParseInteractor()
     }
 
 //    @Provides

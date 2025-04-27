@@ -4,10 +4,11 @@
     <string name="entry">Данное приложение призвано помочь начинающим поэтам, стихотворцам и прочим заинтересованным в стихосложении людям.</string>
     <string name="generator">Генератор рифм</string>
     <string name="notes">Заметки</string>
+    <string name="aotd">Мне повезёт!</string>
     <string name="settings">Настройки</string>
     <string name="account">Аккаунт</string>
     <string name="library">Библиотека статей</string>
-    <string name="press_the_button">Нажмите на кнопку ниже, чтобы отобразить сегодняшнюю статью дня</string>
+    <string name="press_the_button">Нажмите на кнопку ниже, чтобы отобразить случайную статью</string>
     <string name="topic_name">Название статьи</string>
     <string name="first_words">Первые строки статьи</string>
     <string name="enter_rhyming_word">Введите слово для подбора рифмы:</string>

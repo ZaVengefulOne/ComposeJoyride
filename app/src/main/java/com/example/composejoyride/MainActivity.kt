@@ -114,7 +114,7 @@ fun NavHostContainer(
             }
 
             composable(NoteGraph.AOTD_SCREEN) {
-                AOTD()
+                AOTD(navController)
             }
 
             composable(NoteGraph.GENERATOR_SCREEN) {

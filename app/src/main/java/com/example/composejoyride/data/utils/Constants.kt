@@ -4,7 +4,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Abc
 import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.ContactPage
+import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Notes
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.composejoyride.R
@@ -20,9 +22,9 @@ object Constants {
             route = NoteGraph.MAIN_SCREEN
         ),
         BottomNavItem(
-            label = "Статья",
-            icon = Icons.Filled.ContactPage,
-            route = NoteGraph.AOTD_SCREEN
+            label = "Заметки",
+            icon = Icons.Filled.EditNote,
+            route = NoteGraph.NOTES_SCREEN
         ),
         BottomNavItem(
             label = "Генератор",
@@ -41,6 +43,7 @@ object Constants {
     const val EDIT_KEY = "dark_theme"
     const val SEARCH_KEY = "search_key"
     const val BASE_RHYMES_URL = "https://rifme.net/r/"
+    const val BASE_ARTICLES_URL = "https://nsaturnia.ru/kak-pisat-stixi/"
     val vowels = setOf('а', 'е', 'ё', 'и', 'о', 'у', 'ы', 'э', 'ю', 'я',
         'А', 'Е', 'Ё', 'И', 'О', 'У', 'Ы', 'Э', 'Ю', 'Я')
 }
