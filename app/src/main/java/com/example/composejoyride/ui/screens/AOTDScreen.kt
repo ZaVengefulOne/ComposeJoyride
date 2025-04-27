@@ -58,22 +58,28 @@ fun AOTD(navController: NavController) {
         .verticalScroll(scrollState, reverseScrolling = false),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Box {
             if (!isLoaded) {
                 Text(
                     text = stringResource(id = R.string.press_the_button),
                     modifier = Modifier
-                        .padding(Dimens.paddingMedium)
-                        .align(Alignment.Center)
-                        .fillMaxWidth(),
+                        .padding(Dimens.paddingMedium),
                     color = buttonText,
                     textAlign = TextAlign.Center,
                     fontFamily = ttFamily,
                     fontSize = 22.sp,
                 )
+                OutlinedIconButton(onClick = { viewModel.getRandomArticle() },
+                    modifier= Modifier
+                        .size(100.dp)
+                        .padding(10.dp),  //avoid the oval shape
+                    shape = CircleShape,
+                    border= BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary),
+                ) {
+                    Icon(Icons.Filled.Download, contentDescription = "content description",
+                        tint = MaterialTheme.colorScheme.tertiary)
+                }
             }
-        }
-        if (isLoaded) {
+        else {
             Text(
                 text = articleName,
                 modifier = Modifier.fillMaxWidth(),
@@ -88,20 +94,6 @@ fun AOTD(navController: NavController) {
                 fontSize = 20.sp,
                 color = buttonText
             )
-        }
-        Box (modifier = Modifier.fillMaxWidth()) {
-            if (!isLoaded) {
-                OutlinedIconButton(onClick = { viewModel.getRandomArticle() },
-                    modifier= Modifier
-                        .size(100.dp)
-                        .padding(10.dp).align(Alignment.Center),  //avoid the oval shape
-                    shape = CircleShape,
-                    border= BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary),
-                ) {
-                    Icon(Icons.Filled.Download, contentDescription = "content description",
-                        tint = MaterialTheme.colorScheme.tertiary)
-                }
-            }
         }
         if (showPB){
             CircularProgressIndicator()

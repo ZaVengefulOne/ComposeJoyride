@@ -32,6 +32,7 @@ import com.example.composejoyride.data.utils.CustomFontFamily
 import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.ui.theme.Dimens
 import com.example.composejoyride.ui.theme.LocalTheme
+import com.example.composejoyride.ui.theme.ttFamily
 
 @Composable
 fun Main(navController: NavController, preferences: SharedPreferences)  {
@@ -55,7 +56,7 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
                 .fillMaxWidth(),
             color = MaterialTheme.colorScheme.tertiary,
             textAlign = TextAlign.Center,
-            fontFamily = CustomFontFamily,
+            fontFamily = ttFamily,
             fontSize = 22.sp,
         )
         Text(
@@ -66,7 +67,7 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
                 .fillMaxWidth(),
             color = MaterialTheme.colorScheme.tertiary,
             textAlign = TextAlign.Center,
-            fontFamily = CustomFontFamily,
+            fontFamily = ttFamily,
             fontSize = 22.sp,
         )
         Button(
@@ -84,7 +85,7 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
             Text(
                 text = stringResource(id = R.string.aotd),
                 modifier = Modifier.fillMaxWidth().padding(start = Dimens.paddingLarge),
-                fontFamily = CustomFontFamily,
+                fontFamily = ttFamily,
                 color = buttonText,
                 fontSize = 22.sp
             )
@@ -104,7 +105,7 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
             Text(
                 text = stringResource(id = R.string.generator),
                 modifier = Modifier.fillMaxWidth().padding(start = Dimens.paddingLarge),
-                fontFamily = CustomFontFamily,
+                fontFamily = ttFamily,
                 color = buttonText,
                 fontSize = 22.sp
             )
@@ -124,7 +125,7 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
             Text(
                 text = stringResource(id = R.string.library),
                 modifier = Modifier.fillMaxWidth().padding(start = Dimens.paddingLarge),
-                fontFamily = CustomFontFamily,
+                fontFamily = ttFamily,
                 color = buttonText,
                 fontSize = 22.sp
             )
@@ -144,7 +145,7 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
             Text(
                 text = stringResource(id = R.string.settings),
                 modifier = Modifier.fillMaxWidth().padding(start = Dimens.paddingLarge),
-                fontFamily = CustomFontFamily,
+                fontFamily = ttFamily,
                 color = buttonText,
                 fontSize = 22.sp
             )

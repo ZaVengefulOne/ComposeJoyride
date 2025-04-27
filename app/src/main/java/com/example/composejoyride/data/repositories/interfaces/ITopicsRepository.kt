@@ -1,6 +1,7 @@
 package com.example.composejoyride.data.repositories.interfaces
 
-interface ITopicsRepository {
-    suspend fun getRandomTopic(): List<String>
-    suspend fun getTopics(): List<List<String>>
+interface IArticlesRepository {
+    suspend fun getRandomArticle(): List<String>
+    suspend fun getArticles(): List<List<String>>
+    suspend fun getArticle(url: String): List<String>
 }

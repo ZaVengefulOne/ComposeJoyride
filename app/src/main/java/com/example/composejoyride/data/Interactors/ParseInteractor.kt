@@ -22,7 +22,7 @@ class ParseInteractor: IParseInteractor {
         return links.map {it.attr("href").toString()}.dropLast(1)
         }
 
-    override suspend fun getRandomTopic(): List<String> {
+    override suspend fun getRandomArticle(): List<String> {
         val linksList = getLinks()
         val document =
             Jsoup.connect(linksList.random())
@@ -32,7 +32,16 @@ class ParseInteractor: IParseInteractor {
                 return listOf(topicTitle, topicText)
         }
 
-    override suspend fun getTopics(): List<List<String>> {
+    override suspend fun getArticles(): List<List<String>> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun getArticle(url: String): List<String> {
+        val document = Jsoup.connect(url).get()
+        val articleTitle = document.title()
+        val articleText = document.select("article").text()
+        return listOf(articleTitle, articleText)
+    }
+
+
 }

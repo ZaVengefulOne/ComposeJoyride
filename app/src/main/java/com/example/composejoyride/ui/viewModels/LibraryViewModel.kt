@@ -3,13 +3,19 @@ package com.example.composejoyride.ui.viewModels
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
-import com.example.composejoyride.data.repositories.TopicsRepository
+import com.example.composejoyride.data.repositories.ArticlesRepository
 import com.example.composejoyride.data.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class LibraryViewModel @Inject constructor(repository: TopicsRepository) : ViewModel() {
+class LibraryViewModel @Inject constructor(repository: ArticlesRepository) : ViewModel() {
+
+    private val _chosenArticleURL = MutableStateFlow("")
+    val chosenArticleURL: StateFlow<String> get() = _chosenArticleURL
+
 
     fun saveSearchHistory(query: String, sharedPreferences: SharedPreferences) {
         val historySet =

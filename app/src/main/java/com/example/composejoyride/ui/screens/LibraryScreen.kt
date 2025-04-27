@@ -53,8 +53,10 @@ import androidx.navigation.NavController
 import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.Constants
 import com.example.composejoyride.data.utils.CustomFontFamily
+import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Dimens
+import com.example.composejoyride.ui.viewModels.ArticleViewModel
 import com.example.composejoyride.ui.viewModels.LibraryViewModel
 import org.jsoup.Jsoup
 
@@ -70,6 +72,8 @@ fun Library(navController: NavController, preferences: SharedPreferences, isBott
 
 
     val viewModel: LibraryViewModel = sharedViewModel(navController)
+    val articleViewModel: ArticleViewModel = sharedViewModel(navController)
+
     val buttonColor = MaterialTheme.colorScheme.secondary
     val buttonText = MaterialTheme.colorScheme.tertiary
     val topicsList = rememberSaveable { mutableStateOf(listOf<String>()) }
@@ -182,7 +186,8 @@ fun Library(navController: NavController, preferences: SharedPreferences, isBott
                                             topicItem[1]
                                         )
                                     }
-                                navController.navigate("topic")
+                                articleViewModel.getArticle(topicItem[1])
+                                navController.navigate(NoteGraph.TOPIC_SCREEN)
                             }, elevation = 12.dp, backgroundColor = MaterialTheme.colorScheme.secondary ,border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                     ) {
                         Row {
