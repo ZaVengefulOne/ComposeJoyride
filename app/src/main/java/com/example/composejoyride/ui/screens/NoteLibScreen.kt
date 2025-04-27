@@ -19,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
 //noinspection UsingMaterialAndMaterial3Libraries
@@ -27,6 +28,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
@@ -38,6 +40,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -50,11 +53,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.example.composejoyride.data.entitites.Note
 import com.example.composejoyride.data.utils.CustomFontFamily
 import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.data.utils.sharedViewModel
+import com.example.composejoyride.ui.theme.AlertDialog
 import com.example.composejoyride.ui.viewModels.NoteViewModel
 import com.example.composejoyride.ui.viewModels.NotesViewModel
 import kotlinx.coroutines.launch
@@ -79,9 +84,26 @@ fun Notes(navController: NavController)
     val selectedNoteId by rememberSaveable { mutableIntStateOf(0) }
     var isNoteMenuVisible by rememberSaveable { mutableStateOf(false)}
     var openedForEditing by rememberSaveable { mutableStateOf(false)}
+    val openDeleteDialog = remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
+
+    when {
+        openDeleteDialog.value -> {
+            AlertDialog(
+                onDismissRequest = { openDeleteDialog.value = false },
+                onConfirmation = {
+                    openDeleteDialog.value = false
+                    notesViewModel.clearNotes()
+                },
+                dialogTitle = "Удаление заметок",
+                dialogText = "Вы уверены, что хотите очистить заметки?",
+                icon = Icons.Default.DeleteForever
+            )
+        }
+    }
+
 
 
         Column(modifier = Modifier.fillMaxSize()) {
@@ -102,12 +124,6 @@ fun Notes(navController: NavController)
                                 .padding(4.dp)
                                 .fillMaxWidth()
                                 .clickable {
-//                                    isNoteMenuVisible = true
-//                                    openedForEditing = true
-//                                    noteName = index.note_name
-//                                    noteText = index.note_text
-//                                    selectedNoteId = index.id
-                                    Log.d("HASHCODE_VENGEFUL1", noteViewModel.hashCode().toString())
                                     noteViewModel.setNote(index.note_name)
                                     navController.navigate(NoteGraph.NOTE_SCREEN)
                                 },
@@ -137,7 +153,19 @@ fun Notes(navController: NavController)
                     border= BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary),
                 ) {
                     Icon(Icons.Default.Add, contentDescription = "content description", tint = MaterialTheme.colorScheme.tertiary)
-                }}
+                }
+                OutlinedIconButton(onClick = {
+                    openDeleteDialog.value = true
+                },
+                    modifier= Modifier
+                        .size(100.dp)
+                        .padding(10.dp),  //avoid the oval shape
+                    shape = CircleShape,
+                    border= BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary)
+                ) {
+                    Icon(Icons.Default.DeleteForever, contentDescription = "content description", tint = MaterialTheme.colorScheme.tertiary)
+                }
+                }
             } else {
                 LaunchedEffect(scrollState) {
                     scope.launch {
@@ -183,13 +211,13 @@ fun Notes(navController: NavController)
                 Row (horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()){
                     OutlinedIconButton(onClick = {
                         if (openedForEditing){
-                        noteViewModel.updateNote(selectedNoteId,noteName,noteText)
+                        noteViewModel.updateNote()
                         openedForEditing = false
                         isNoteMenuVisible = false
                         noteName = ""
                         noteText = ""
                     } else {
-                        noteViewModel.insertNote(Note(0, noteName, noteText))
+                        noteViewModel.insertNote(newNote)
                         isNoteMenuVisible = false
                         noteName = ""
                         noteText = ""
@@ -205,7 +233,7 @@ fun Notes(navController: NavController)
                         Icon(Icons.Default.Check, contentDescription = "content description", tint = MaterialTheme.colorScheme.tertiary)
                     }
                     OutlinedIconButton(onClick = {
-                        noteViewModel.deleteNote(noteName)
+                        noteViewModel.deleteNote()
                         isNoteMenuVisible = false
                         notesViewModel.loadNotes()},
                         modifier= Modifier

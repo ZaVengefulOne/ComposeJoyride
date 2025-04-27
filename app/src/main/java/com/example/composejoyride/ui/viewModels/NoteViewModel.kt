@@ -27,9 +27,9 @@ class NoteViewModel @Inject constructor(private val repository: NotesRepository)
         }
     }
 
-    fun deleteNote(name: String) {
+    fun deleteNote() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteNote(name)
+            repository.deleteNote(_note.value.note_name)
         }
     }
 
@@ -48,9 +48,9 @@ class NoteViewModel @Inject constructor(private val repository: NotesRepository)
         _note.value = _note.value.copy(note_text = newText)
     }
 
-    fun updateNote(id: Int, newName: String, newText: String) {
+    fun updateNote() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateNote(id, newName, newText)
+            repository.updateNote(_note.value.id, _note.value.note_name, _note.value.note_text)
         }
     }
 }

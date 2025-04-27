@@ -17,7 +17,7 @@ val Typography = Typography(
     bodyMedium = TextStyle(
         fontFamily = ttFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 22.sp,
+        fontSize = 18.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.9.sp
     ),

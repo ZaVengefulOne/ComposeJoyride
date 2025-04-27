@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.FormatBold
 import androidx.compose.material.icons.filled.FormatItalic
 import androidx.compose.material.icons.filled.FormatUnderlined
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -52,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.composejoyride.data.utils.sharedViewModel
+import com.example.composejoyride.ui.theme.Typography
 import com.example.composejoyride.ui.viewModels.NoteViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -61,139 +63,72 @@ fun Note(
     navController: NavController,
     onDone: () -> Unit,
     ) {
+    val isKeyboardOpen = WindowInsets.isImeVisible
     val noteViewModel: NoteViewModel = sharedViewModel(navController)
-
     val note by noteViewModel.note.collectAsState()
-    val isKeyboardVisible = WindowInsets.isImeVisible
-
-    var textFieldValue by remember {
-        mutableStateOf(
-            TextFieldValue(
-                annotatedString = AnnotatedString(note.note_text),
-                selection = TextRange(0)
-            )
-        )
-    }
-
-    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .imePadding()
             .padding(16.dp)
     ) {
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Кнопки
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Color.Transparent)
+        ) {
+            OutlinedButton(
+                onClick = {
+                    noteViewModel.updateNote()
+                    onDone()
+                },
+                //modifier = Modifier.weight(1f)
+            ) {
+                Icon(imageVector = Icons.Filled.Save, contentDescription = null)
+            }
+
+            OutlinedButton(
+                onClick = {
+                    noteViewModel.deleteNote()
+                    onDone()
+                },
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
+                //modifier = Modifier.weight(1f)
+            ) {
+                Icon(imageVector = Icons.Filled.Delete, contentDescription = null)
+            }
+        }
+
+
         // Заголовок
         OutlinedTextField(
-            value = note.note_name,
+            value = note.note_name ?: "",
             onValueChange = { noteViewModel.updateNoteName(it) },
             label = { Text("Название") },
             modifier = Modifier.fillMaxWidth(),
-            textStyle = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
+            textStyle = Typography.titleLarge
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
 
-        // Панель редактирования шрифта
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            IconButton(onClick = { textFieldValue = applyStyle(textFieldValue, FontWeight.Bold) }) {
-                Icon(Icons.Default.FormatBold, contentDescription = "Bold")
-            }
-            IconButton(onClick = {
-                textFieldValue = applyStyle(textFieldValue, fontStyle = FontStyle.Italic)
-            }) {
-                Icon(Icons.Default.FormatItalic, contentDescription = "Italic")
-            }
-            IconButton(onClick = {
-                textFieldValue =
-                    applyStyle(textFieldValue, textDecoration = TextDecoration.Underline)
-            }) {
-                Icon(Icons.Default.FormatUnderlined, contentDescription = "Underline")
-            }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
 
-        // Поле текста
+        // Текст заметки
         BasicTextField(
-            value = textFieldValue,
-            onValueChange = {
-                textFieldValue = it.copy(annotatedString = it.annotatedString)
-                noteViewModel.updateNoteText(it.annotatedString.text)
-            },
+            value = note.note_text ?: "",
+            onValueChange = { noteViewModel.updateNoteText(it) },
+            textStyle = Typography.bodyMedium,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .background(Color(0xFFF5F5F5))
-                .padding(12.dp),
-            textStyle = TextStyle.Default.copy(fontSize = 16.sp)
+                .background(MaterialTheme.colorScheme.background)
+                .padding(12.dp)
         )
 
 
-        // Кнопки
-        if (!isKeyboardVisible) {
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Button(
-                    onClick = {
-                        noteViewModel.updateNote(note.id, note.note_name, note.note_text)
-                        onDone()
-                        keyboardController?.hide()
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Icon(imageVector = Icons.Default.Done, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Сохранить")
-                }
-
-                OutlinedButton(
-                    onClick = {
-                        noteViewModel.deleteNote(note.note_name)
-                        onDone()
-                        keyboardController?.hide()
-                    },
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Удалить")
-                }
-            }
         }
     }
-}
-
-// Функция для применения стиля к выделенному тексту
-private fun applyStyle(
-    textFieldValue: TextFieldValue,
-    fontWeight: FontWeight? = null,
-    fontStyle: FontStyle? = null,
-    textDecoration: TextDecoration? = null
-): TextFieldValue {
-    val selection = textFieldValue.selection
-    if (selection.min == selection.max) return textFieldValue // Нет выделения
-
-    val annotatedString = buildAnnotatedString {
-        append(textFieldValue.text)
-        if (fontWeight != null) {
-            addStyle(SpanStyle(fontWeight = fontWeight), selection.start, selection.end)
-        }
-        if (fontStyle != null) {
-            addStyle(SpanStyle(fontStyle = fontStyle), selection.start, selection.end)
-        }
-        if (textDecoration != null) {
-            addStyle(SpanStyle(textDecoration = textDecoration), selection.start, selection.end)
-        }
-    }
-
-    return textFieldValue.copy(annotatedString = annotatedString)
-}

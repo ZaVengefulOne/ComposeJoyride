@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.CustomFontFamily
 import com.example.composejoyride.data.utils.EDIT_KEY
+import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.ui.theme.Dimens
 import com.example.composejoyride.ui.theme.LocalTheme
 
@@ -86,7 +87,7 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
             )
         }
         Button(
-            onClick = { navController.navigate("list") },
+            onClick = { navController.navigate(NoteGraph.LIBRARY_SCREEN) },
             colors = buttonColor,
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
