@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.Constants
-import com.example.composejoyride.data.utils.CustomFontFamily
 import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Dimens
@@ -125,7 +124,7 @@ fun Settings(navController: NavController, preferences: SharedPreferences)
             }
         }
         else{
-            Text(text = stringResource(id = R.string.aboutApp), textAlign = TextAlign.Center, fontFamily = CustomFontFamily, modifier = Modifier.padding(
+            Text(text = stringResource(id = R.string.aboutApp), textAlign = TextAlign.Center, fontFamily = ttFamily, modifier = Modifier.padding(
                 Dimens.paddingMedium), color = MaterialTheme.colorScheme.tertiary)
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 OutlinedIconButton(

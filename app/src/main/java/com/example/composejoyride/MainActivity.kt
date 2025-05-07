@@ -34,8 +34,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,7 +51,7 @@ import com.example.composejoyride.ui.screens.Note
 import com.example.composejoyride.ui.screens.Notes
 import com.example.composejoyride.ui.screens.Rhyme
 import com.example.composejoyride.ui.screens.Settings
-import com.example.composejoyride.ui.screens.Topic
+import com.example.composejoyride.ui.screens.Article
 import com.example.composejoyride.ui.theme.ComposeJoyrideTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -132,7 +130,7 @@ fun NavHostContainer(
                 Notes(navController)
             }
             composable(NoteGraph.TOPIC_SCREEN){
-                Topic(navController, preferences)
+                Article(navController, preferences)
             }
             composable(NoteGraph.NOTE_SCREEN){
                 Note(navController, {navController.navigate(NoteGraph.NOTES_SCREEN)}, bottomBarVisibility)

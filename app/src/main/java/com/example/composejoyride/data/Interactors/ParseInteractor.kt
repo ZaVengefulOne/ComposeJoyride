@@ -17,7 +17,6 @@ class ParseInteractor: IParseInteractor {
         val document =
             Jsoup.connect(Constants.BASE_ARTICLES_URL)
                         .get()
-                val rhyme = document.select("h3")
                 val links = document.select("h3 > a")
         return links.map {it.attr("href").toString()}.dropLast(1)
         }

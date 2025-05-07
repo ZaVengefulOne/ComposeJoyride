@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontFamily
 import com.example.composejoyride.R
 
 
-val CustomFontFamily = FontFamily(Font(R.font.tippytoesbold))
+//val CustomFontFamily = FontFamily(Font(R.font.tippytoesbold))
 
 object Constants {
     val BottomNavItems = listOf(

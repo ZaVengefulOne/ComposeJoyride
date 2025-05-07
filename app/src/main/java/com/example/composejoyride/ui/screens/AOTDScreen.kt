@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.composejoyride.R
-import com.example.composejoyride.data.utils.CustomFontFamily
 import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Dimens
 import com.example.composejoyride.ui.theme.ttFamily

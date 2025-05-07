@@ -64,7 +64,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.Constants
-import com.example.composejoyride.data.utils.CustomFontFamily
 import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Dimens
 import com.example.composejoyride.ui.theme.VowelSelectionDialog
@@ -127,7 +126,7 @@ fun Rhyme(navController: NavController, isBottomBarVisible: MutableState<Boolean
             .align(Alignment.CenterHorizontally)
             .fillMaxWidth(),
             color = MaterialTheme.colorScheme.tertiary,
-            fontFamily = CustomFontFamily,
+            fontFamily = ttFamily,
             fontSize = 28.sp,
             textAlign = TextAlign.Center)
         LazyColumn (
@@ -142,7 +141,7 @@ fun Rhyme(navController: NavController, isBottomBarVisible: MutableState<Boolean
                         Row {
                             Text(text = rhymeItem,
                                 color = MaterialTheme.colorScheme.tertiary,
-                                fontFamily = CustomFontFamily,
+                                fontFamily = ttFamily,
                                 fontSize = 28.sp,
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)

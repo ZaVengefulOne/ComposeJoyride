@@ -24,6 +24,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -53,7 +54,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.Constants
-import com.example.composejoyride.data.utils.CustomFontFamily
 import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Dimens
@@ -193,22 +193,22 @@ fun Library(navController: NavController, preferences: SharedPreferences, isBott
                             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                         ) {
                             Row {
-                                Image(
-                                    painter = painterResource(R.drawable.baseline_notes_24),
+                                Icon(
+                                    Icons.Filled.AutoStories,
                                     contentDescription = "Article Icon",
                                     modifier = Modifier
                                         .size(80.dp)
                                         .background(buttonColor),
+                                    tint = MaterialTheme.colorScheme.background
                                 )
                                 Text(
                                     modifier = Modifier
                                         .padding(Dimens.paddingMedium)
                                         .align(Alignment.CenterVertically),
                                     text = topicItem[0],
-                                    fontWeight = FontWeight.Bold,
                                     fontSize = 20.sp,
                                     color = buttonText,
-                                    fontFamily = CustomFontFamily,
+                                    fontFamily = ttFamily,
                                     textAlign = TextAlign.Start
                                 )
                             }

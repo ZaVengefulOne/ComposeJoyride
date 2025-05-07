@@ -60,8 +60,8 @@ fun Notes(navController: NavController)
 
     notesViewModel.loadNotes()
     val newNote = Note(0, "Новая заметка", "")
-    val selectedNoteId by rememberSaveable { mutableIntStateOf(0) }
     val openDeleteDialog = remember { mutableStateOf(false) }
+
 
     when {
         openDeleteDialog.value -> {
