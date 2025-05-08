@@ -9,7 +9,7 @@ import com.example.composejoyride.data.entitites.Note
 @Dao
 interface NotesDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(note: Note)
 
     @Query("UPDATE notes SET note_name = :newName, note_text = :newText WHERE id = :id")

@@ -53,14 +53,14 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Article(navController: NavController, preferences: SharedPreferences){
+fun ArticleScreen(navController: NavController, preferences: SharedPreferences){
 
     val articleViewModel = sharedViewModel<ArticleViewModel>(navController)
     val libraryViewModel = sharedViewModel<LibraryViewModel>(navController)
 
     //val topicUrl = preferences.getString("topicURL", Constants.BASE_ARTICLES_URL)
-    val articleTitle = articleViewModel.arcticleName.collectAsState().value
-    val articleText = articleViewModel.arcticleText.collectAsState().value
+    val articleTitle = articleViewModel.articleName.collectAsState().value
+    val articleText = articleViewModel.articleText.collectAsState().value
     val textColor = MaterialTheme.colorScheme.tertiary
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()

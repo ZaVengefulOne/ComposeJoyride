@@ -13,27 +13,29 @@ import javax.inject.Inject
 @HiltViewModel
 class ArticleViewModel @Inject constructor(private val repository: ArticlesRepository) : ViewModel() {
 
-    private val _arcticleName = MutableStateFlow("Статья загружается, пожалуйста, подождите...")
-    val arcticleName: StateFlow<String> get() = _arcticleName
+    private val _articleName = MutableStateFlow("Статья загружается, пожалуйста, подождите...")
+    val articleName: StateFlow<String> get() = _articleName
 
-    private val _arcticleText = MutableStateFlow("")
-    val arcticleText: StateFlow<String> get() = _arcticleText
+    private val _articleText = MutableStateFlow("")
+    val articleText: StateFlow<String> get() = _articleText
 
     fun getArticle(url: String){
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val article = repository.getArticle(url)
-                _arcticleName.value = article[0]
-                _arcticleText.value = article[1]
+                _articleName.value = article.articleTitle
+                _articleText.value = article.articleText ?: ""
             } catch (e: Exception){
-             _arcticleName.value = "Ошибка!"
+                val article = repository.getSavedArticle(url)
+                _articleName.value = article.articleTitle
+                _articleText.value = article.articleText
             }
         }
     }
 
     fun articleDrop(){
-        _arcticleName.value = "Статья загружается, пожалуйста, подождите..."
-        _arcticleText.value = ""
+        _articleName.value = "Статья загружается, пожалуйста, подождите..."
+        _articleText.value = ""
     }
 
 }

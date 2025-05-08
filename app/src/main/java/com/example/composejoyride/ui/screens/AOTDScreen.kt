@@ -2,7 +2,6 @@ package com.example.composejoyride.ui.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,13 +19,8 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -37,15 +31,14 @@ import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Dimens
 import com.example.composejoyride.ui.theme.ttFamily
 import com.example.composejoyride.ui.viewModels.AOTDViewModel
-import org.jsoup.Jsoup
 
 @Composable
 fun AOTD(navController: NavController) {
 
     val viewModel = sharedViewModel<AOTDViewModel>(navController)
 
-    val articleName = viewModel.randomArcticleName.collectAsState().value
-    val articleText = viewModel.randomArcticleText.collectAsState().value
+    val articleName = viewModel.randomArticleName.collectAsState().value
+    val articleText = viewModel.randomArticleText.collectAsState().value
     val isLoaded = viewModel.isLoaded.collectAsState().value
     val showPB = viewModel.showPB.collectAsState().value
 

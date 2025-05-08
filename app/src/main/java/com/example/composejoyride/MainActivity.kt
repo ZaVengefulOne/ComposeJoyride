@@ -49,9 +49,9 @@ import com.example.composejoyride.ui.screens.Library
 import com.example.composejoyride.ui.screens.Main
 import com.example.composejoyride.ui.screens.Note
 import com.example.composejoyride.ui.screens.Notes
-import com.example.composejoyride.ui.screens.Rhyme
+import com.example.composejoyride.ui.screens.RhymeScreen
 import com.example.composejoyride.ui.screens.Settings
-import com.example.composejoyride.ui.screens.Article
+import com.example.composejoyride.ui.screens.ArticleScreen
 import com.example.composejoyride.ui.theme.ComposeJoyrideTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -116,7 +116,7 @@ fun NavHostContainer(
             }
 
             composable(NoteGraph.GENERATOR_SCREEN) {
-                Rhyme(navController, bottomBarVisibility
+                RhymeScreen(navController, bottomBarVisibility
                 )
             }
 
@@ -130,7 +130,7 @@ fun NavHostContainer(
                 Notes(navController)
             }
             composable(NoteGraph.TOPIC_SCREEN){
-                Article(navController, preferences)
+                ArticleScreen(navController, preferences)
             }
             composable(NoteGraph.NOTE_SCREEN){
                 Note(navController, {navController.navigate(NoteGraph.NOTES_SCREEN)}, bottomBarVisibility)

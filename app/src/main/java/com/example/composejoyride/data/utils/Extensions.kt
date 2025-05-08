@@ -6,6 +6,8 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.example.composejoyride.data.entitites.CacheArticle
+import com.example.composejoyride.di.models.Article
 
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
@@ -18,4 +20,25 @@ inline fun <reified VM : ViewModel> sharedViewModel(
 
 fun countRussianVowels(word: String): Int {
     return word.count { it in Constants.vowels }
+}
+
+inline fun List<CacheArticle>.toArticles(): List<Article>{
+    return map { cacheItem ->
+        Article(
+            articleTitle = cacheItem.articleTitle,
+            articleText = cacheItem.articleText,
+            articleLink = cacheItem.articleLink
+        )
+    }
+}
+
+inline fun List<Article>.toCacheArticles(): List<CacheArticle> {
+    return mapIndexed { index, articleItem ->
+        CacheArticle(
+            id = index + 1,
+            articleTitle = articleItem.articleTitle,
+            articleText = articleItem.articleText ?: "",
+            articleLink = articleItem.articleLink
+        )
+    }
 }

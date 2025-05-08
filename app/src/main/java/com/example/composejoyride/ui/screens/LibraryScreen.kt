@@ -3,8 +3,9 @@ package com.example.composejoyride.ui.screens
 //noinspection UsingMaterialAndMaterial3Libraries
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,7 +46,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -61,13 +61,13 @@ import com.example.composejoyride.ui.theme.ttFamily
 import com.example.composejoyride.ui.viewModels.ArticleViewModel
 import com.example.composejoyride.ui.viewModels.LibraryViewModel
 
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun Library(navController: NavController, preferences: SharedPreferences, isBottomBarVisible: MutableState<Boolean>) {
     val viewModel: LibraryViewModel = sharedViewModel(navController)
     val articleViewModel: ArticleViewModel = sharedViewModel(navController)
     viewModel.getArticles()
-
     val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(imeVisible) {
@@ -77,11 +77,11 @@ fun Library(navController: NavController, preferences: SharedPreferences, isBott
 
     val buttonColor = MaterialTheme.colorScheme.secondary
     val buttonText = MaterialTheme.colorScheme.tertiary
-    val topics = viewModel.articleItems.collectAsState().value
+    val articles = viewModel.articleItems.collectAsState().value
     val isLoaded = viewModel.isLoaded.collectAsState().value
 
     val searchText = rememberSaveable { mutableStateOf("") }
-    val filteredTopicsList = rememberSaveable { mutableStateOf(topics) }
+    val filteredArticleList = rememberSaveable { mutableStateOf(articles) }
     val localItems = rememberSaveable {
         mutableStateOf(
             preferences.getStringSet(Constants.SEARCH_KEY, mutableSetOf())?.toMutableSet()
@@ -93,7 +93,7 @@ fun Library(navController: NavController, preferences: SharedPreferences, isBott
         if (searchText.value.isNotEmpty()) {
             IconButton(onClick = {
                 searchText.value = ""
-                filteredTopicsList.value = topics
+                filteredArticleList.value = articles
             }) {
                 Icon(
                     Icons.Filled.Close,
@@ -142,10 +142,10 @@ fun Library(navController: NavController, preferences: SharedPreferences, isBott
                     keyboardActions = KeyboardActions(
                         onDone = {
                             if (searchText.value.isEmpty()) {
-                                filteredTopicsList.value = topics
+                                filteredArticleList.value = articles
                             } else {
-                                filteredTopicsList.value = topics.filter {
-                                    it[0].contains(searchText.value, true)
+                                filteredArticleList.value = articles.filter {
+                                    it.articleTitle.contains(searchText.value, true)
                                 }
                                 viewModel.saveSearchHistory(searchText.value, preferences)
                                 localItems.value =
@@ -180,13 +180,13 @@ fun Library(navController: NavController, preferences: SharedPreferences, isBott
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Top,
                 content = {
-                    items(filteredTopicsList.value.ifEmpty { topics }) { topicItem ->
-                        Card(
+                    items(filteredArticleList.value.ifEmpty { articles }) { articleItem ->
+                        Card( //Перейти на Material3
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(4.dp)
                                 .clickable {
-                                    articleViewModel.getArticle(topicItem[1])
+                                    articleViewModel.getArticle(articleItem.articleLink)
                                     navController.navigate(NoteGraph.TOPIC_SCREEN)
                                 }, elevation = 12.dp,
                             backgroundColor = MaterialTheme.colorScheme.secondary,
@@ -205,7 +205,7 @@ fun Library(navController: NavController, preferences: SharedPreferences, isBott
                                     modifier = Modifier
                                         .padding(Dimens.paddingMedium)
                                         .align(Alignment.CenterVertically),
-                                    text = topicItem[0],
+                                    text = articleItem.articleTitle,
                                     fontSize = 20.sp,
                                     color = buttonText,
                                     fontFamily = ttFamily,

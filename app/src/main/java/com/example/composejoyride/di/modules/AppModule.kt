@@ -3,8 +3,11 @@ package com.example.composejoyride.di.modules
 import android.content.Context
 import androidx.room.Room
 import com.example.composejoyride.data.Interactors.ParseInteractor
+import com.example.composejoyride.data.dao.ArticlesDao
 import com.example.composejoyride.data.dao.NotesDao
+import com.example.composejoyride.data.databases.ArticlesDatabase
 import com.example.composejoyride.data.databases.NotesDatabase
+import com.example.composejoyride.data.repositories.ArticlesRepository
 import com.example.composejoyride.data.repositories.NotesRepository
 import com.example.composejoyride.data.repositories.RhymeRepository
 import dagger.Module
@@ -50,6 +53,30 @@ object AppModule {
     @Singleton
     fun provideInteractor(): ParseInteractor{
         return ParseInteractor()
+    }
+
+    @Provides
+    @Singleton
+    fun provideArticlesDatabase(@ApplicationContext context: Context): ArticlesDatabase {
+        return Room.databaseBuilder(
+            context,
+            ArticlesDatabase::class.java,
+            "cache"
+        ).build()
+    }
+
+    @Provides
+    fun provideArticlesDao(database: ArticlesDatabase): ArticlesDao{
+        return database.articlesDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideArticlesRepository(
+        interactor: ParseInteractor,
+        articlesDao: ArticlesDao
+    ) : ArticlesRepository{
+        return ArticlesRepository(interactor, articlesDao)
     }
 
 //    @Provides

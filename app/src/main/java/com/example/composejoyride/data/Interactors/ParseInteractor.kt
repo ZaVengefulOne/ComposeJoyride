@@ -1,13 +1,17 @@
 package com.example.composejoyride.data.Interactors
 
+import android.util.Log
 import com.example.composejoyride.data.Interactors.interfaces.IParseInteractor
+import com.example.composejoyride.data.entitites.CacheArticle
 import com.example.composejoyride.data.utils.Constants
+import com.example.composejoyride.di.models.Article
+import com.example.composejoyride.di.models.Rhyme
 import org.jsoup.Jsoup
 
 class ParseInteractor: IParseInteractor {
-    override suspend fun getRhymes(input: String, stress: Int): List<String> {
+    override suspend fun getRhymes(input: Rhyme): List<String> {
         val document =
-            Jsoup.connect(Constants.BASE_RHYMES_URL + input + "/${stress}")
+            Jsoup.connect(Constants.BASE_RHYMES_URL + input.text + "/${input.stress}")
                 .get()
         val rhyme = document.getElementsByClass("riLi")
         return rhyme.map { it.text().toString() }
@@ -21,32 +25,33 @@ class ParseInteractor: IParseInteractor {
         return links.map {it.attr("href").toString()}.dropLast(1)
         }
 
-    override suspend fun getRandomArticle(): List<String> {
+    override suspend fun getRandomArticle(): Article {
         val linksList = getLinks()
+        val randomLink = linksList.random()
         val document =
-            Jsoup.connect(linksList.random())
+            Jsoup.connect(randomLink)
                 .get()
                 val topicTitle = document.title()
                 val topicText = document.select("article").text()
-                return listOf(topicTitle, topicText)
+                return Article(topicTitle,topicText,randomLink)
         }
 
-    override suspend fun getArticles(): List<List<String>> {
+    override suspend fun getArticles(): List<Article> {
         val document =
             Jsoup.connect(Constants.BASE_ARTICLES_URL)
                 .get()
-        val rhyme = document.select("h3")
+        val articles = document.select("h3")
         val links = document.select("h3 > a")
-        val articleList = rhyme.map { it.text().toString() }.dropLast(1)
+        val articleList = articles.map { it.text().toString() }.dropLast(1)
         val articleLinks = links.map {it.attr("href").toString()}.dropLast(1)
-        return articleList.zip(articleLinks) {topic, link -> listOf(topic, link)}
+        return articleList.zip(articleLinks) {topic, link -> Article(topic,null,link)}
     }
 
-    override suspend fun getArticle(url: String): List<String> {
+    override suspend fun getArticle(url: String): Article {
         val document = Jsoup.connect(url).get()
         val articleTitle = document.title()
         val articleText = document.select("article").text()
-        return listOf(articleTitle, articleText)
+        return Article(articleTitle,articleText,url)
     }
 
 

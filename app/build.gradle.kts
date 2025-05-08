@@ -64,13 +64,12 @@ allprojects {
 dependencies {
 
     // DI
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.work.runtime.ktx.v281)
     implementation(libs.work.runtime.ktx)
-
+    ksp(libs.hilt.compiler)
 
     implementation(libs.lifecycle.viewmodel.android)
     

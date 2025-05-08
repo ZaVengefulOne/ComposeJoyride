@@ -13,11 +13,11 @@ import javax.inject.Inject
 @HiltViewModel
 class AOTDViewModel @Inject constructor(private val repository: ArticlesRepository) : ViewModel() {
 
-    private val _randomArcticleName = MutableStateFlow("")
-    val randomArcticleName: StateFlow<String> get() = _randomArcticleName
+    private val _randomArticleName = MutableStateFlow("")
+    val randomArticleName: StateFlow<String> get() = _randomArticleName
 
-    private val _randomArcticleText = MutableStateFlow("")
-    val randomArcticleText: StateFlow<String> get() = _randomArcticleText
+    private val _randomArticleText = MutableStateFlow("")
+    val randomArticleText: StateFlow<String> get() = _randomArticleText
 
     private val _isLoaded = MutableStateFlow(false)
     val isLoaded: StateFlow<Boolean> get() = _isLoaded
@@ -29,12 +29,12 @@ class AOTDViewModel @Inject constructor(private val repository: ArticlesReposito
         _showPB.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val randomArcticle = repository.getRandomArticle()
-                _randomArcticleName.value = randomArcticle[0]
-                _randomArcticleText.value = randomArcticle[1]
+                val randomArticle = repository.getRandomArticle()
+                _randomArticleName.value = randomArticle.articleTitle
+                _randomArticleText.value = randomArticle.articleText ?: ""
             } catch (e: Exception)
             {
-                _randomArcticleName.value = "Ошибка! Статья не найдена!"
+                _randomArticleName.value = "Ошибка! Статья не найдена!"
             }
             _isLoaded.value = true
             _showPB.value = false

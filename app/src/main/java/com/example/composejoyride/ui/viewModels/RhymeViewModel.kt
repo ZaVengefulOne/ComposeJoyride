@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.composejoyride.data.entitites.Note
 import com.example.composejoyride.data.repositories.RhymeRepository
+import com.example.composejoyride.di.models.Rhyme
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +36,7 @@ class RhymeViewModel @Inject constructor(private val repository: RhymeRepository
     fun findRhymes(stress: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _result.value = repository.getRhymes(input.value, stress)
+                _result.value = repository.getRhymes(Rhyme(input.value, stress))
             } catch (e: Exception) {
                 _result.value = listOf("Ошибка!")
             }
