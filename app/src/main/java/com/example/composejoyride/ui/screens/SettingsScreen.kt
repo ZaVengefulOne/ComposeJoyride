@@ -43,6 +43,7 @@ import com.example.composejoyride.ui.theme.schistFont
 import com.example.composejoyride.ui.theme.tippyToesFont
 import com.example.composejoyride.ui.theme.ttFamily
 import com.example.composejoyride.ui.viewModels.SettingsViewModel
+import androidx.core.content.edit
 
 @Composable
 fun Settings(navController: NavController, preferences: SharedPreferences)
@@ -54,10 +55,10 @@ fun Settings(navController: NavController, preferences: SharedPreferences)
     Column(modifier = Modifier.fillMaxSize()) {
         if(!isInfoOpen.value) {
             Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Text(text = "Переключатель темы: ", fontFamily = ttFamily, color = MaterialTheme.colorScheme.tertiary)
+                Text(text = stringResource(R.string.theme_switcher), fontFamily = ttFamily, color = MaterialTheme.colorScheme.tertiary)
                 IconButton(onClick = {
                     LocalTheme.value = !LocalTheme.value
-                    preferences.edit().putBoolean(Constants.EDIT_KEY, LocalTheme.value).apply()
+                    preferences.edit { putBoolean(Constants.EDIT_KEY, LocalTheme.value) }
                 }) {
                     Icon(
                         painter = painterResource(if (!LocalTheme.value) R.drawable.baseline_dark_mode_24 else R.drawable.baseline_light_mode_24),
@@ -67,7 +68,7 @@ fun Settings(navController: NavController, preferences: SharedPreferences)
                 }
             }
             Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Text(text = "О приложении: ", fontFamily = ttFamily, color = MaterialTheme.colorScheme.tertiary)
+                Text(text = stringResource(R.string.about_app_button), fontFamily = ttFamily, color = MaterialTheme.colorScheme.tertiary)
                 IconButton(onClick = { isInfoOpen.value = true }) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_info_outline_24),
@@ -84,7 +85,9 @@ fun Settings(navController: NavController, preferences: SharedPreferences)
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
-                    .fillMaxWidth().height(48.dp).padding(vertical = Dimens.paddingSmall)
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .padding(vertical = Dimens.paddingSmall)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.baseline_settings_24),
@@ -92,8 +95,10 @@ fun Settings(navController: NavController, preferences: SharedPreferences)
                     tint = MaterialTheme.colorScheme.tertiary
                 )
                 Text(
-                    text = "Выбрать этот шрифт",
-                    modifier = Modifier.fillMaxWidth().padding(start = Dimens.paddingLarge),
+                    text = stringResource(R.string.that_font),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = Dimens.paddingLarge),
                     fontFamily = schistFont,
                     color = MaterialTheme.colorScheme.tertiary,
                     fontSize = 22.sp
@@ -107,7 +112,9 @@ fun Settings(navController: NavController, preferences: SharedPreferences)
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
-                    .fillMaxWidth().height(48.dp).padding(vertical = Dimens.paddingSmall)
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .padding(vertical = Dimens.paddingSmall)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.baseline_settings_24),
@@ -115,8 +122,10 @@ fun Settings(navController: NavController, preferences: SharedPreferences)
                     tint = MaterialTheme.colorScheme.tertiary
                 )
                 Text(
-                    text = "Или этот",
-                    modifier = Modifier.fillMaxWidth().padding(start = Dimens.paddingLarge),
+                    text = stringResource(R.string.this_font),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = Dimens.paddingLarge),
                     fontFamily = tippyToesFont,
                     color = MaterialTheme.colorScheme.tertiary,
                     fontSize = 22.sp

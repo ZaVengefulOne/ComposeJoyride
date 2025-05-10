@@ -28,17 +28,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.composejoyride.R
 import com.example.composejoyride.data.entitites.Note
 import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.data.utils.sharedViewModel
@@ -59,7 +58,7 @@ fun Notes(navController: NavController)
     val searchResults by notesViewModel.searchResults.collectAsState()
 
     notesViewModel.loadNotes()
-    val newNote = Note(0, "Новая заметка", "")
+    val newNote = Note(0, "", "")
     val openDeleteDialog = remember { mutableStateOf(false) }
 
 
@@ -71,8 +70,8 @@ fun Notes(navController: NavController)
                     openDeleteDialog.value = false
                     notesViewModel.clearNotes()
                 },
-                dialogTitle = "Удаление заметок",
-                dialogText = "Вы уверены, что хотите очистить заметки?",
+                dialogTitle = stringResource(R.string.noteDeletion),
+                dialogText = stringResource(R.string.noteDeletionRUSure),
                 icon = Icons.Default.DeleteForever
             )
         }
@@ -111,7 +110,9 @@ fun Notes(navController: NavController)
                     }
                 }
                 Row (
-                    modifier = Modifier.align(Alignment.End).fillMaxWidth(),
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween){
                 OutlinedIconButton(onClick = {
                     noteViewModel.insertNote(newNote)
@@ -120,22 +121,22 @@ fun Notes(navController: NavController)
                 },
                     modifier= Modifier
                         .size(100.dp)
-                        .padding(10.dp),  //avoid the oval shape
+                        .padding(10.dp),
                     shape = CircleShape,
                     border= BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary),
                 ) {
-                    Icon(Icons.Default.Add, contentDescription = "content description", tint = MaterialTheme.colorScheme.tertiary)
+                    Icon(Icons.Default.Add, contentDescription = "Add Note", tint = MaterialTheme.colorScheme.tertiary)
                 }
                 OutlinedIconButton(onClick = {
                     openDeleteDialog.value = true
                 },
                     modifier= Modifier
                         .size(100.dp)
-                        .padding(10.dp),  //avoid the oval shape
+                        .padding(10.dp),
                     shape = CircleShape,
                     border= BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary)
                 ) {
-                    Icon(Icons.Default.DeleteForever, contentDescription = "content description", tint = MaterialTheme.colorScheme.tertiary)
+                    Icon(Icons.Default.DeleteForever, contentDescription = "Clear Notes", tint = MaterialTheme.colorScheme.tertiary)
                 }
                 }
         }

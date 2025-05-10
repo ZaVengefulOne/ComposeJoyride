@@ -1,7 +1,5 @@
 package com.example.composejoyride.ui.theme
 
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,8 +17,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.Constants
 
 @Composable
@@ -29,11 +29,10 @@ fun VowelSelectionDialog(
     onDismissRequest: () -> Unit,
     onVowelSelected: (vowelIndex: Int) -> Unit
 ) {
+
     val vowelPositions = word.withIndex()
         .filter { it.value in Constants.vowels }
         .map { it.index }.reversed()
-
-    Log.d("Гласные", vowelPositions.toString())
 
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
@@ -51,8 +50,7 @@ fun VowelSelectionDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "В слове, которое вы ввели, ${vowelPositions.size} гласных.\n" +
-                            "Выберите, на какую поставить ударение (справа налево).",
+                    text = stringResource(R.string.vowels_amount, vowelPositions.size),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(bottom = 16.dp),
                     color = MaterialTheme.colorScheme.tertiary,
@@ -73,7 +71,8 @@ fun VowelSelectionDialog(
                             },
                             shape = MaterialTheme.shapes.small,
                             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
+                            colors =
+                                ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
                         ) {
                             Text(
                                 text = word[position].toString(),
@@ -85,7 +84,7 @@ fun VowelSelectionDialog(
                     }
                 }
                 TextButton(onClick = onDismissRequest) {
-                    Text(text = "Отмена",
+                    Text(text = stringResource(R.string.cancel),
                         color = MaterialTheme.colorScheme.tertiary,
                         fontFamily = ttFamily)
                 }

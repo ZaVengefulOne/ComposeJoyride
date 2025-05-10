@@ -18,10 +18,6 @@ inline fun <reified VM : ViewModel> sharedViewModel(
     return hiltViewModel(parentEntry)
 }
 
-fun countRussianVowels(word: String): Int {
-    return word.count { it in Constants.vowels }
-}
-
 inline fun List<CacheArticle>.toArticles(): List<Article>{
     return map { cacheItem ->
         Article(
@@ -42,3 +38,4 @@ inline fun List<Article>.toCacheArticles(): List<CacheArticle> {
         )
     }
 }
+

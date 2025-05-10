@@ -59,7 +59,8 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
             fontSize = 22.sp,
         )
         Text(
-            text = stringResource(id = R.string.entry),
+            text =
+                stringResource(id = R.string.entry),
             modifier = Modifier
                 .padding(Dimens.paddingMedium)
                 .align(Alignment.CenterHorizontally)

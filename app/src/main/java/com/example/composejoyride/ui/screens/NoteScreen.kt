@@ -5,19 +5,14 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Save
@@ -26,31 +21,28 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.sharedViewModel
-import com.example.composejoyride.ui.theme.Typography
 import com.example.composejoyride.ui.theme.ttFamily
 import com.example.composejoyride.ui.viewModels.NoteViewModel
 
-@OptIn(ExperimentalLayoutApi::class)
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun Note(
@@ -71,7 +63,6 @@ fun Note(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Кнопки
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
@@ -102,12 +93,12 @@ fun Note(
         }
 
 
-        // Заголовок
         OutlinedTextField(
             value = note.note_name ?: "",
             onValueChange = { noteViewModel.updateNoteName(it) },
-            label = { Text("Название") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text(stringResource(R.string.newNote)) },
+            modifier = Modifier
+                .fillMaxWidth()
                 .onFocusChanged { if (it.isFocused) isBottomBarVisible.value = false },
             textStyle = TextStyle(fontFamily = ttFamily, fontSize = 22.sp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text,
@@ -121,8 +112,7 @@ fun Note(
 
 
 
-        // Текст заметки
-        BasicTextField(
+        TextField(
             value = note.note_text ?: "",
             onValueChange = { noteViewModel.updateNoteText(it) },
             textStyle = TextStyle(fontFamily = ttFamily, fontSize = 18.sp),
@@ -132,9 +122,20 @@ fun Note(
                 .background(MaterialTheme.colorScheme.background)
                 .padding(12.dp)
                 .onFocusChanged {
-                    if (it.isFocused) isBottomBarVisible.value = false },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Default),)
+                    if (it.isFocused) isBottomBarVisible.value = false
+                },
+            keyboardOptions =
+                KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Default
+                ),
+            placeholder = {
+                Text(
+                    stringResource(R.string.enter_note_text),
+                    style = TextStyle(fontFamily = ttFamily,
+                        fontSize = 18.sp))}
+
+            )
 
         BackHandler {
             isBottomBarVisible.value = true

@@ -3,8 +3,6 @@ package com.example.composejoyride.ui.screens
 //noinspection UsingMaterialAndMaterial3Libraries
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,11 +20,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -34,6 +33,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -43,6 +43,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -61,10 +62,14 @@ import com.example.composejoyride.ui.theme.ttFamily
 import com.example.composejoyride.ui.viewModels.ArticleViewModel
 import com.example.composejoyride.ui.viewModels.LibraryViewModel
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun Library(navController: NavController, preferences: SharedPreferences, isBottomBarVisible: MutableState<Boolean>) {
+fun Library(
+    navController: NavController,
+    preferences: SharedPreferences,
+    isBottomBarVisible: MutableState<Boolean>) {
+
     val viewModel: LibraryViewModel = sharedViewModel(navController)
     val articleViewModel: ArticleViewModel = sharedViewModel(navController)
     viewModel.getArticles()
@@ -128,7 +133,8 @@ fun Library(navController: NavController, preferences: SharedPreferences, isBott
                         searchText.value = it
                     },
                     modifier = Modifier.padding(16.dp)
-                        .onFocusChanged { if (it.isFocused) isBottomBarVisible.value = false },
+                        .onFocusChanged { if (it.isFocused) isBottomBarVisible.value = false }
+                    ,
                     placeholder = {
                         Text(
                             "Поиск...",
@@ -137,6 +143,15 @@ fun Library(navController: NavController, preferences: SharedPreferences, isBott
                             fontFamily = ttFamily
                         )
                     },
+                    colors = TextFieldDefaults.colors(
+                        unfocusedIndicatorColor = Color.Black,
+                        focusedIndicatorColor = Color.Cyan,
+                        focusedPlaceholderColor = Color.Cyan,
+                        focusedTextColor = Color.Black,
+                        focusedTrailingIconColor = Color.Cyan,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                        focusedContainerColor = MaterialTheme.colorScheme.background
+                    ),
                     shape = RoundedCornerShape(16.dp),
                     singleLine = true,
                     keyboardActions = KeyboardActions(
@@ -181,30 +196,35 @@ fun Library(navController: NavController, preferences: SharedPreferences, isBott
                 verticalArrangement = Arrangement.Top,
                 content = {
                     items(filteredArticleList.value.ifEmpty { articles }) { articleItem ->
-                        Card( //Перейти на Material3
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(4.dp)
                                 .clickable {
                                     articleViewModel.getArticle(articleItem.articleLink)
-                                    navController.navigate(NoteGraph.TOPIC_SCREEN)
-                                }, elevation = 12.dp,
-                            backgroundColor = MaterialTheme.colorScheme.secondary,
+                                    navController.navigate(NoteGraph.ARTICLE_SCREEN)
+                                }
+                                .size(80.dp)
+                            ,
+                            shape = CardDefaults.elevatedShape,
+                            elevation = CardDefaults.cardElevation(12.dp),
+                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
                             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                         ) {
-                            Row {
+                            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxSize()) {
                                 Icon(
                                     Icons.Filled.AutoStories,
                                     contentDescription = "Article Icon",
                                     modifier = Modifier
-                                        .size(80.dp)
-                                        .background(buttonColor),
+                                        .size(40.dp)
+                                        .background(buttonColor)
+                                        .padding(start = Dimens.paddingMedium)
+                                    ,
                                     tint = MaterialTheme.colorScheme.background
                                 )
                                 Text(
                                     modifier = Modifier
-                                        .padding(Dimens.paddingMedium)
-                                        .align(Alignment.CenterVertically),
+                                        .padding(start = Dimens.paddingMedium),
                                     text = articleItem.articleTitle,
                                     fontSize = 20.sp,
                                     color = buttonText,

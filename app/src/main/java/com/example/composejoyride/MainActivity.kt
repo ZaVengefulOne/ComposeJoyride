@@ -129,8 +129,8 @@ fun NavHostContainer(
             composable(NoteGraph.NOTES_SCREEN) {
                 Notes(navController)
             }
-            composable(NoteGraph.TOPIC_SCREEN){
-                ArticleScreen(navController, preferences)
+            composable(NoteGraph.ARTICLE_SCREEN){
+                ArticleScreen(navController)
             }
             composable(NoteGraph.NOTE_SCREEN){
                 Note(navController, {navController.navigate(NoteGraph.NOTES_SCREEN)}, bottomBarVisibility)

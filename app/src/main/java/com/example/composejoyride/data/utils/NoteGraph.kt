@@ -8,5 +8,5 @@ object NoteGraph {
     const val SETTINGS_SCREEN = "settings"
     const val NOTES_SCREEN = "notes"
     const val NOTE_SCREEN = "note"
-    const val TOPIC_SCREEN = "topic"
+    const val ARTICLE_SCREEN = "article"
 }

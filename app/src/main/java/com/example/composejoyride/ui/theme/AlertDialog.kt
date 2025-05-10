@@ -7,7 +7,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
+import com.example.composejoyride.R
 
 @Composable
 fun AlertDialog(
@@ -38,7 +40,7 @@ fun AlertDialog(
                     onConfirmation()
                 }
             ) {
-                Text("Да", color = MaterialTheme.colorScheme.tertiary)
+                Text(stringResource(R.string.yes), color = MaterialTheme.colorScheme.tertiary)
             }
         },
         dismissButton = {
@@ -47,7 +49,7 @@ fun AlertDialog(
                     onDismissRequest()
                 }
             ) {
-                Text("Нет", color = MaterialTheme.colorScheme.tertiary)
+                Text(stringResource(R.string.no), color = MaterialTheme.colorScheme.tertiary)
             }
         }
     )

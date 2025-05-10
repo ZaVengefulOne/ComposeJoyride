@@ -19,6 +19,9 @@ class AOTDViewModel @Inject constructor(private val repository: ArticlesReposito
     private val _randomArticleText = MutableStateFlow("")
     val randomArticleText: StateFlow<String> get() = _randomArticleText
 
+    private val _randomArticleLink = MutableStateFlow("")
+    val randomArticleLink: StateFlow<String> get() = _randomArticleLink
+
     private val _isLoaded = MutableStateFlow(false)
     val isLoaded: StateFlow<Boolean> get() = _isLoaded
 
@@ -32,6 +35,7 @@ class AOTDViewModel @Inject constructor(private val repository: ArticlesReposito
                 val randomArticle = repository.getRandomArticle()
                 _randomArticleName.value = randomArticle.articleTitle
                 _randomArticleText.value = randomArticle.articleText ?: ""
+                _randomArticleLink.value = randomArticle.articleLink
             } catch (e: Exception)
             {
                 _randomArticleName.value = "Ошибка! Статья не найдена!"

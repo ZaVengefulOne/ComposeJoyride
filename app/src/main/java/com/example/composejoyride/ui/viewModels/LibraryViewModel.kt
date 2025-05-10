@@ -33,7 +33,6 @@ class LibraryViewModel @Inject constructor(private val repository: ArticlesRepos
 
 
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun getArticles(){
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -41,19 +40,16 @@ class LibraryViewModel @Inject constructor(private val repository: ArticlesRepos
                 val articles = repository.getArticles()
                 _articleItems.value = articles
                 if (articles.isNotEmpty()) {
-                    Log.d("OBTAINED_ARTICLES", articles.toString())
                     cacheArticles(articles)
                 }
                 _isLoaded.value = true
             } catch (e: Exception) {
-                Log.d("VENGEFUL_ERROR", e.toString())
                 _articleItems.value = getCache()
                 _isLoaded.value = true
             }
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     private fun cacheArticles(articlesList: List<Article>){
         viewModelScope.launch(Dispatchers.IO) {
             val fullArticles: ArrayList<Article> = arrayListOf()
@@ -69,7 +65,6 @@ class LibraryViewModel @Inject constructor(private val repository: ArticlesRepos
 
     private suspend fun getCache(): List<Article>{
         val articles = repository.getSavedArticles()
-        Log.d("SAVED_ARTICLES", articles.toString())
         return articles.toArticles()
     }
 

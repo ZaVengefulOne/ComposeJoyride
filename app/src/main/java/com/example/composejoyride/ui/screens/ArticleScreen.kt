@@ -1,6 +1,5 @@
 package com.example.composejoyride.ui.screens
 
-import android.content.SharedPreferences
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
@@ -43,38 +42,35 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.shadow
 import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.viewModels.ArticleViewModel
-import com.example.composejoyride.ui.viewModels.LibraryViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArticleScreen(navController: NavController, preferences: SharedPreferences){
+fun ArticleScreen(navController: NavController){
 
     val articleViewModel = sharedViewModel<ArticleViewModel>(navController)
-    val libraryViewModel = sharedViewModel<LibraryViewModel>(navController)
 
-    //val topicUrl = preferences.getString("topicURL", Constants.BASE_ARTICLES_URL)
     val articleTitle = articleViewModel.articleName.collectAsState().value
     val articleText = articleViewModel.articleText.collectAsState().value
+
+
     val textColor = MaterialTheme.colorScheme.tertiary
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
 
     var showTopBar by remember { mutableStateOf(true) }
-    var previousScrollPosition by remember { mutableStateOf(0) }
+    var previousScrollPosition by remember { mutableIntStateOf(0) }
     var showScrollUpButton by remember { mutableStateOf(false) }
 
     LaunchedEffect(scrollState.value) {
-        // Определяем направление скролла
         showTopBar = scrollState.value <= previousScrollPosition || scrollState.value <= 20
         previousScrollPosition = scrollState.value
-
-        // Показывать кнопку "вверх" если скроллим достаточно далеко
         showScrollUpButton = scrollState.value > 400
     }
     Scaffold(
@@ -126,7 +122,7 @@ fun ArticleScreen(navController: NavController, preferences: SharedPreferences){
             ) {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowUp,
-                    contentDescription = "Наверх"
+                    contentDescription = "Up"
                 )
             }
         }
