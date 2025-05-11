@@ -3,6 +3,7 @@ package com.example.composejoyride.ui.screens
 import android.content.SharedPreferences
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -43,33 +44,28 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 40.dp),
-        verticalArrangement = Arrangement.Top,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     )
     {
         Text(
-            text = stringResource(id = R.string.welcome),
+            text = stringResource(id = R.string.app_name),
             modifier = Modifier
-                .padding(Dimens.paddingMedium)
+                .padding(top = 24.dp, bottom = 24.dp)
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(),
             color = MaterialTheme.colorScheme.tertiary,
             textAlign = TextAlign.Center,
-            fontFamily = TheFont,
-            fontSize = 22.sp,
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontFamily = TheFont,
+                fontSize = 50.sp,
+                lineHeight = 65.sp
+            )
         )
-        Text(
-            text =
-                stringResource(id = R.string.entry),
-            modifier = Modifier
-                .padding(Dimens.paddingMedium)
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth(),
-            color = MaterialTheme.colorScheme.tertiary,
-            textAlign = TextAlign.Center,
-            fontFamily = TheFont,
-            fontSize = 22.sp,
-        )
+
+        Spacer(modifier = Modifier.height(48.dp))
+
+        Column {
         Button(
             onClick = { navController.navigate(NoteGraph.AOTD_SCREEN) },
             colors = buttonColor,
@@ -90,6 +86,9 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
                 fontSize = 22.sp
             )
         }
+
+        Spacer(modifier = Modifier.height(Dimens.paddingSpacer))
+
         Button(
             onClick = { navController.navigate(NoteGraph.GENERATOR_SCREEN) },
             colors = buttonColor,
@@ -110,6 +109,9 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
                 fontSize = 22.sp
             )
         }
+
+        Spacer(modifier = Modifier.height(Dimens.paddingSpacer))
+
         Button(
             onClick = { navController.navigate(NoteGraph.LIBRARY_SCREEN) },
             colors = buttonColor,
@@ -130,6 +132,9 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
                 fontSize = 22.sp
             )
         }
+
+        Spacer(modifier = Modifier.height(Dimens.paddingSpacer))
+
         Button(
             onClick = { navController.navigate(NoteGraph.SETTINGS_SCREEN) },
             colors = buttonColor,
@@ -150,5 +155,7 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
                 fontSize = 22.sp
             )
         }
+
+    }
     }
 }

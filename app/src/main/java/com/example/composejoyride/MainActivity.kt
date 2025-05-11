@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
             val sharedPrefs = getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE)
                 ComposeJoyrideTheme {
                     val navController = rememberNavController()
-                    val isBottomBarVisible = remember { mutableStateOf(true) } // на будущее
+                    val isBottomBarVisible = remember { mutableStateOf(true) }
                     Surface(
                         modifier = Modifier.fillMaxSize(),
                         color = colorScheme.background
@@ -152,8 +152,6 @@ fun BottomNavigationBar(navController: NavHostController, visibility: MutableSta
             shape = RoundedCornerShape(
                 topStart = 24.dp,
                 topEnd = 24.dp,
-                bottomStart = 24.dp,
-                bottomEnd = 24.dp
             ), // Округление краёв
             shadowElevation = 8.dp, // Тень
             color = colorScheme.surface,

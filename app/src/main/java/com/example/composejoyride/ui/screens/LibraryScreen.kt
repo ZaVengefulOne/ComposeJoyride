@@ -7,6 +7,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -23,17 +24,21 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -63,6 +68,7 @@ import com.example.composejoyride.ui.viewModels.ArticleViewModel
 import com.example.composejoyride.ui.viewModels.LibraryViewModel
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun Library(
@@ -118,13 +124,40 @@ fun Library(
             }
         }
     }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Библиотека статей",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        textAlign = TextAlign.Center
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.navigate(NoteGraph.MAIN_SCREEN)
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Назад"
+                        )
+                    }
+
+                }
+            )
+        }
+    ) { padding ->
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(padding),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (!isLoaded) {
-                CircularProgressIndicator()
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.secondary)
+                }
             } else {
             Row {
                 OutlinedTextField(
@@ -133,7 +166,7 @@ fun Library(
                         searchText.value = it
                     },
                     modifier = Modifier.padding(16.dp)
-                        .onFocusChanged { if (it.isFocused) isBottomBarVisible.value = false }
+                        .onFocusChanged { isBottomBarVisible.value = !it.isFocused }
                     ,
                     placeholder = {
                         Text(
@@ -180,7 +213,9 @@ fun Library(
                 )
                 DropdownMenu(
                     expanded = expanded.value,
-                    onDismissRequest = { expanded.value = false }) {
+                    onDismissRequest = { expanded.value = false },
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    shadowElevation = 5.dp) {
                     localItems.value.forEach { item ->
                         DropdownMenuItem(text = {
                             Text(text = item)
@@ -238,6 +273,7 @@ fun Library(
                 }
             )
         }
+    }
     }
 }
 

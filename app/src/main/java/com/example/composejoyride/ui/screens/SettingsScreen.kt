@@ -79,7 +79,8 @@ fun Settings(navController: NavController, preferences: SharedPreferences) {
                     Text(
                         text = if (isInfoOpen.value) "О приложении" else "Настройки",
                         style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.tertiary
+                        color = MaterialTheme.colorScheme.tertiary,
+                        textAlign = TextAlign.Center
                     )
                 },
                 navigationIcon = {

@@ -7,6 +7,7 @@ object Dimens {
     val paddingSmall = 4.dp
     val paddingMedium = 8.dp
     val paddingLarge = 16.dp
+    val paddingSpacer = 12.dp
 
     val buttonWidth = 150.dp
 
