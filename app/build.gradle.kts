@@ -22,6 +22,10 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
 
     buildTypes {
@@ -73,29 +77,39 @@ dependencies {
 
     implementation(libs.lifecycle.viewmodel.android)
     
-    //room
+    //Room
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
     implementation(libs.runtime.livedata)
 
-
+    //Navigation
     implementation(libs.navigation.compose)
-    implementation(libs.material)
+
+    // Network
     implementation(libs.coil.compose)
     implementation (libs.jsoup)
-    implementation(libs.core.ktx)
+
+    //Misc
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
     implementation(platform(libs.compose.bom))
+
+
+
+    //UI
+    implementation(libs.material3.android)
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
+    implementation(libs.material)
+    implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc12")
 
+    //Core
+    implementation(libs.core.ktx)
 
-    implementation(libs.material3.android)
-    implementation(libs.androidx.material.icons.extended)
-
+    //Tests
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

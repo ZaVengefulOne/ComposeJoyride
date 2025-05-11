@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Dimens
-import com.example.composejoyride.ui.theme.VowelSelectionDialog
+import com.example.composejoyride.ui.theme.composables.VowelSelectionDialog
 import com.example.composejoyride.ui.theme.ttFamily
 import com.example.composejoyride.ui.viewModels.RhymeViewModel
 

@@ -1,4 +1,4 @@
-package com.example.composejoyride.ui.theme
+package com.example.composejoyride.ui.theme.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.Constants
+import com.example.composejoyride.ui.theme.ttFamily
 
 @Composable
 fun VowelSelectionDialog(
@@ -86,7 +87,8 @@ fun VowelSelectionDialog(
                 TextButton(onClick = onDismissRequest) {
                     Text(text = stringResource(R.string.cancel),
                         color = MaterialTheme.colorScheme.tertiary,
-                        fontFamily = ttFamily)
+                        fontFamily = ttFamily
+                    )
                 }
             }
         }

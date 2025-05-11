@@ -2,6 +2,8 @@ package com.example.composejoyride.di.modules
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.composejoyride.data.Interactors.ParseInteractor
 import com.example.composejoyride.data.dao.ArticlesDao
 import com.example.composejoyride.data.dao.NotesDao
@@ -29,7 +31,7 @@ object AppModule {
             context,
             NotesDatabase::class.java,
             "notes"
-        ).build()
+        ).fallbackToDestructiveMigration(true).build()
     }
 
     @Provides
@@ -55,6 +57,7 @@ object AppModule {
         return ParseInteractor()
     }
 
+    
     @Provides
     @Singleton
     fun provideArticlesDatabase(@ApplicationContext context: Context): ArticlesDatabase {
@@ -62,7 +65,7 @@ object AppModule {
             context,
             ArticlesDatabase::class.java,
             "cache"
-        ).build()
+        ).fallbackToDestructiveMigration(true).build()
     }
 
     @Provides

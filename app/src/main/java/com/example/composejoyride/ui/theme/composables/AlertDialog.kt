@@ -1,4 +1,4 @@
-package com.example.composejoyride.ui.theme
+package com.example.composejoyride.ui.theme.composables
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon

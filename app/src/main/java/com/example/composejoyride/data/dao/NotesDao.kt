@@ -12,14 +12,14 @@ interface NotesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(note: Note)
 
-    @Query("UPDATE notes SET note_name = :newName, note_text = :newText WHERE id = :id")
+    @Query("UPDATE notes SET note_name = :newName, note_content_html = :newText WHERE id = :id")
     fun update(id: Int, newName: String, newText: String)
 
     @Query("DELETE FROM notes WHERE note_name = :name")
     fun delete(name: String)
 
     @Query("SELECT * from notes WHERE note_name = :name LIMIT 1")
-    fun getItem(name: String): Note
+    fun getItem(name: String): Note?
 
     @Query("SELECT * from notes")
     fun getAllItems(): List<Note>

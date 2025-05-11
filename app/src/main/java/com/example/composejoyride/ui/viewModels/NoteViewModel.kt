@@ -18,7 +18,7 @@ class NoteViewModel @Inject constructor(private val repository: NotesRepository)
     val note: StateFlow<Note> get() = _note
 
     private suspend fun findNote(name: String) {
-        _note.value = repository.findNote(name)
+        _note.value = repository.findNote(name) ?: Note(0, note_content_html = "Ошибка!")
     }
 
     fun setNote(name: String) {
@@ -29,7 +29,7 @@ class NoteViewModel @Inject constructor(private val repository: NotesRepository)
 
     fun deleteNote() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteNote(_note.value.note_name)
+            _note.value.note_name?.let { repository.deleteNote(it) }
         }
     }
 
@@ -45,12 +45,15 @@ class NoteViewModel @Inject constructor(private val repository: NotesRepository)
     }
 
     fun updateNoteText(newText: String) {
-        _note.value = _note.value.copy(note_text = newText)
+        _note.value = _note.value.copy(note_content_html = newText)
     }
 
     fun updateNote() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateNote(_note.value.id, _note.value.note_name, _note.value.note_text)
+            _note.value.note_name?.let {
+                repository.updateNote(_note.value.id,
+                    it, _note.value.note_content_html)
+            }
         }
     }
 }

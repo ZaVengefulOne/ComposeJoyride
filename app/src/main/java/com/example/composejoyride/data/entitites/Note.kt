@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 data class Note (
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
-    var note_name: String,
-    var note_text: String
+    var note_name: String? = "Новая заметка",
+    var note_content_html: String
     )

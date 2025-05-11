@@ -37,7 +37,7 @@ class NotesRepository(private val notesDao: NotesDao): INotesRepository {
         }
     }
 
-    override suspend fun findNote(name: String): Note {
+    override suspend fun findNote(name: String): Note? {
             return asyncFind(name)
     }
 
@@ -45,7 +45,7 @@ class NotesRepository(private val notesDao: NotesDao): INotesRepository {
             notesDao.deleteAll()
     }
 
-    override suspend fun asyncFind(name: String): Note {
+    override suspend fun asyncFind(name: String): Note? {
         return notesDao.getItem(name)
     }
 }

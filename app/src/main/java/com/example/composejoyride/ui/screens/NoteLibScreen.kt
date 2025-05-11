@@ -41,7 +41,7 @@ import com.example.composejoyride.R
 import com.example.composejoyride.data.entitites.Note
 import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.data.utils.sharedViewModel
-import com.example.composejoyride.ui.theme.AlertDialog
+import com.example.composejoyride.ui.theme.composables.AlertDialog
 import com.example.composejoyride.ui.theme.ttFamily
 import com.example.composejoyride.ui.viewModels.NoteViewModel
 import com.example.composejoyride.ui.viewModels.NotesViewModel
@@ -58,7 +58,7 @@ fun Notes(navController: NavController)
     val searchResults by notesViewModel.searchResults.collectAsState()
 
     notesViewModel.loadNotes()
-    val newNote = Note(0, "", "")
+    val newNote = Note(0, note_content_html =  "")
     val openDeleteDialog = remember { mutableStateOf(false) }
 
 
@@ -93,13 +93,13 @@ fun Notes(navController: NavController)
                                 .padding(4.dp)
                                 .fillMaxWidth()
                                 .clickable {
-                                    noteViewModel.setNote(index.note_name)
+                                    noteViewModel.setNote(index.note_name ?: "Новая заметка")
                                     navController.navigate(NoteGraph.NOTE_SCREEN)
                                 },
                             elevation = 8.dp,
                         ) {
                             Text(
-                                text = index.note_name,
+                                text = index.note_name ?: "Новая заметка",
                                 fontSize = 14.sp,
                                 fontFamily = ttFamily,
                                 color = MaterialTheme.colorScheme.tertiary,
@@ -116,7 +116,7 @@ fun Notes(navController: NavController)
                     horizontalArrangement = Arrangement.SpaceBetween){
                 OutlinedIconButton(onClick = {
                     noteViewModel.insertNote(newNote)
-                    noteViewModel.setNote(newNote.note_name)
+                    noteViewModel.setNote(newNote.note_name ?: "Новая заметка")
                     navController.navigate(NoteGraph.NOTE_SCREEN)
                 },
                     modifier= Modifier

@@ -17,12 +17,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
@@ -40,9 +40,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.sharedViewModel
+import com.example.composejoyride.ui.theme.Dimens
+import com.example.composejoyride.ui.theme.composables.RichTextFormattingToolbar
 import com.example.composejoyride.ui.theme.ttFamily
 import com.example.composejoyride.ui.viewModels.NoteViewModel
+import com.mohamedrejeb.richeditor.model.rememberRichTextState
+import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun Note(
@@ -54,6 +59,8 @@ fun Note(
     val note by noteViewModel.note.collectAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val richState = rememberRichTextState()
+    richState.setHtml(note.note_content_html)
 
     Column(
         modifier = Modifier
@@ -71,6 +78,7 @@ fun Note(
         ) {
             OutlinedButton(
                 onClick = {
+                    noteViewModel.updateNoteText(richState.toHtml())
                     noteViewModel.updateNote()
                     isBottomBarVisible.value = true
                     onDone()
@@ -109,18 +117,15 @@ fun Note(
             })
         )
 
-
-
-
-        TextField(
-            value = note.note_text ?: "",
-            onValueChange = { noteViewModel.updateNoteText(it) },
+        RichTextFormattingToolbar(richState)
+        OutlinedRichTextEditor(
+            state = richState,
             textStyle = TextStyle(fontFamily = ttFamily, fontSize = 18.sp),
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
+                .padding(top = Dimens.paddingMedium)
                 .background(MaterialTheme.colorScheme.background)
-                .padding(12.dp)
                 .onFocusChanged {
                     if (it.isFocused) isBottomBarVisible.value = false
                 },
@@ -133,9 +138,33 @@ fun Note(
                 Text(
                     stringResource(R.string.enter_note_text),
                     style = TextStyle(fontFamily = ttFamily,
-                        fontSize = 18.sp))}
+                        fontSize = 18.sp))},
+        )
 
-            )
+//        TextField(
+//            value = note.note_text ?: "",
+//            onValueChange = { noteViewModel.updateNoteText(it) },
+//            textStyle = TextStyle(fontFamily = ttFamily, fontSize = 18.sp),
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .weight(1f)
+//                .background(MaterialTheme.colorScheme.background)
+//                .padding(12.dp)
+//                .onFocusChanged {
+//                    if (it.isFocused) isBottomBarVisible.value = false
+//                },
+//            keyboardOptions =
+//                KeyboardOptions(
+//                    keyboardType = KeyboardType.Text,
+//                    imeAction = ImeAction.Default
+//                ),
+//            placeholder = {
+//                Text(
+//                    stringResource(R.string.enter_note_text),
+//                    style = TextStyle(fontFamily = ttFamily,
+//                        fontSize = 18.sp))}
+//
+//            )
 
         BackHandler {
             isBottomBarVisible.value = true
@@ -143,3 +172,4 @@ fun Note(
         }
         }
     }
+
