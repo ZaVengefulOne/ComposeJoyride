@@ -64,6 +64,7 @@ fun Settings(navController: NavController, preferences: SharedPreferences) {
     val isInfoOpen = rememberSaveable { mutableStateOf(false) }
 
 
+
     var fontMenuExpanded by remember { mutableStateOf(false) }
     var selectedFont by remember { mutableStateOf(TheFont) }
 
