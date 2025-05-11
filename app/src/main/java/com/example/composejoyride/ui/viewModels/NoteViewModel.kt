@@ -2,8 +2,10 @@ package com.example.composejoyride.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.composejoyride.data.entitites.Note
 import com.example.composejoyride.data.repositories.NotesRepository
+import com.example.composejoyride.data.utils.NoteGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,22 +16,29 @@ import javax.inject.Inject
 @HiltViewModel
 class NoteViewModel @Inject constructor(private val repository: NotesRepository): ViewModel() {
 
-    private val _note = MutableStateFlow(Note(35,"Test", "Test"))
+    private val _note = MutableStateFlow(Note())
     val note: StateFlow<Note> get() = _note
 
-    private suspend fun findNote(name: String) {
-        _note.value = repository.findNote(name) ?: Note(0, note_content_html = "Ошибка!")
+    private suspend fun findNote(id: Int) {
+        _note.value = repository.findNote(id) ?: Note()
     }
 
-    fun setNote(name: String) {
+    fun setNote(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            findNote(name)
+            findNote(id)
+        }
+    }
+
+    fun createAndOpenNewNote() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val id = repository.insertNote(Note())
+            findNote(id.toInt())
         }
     }
 
     fun deleteNote() {
         viewModelScope.launch(Dispatchers.IO) {
-            _note.value.note_name?.let { repository.deleteNote(it) }
+            repository.deleteNote(_note.value.id)
         }
     }
 
@@ -50,10 +59,8 @@ class NoteViewModel @Inject constructor(private val repository: NotesRepository)
 
     fun updateNote() {
         viewModelScope.launch(Dispatchers.IO) {
-            _note.value.note_name?.let {
                 repository.updateNote(_note.value.id,
-                    it, _note.value.note_content_html)
+                    _note.value.note_name, _note.value.note_content_html)
             }
         }
-    }
 }

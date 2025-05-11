@@ -8,6 +8,8 @@ object Dimens {
     val paddingMedium = 8.dp
     val paddingLarge = 16.dp
 
+    val buttonWidth = 150.dp
+
     val textSizeSmall = 12.sp
     val textSizeMedium = 16.sp
     val textSizeLarge = 20.sp

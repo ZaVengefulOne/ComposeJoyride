@@ -17,11 +17,13 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Notes
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
@@ -42,7 +44,7 @@ import com.example.composejoyride.data.entitites.Note
 import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.composables.AlertDialog
-import com.example.composejoyride.ui.theme.ttFamily
+import com.example.composejoyride.ui.theme.TheFont
 import com.example.composejoyride.ui.viewModels.NoteViewModel
 import com.example.composejoyride.ui.viewModels.NotesViewModel
 
@@ -55,10 +57,8 @@ fun Notes(navController: NavController)
     val noteViewModel: NoteViewModel = sharedViewModel(navController)
 
     val allNotes by notesViewModel.allNotes.collectAsState()
-    val searchResults by notesViewModel.searchResults.collectAsState()
+    val newNote = Note()
 
-    notesViewModel.loadNotes()
-    val newNote = Note(0, note_content_html =  "")
     val openDeleteDialog = remember { mutableStateOf(false) }
 
 
@@ -88,24 +88,32 @@ fun Notes(navController: NavController)
                 ) {
                     items(allNotes) { index ->
                         Card(
-                            backgroundColor = MaterialTheme.colorScheme.primary,
                             modifier = Modifier
                                 .padding(4.dp)
                                 .fillMaxWidth()
                                 .clickable {
-                                    noteViewModel.setNote(index.note_name ?: "Новая заметка")
+                                    noteViewModel.setNote(index.id)
                                     navController.navigate(NoteGraph.NOTE_SCREEN)
                                 },
-                            elevation = 8.dp,
+                            shape = CardDefaults.elevatedShape,
+                            elevation = CardDefaults.cardElevation(12.dp),
+                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                         ) {
-                            Text(
-                                text = index.note_name ?: "Новая заметка",
-                                fontSize = 14.sp,
-                                fontFamily = ttFamily,
-                                color = MaterialTheme.colorScheme.tertiary,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(16.dp)
-                            )
+                            Row(Modifier.fillMaxWidth(),verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceEvenly) {
+                                Icon(Icons.AutoMirrored.Filled.Notes,
+                                    contentDescription = "Note",
+                                    tint = MaterialTheme.colorScheme.tertiary)
+                                Text(
+                                    text = index.note_name,
+                                    fontSize = 18.sp,
+                                    fontFamily = TheFont,
+                                    color = MaterialTheme.colorScheme.tertiary,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                            }
                         }
                     }
                 }
@@ -115,12 +123,11 @@ fun Notes(navController: NavController)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween){
                 OutlinedIconButton(onClick = {
-                    noteViewModel.insertNote(newNote)
-                    noteViewModel.setNote(newNote.note_name ?: "Новая заметка")
+                    noteViewModel.createAndOpenNewNote()
                     navController.navigate(NoteGraph.NOTE_SCREEN)
                 },
                     modifier= Modifier
-                        .size(100.dp)
+                        .size(75.dp)
                         .padding(10.dp),
                     shape = CircleShape,
                     border= BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary),
@@ -131,7 +138,7 @@ fun Notes(navController: NavController)
                     openDeleteDialog.value = true
                 },
                     modifier= Modifier
-                        .size(100.dp)
+                        .size(75.dp)
                         .padding(10.dp),
                     shape = CircleShape,
                     border= BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary)

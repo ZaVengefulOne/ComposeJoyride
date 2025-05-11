@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.Constants
-import com.example.composejoyride.ui.theme.ttFamily
+import com.example.composejoyride.ui.theme.TheFont
 
 @Composable
 fun VowelSelectionDialog(
@@ -55,7 +55,7 @@ fun VowelSelectionDialog(
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(bottom = 16.dp),
                     color = MaterialTheme.colorScheme.tertiary,
-                    fontFamily = ttFamily
+                    fontFamily = TheFont
                 )
 
                 LazyRow(
@@ -79,7 +79,7 @@ fun VowelSelectionDialog(
                                 text = word[position].toString(),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.tertiary,
-                                fontFamily = ttFamily
+                                fontFamily = TheFont
                             )
                         }
                     }
@@ -87,7 +87,7 @@ fun VowelSelectionDialog(
                 TextButton(onClick = onDismissRequest) {
                     Text(text = stringResource(R.string.cancel),
                         color = MaterialTheme.colorScheme.tertiary,
-                        fontFamily = ttFamily
+                        fontFamily = TheFont
                     )
                 }
             }

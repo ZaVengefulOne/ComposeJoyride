@@ -9,9 +9,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,7 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Refresh
@@ -58,7 +55,7 @@ import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Dimens
-import com.example.composejoyride.ui.theme.ttFamily
+import com.example.composejoyride.ui.theme.TheFont
 import com.example.composejoyride.ui.viewModels.AOTDViewModel
 import com.example.composejoyride.ui.viewModels.ArticleViewModel
 import kotlinx.coroutines.launch
@@ -98,7 +95,7 @@ fun AOTD(navController: NavController) {
                     .padding(Dimens.paddingMedium),
                 color = buttonText,
                 textAlign = TextAlign.Center,
-                fontFamily = ttFamily,
+                fontFamily = TheFont,
                 fontSize = 22.sp,
             )
             OutlinedIconButton(

@@ -5,25 +5,29 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.composejoyride.data.entitites.Note
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NotesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(note: Note)
+    suspend fun insert(note: Note): Long
 
     @Query("UPDATE notes SET note_name = :newName, note_content_html = :newText WHERE id = :id")
-    fun update(id: Int, newName: String, newText: String)
+    suspend fun update(id: Int, newName: String, newText: String)
 
-    @Query("DELETE FROM notes WHERE note_name = :name")
-    fun delete(name: String)
+    @Query("DELETE FROM notes WHERE id = :id")
+    suspend fun delete(id: Int)
 
-    @Query("SELECT * from notes WHERE note_name = :name LIMIT 1")
-    fun getItem(name: String): Note?
+    @Query("SELECT * from notes WHERE id = :id LIMIT 1")
+    suspend fun getItem(id: Int): Note?
 
-    @Query("SELECT * from notes")
-    fun getAllItems(): List<Note>
+    @Query("SELECT id from notes WHERE note_name = :name LIMIT 1")
+    suspend fun getIdByName(name: String): Int
+
+    @Query("SELECT * from notes ORDER BY id DESC")
+    fun getAllItems(): Flow<List<Note>>
 
     @Query("DELETE FROM notes")
-    fun deleteAll()
+    suspend fun deleteAll()
 }

@@ -58,7 +58,7 @@ import com.example.composejoyride.data.utils.Constants
 import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Dimens
-import com.example.composejoyride.ui.theme.ttFamily
+import com.example.composejoyride.ui.theme.TheFont
 import com.example.composejoyride.ui.viewModels.ArticleViewModel
 import com.example.composejoyride.ui.viewModels.LibraryViewModel
 
@@ -140,7 +140,7 @@ fun Library(
                             "Поиск...",
                             modifier = Modifier.clickable { expanded.value = true },
                             color = MaterialTheme.colorScheme.primary,
-                            fontFamily = ttFamily
+                            fontFamily = TheFont
                         )
                     },
                     colors = TextFieldDefaults.colors(
@@ -228,7 +228,7 @@ fun Library(
                                     text = articleItem.articleTitle,
                                     fontSize = 20.sp,
                                     color = buttonText,
-                                    fontFamily = ttFamily,
+                                    fontFamily = TheFont,
                                     textAlign = TextAlign.Start
                                 )
                             }

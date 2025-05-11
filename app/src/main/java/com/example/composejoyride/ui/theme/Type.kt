@@ -2,36 +2,27 @@ package com.example.composejoyride.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.composejoyride.R
 
-var ttFamily = FontFamily(
-    Font(R.font.schist_regular, FontWeight.Normal),
-)
-
-val schistFont = FontFamily(Font(R.font.schist_regular, FontWeight.Normal))
-val tippyToesFont = FontFamily(Font(R.font.tippytoes, FontWeight.Normal))
 
 val Typography = Typography(
     bodyMedium = TextStyle(
-        fontFamily = ttFamily,
+        fontFamily = TheFont,
         fontWeight = FontWeight.Medium,
         fontSize = 18.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.9.sp
     ),
     titleLarge = TextStyle(
-        fontFamily = ttFamily,
+        fontFamily = TheFont,
         fontWeight = FontWeight.Normal,
         fontSize = 22.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
     labelSmall = TextStyle(
-        fontFamily = ttFamily,
+        fontFamily = TheFont,
         fontWeight = FontWeight.Medium,
         fontSize = 11.sp,
         lineHeight = 16.sp,

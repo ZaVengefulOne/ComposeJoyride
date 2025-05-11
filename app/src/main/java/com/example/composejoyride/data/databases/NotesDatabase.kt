@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 import com.example.composejoyride.data.dao.NotesDao
 import com.example.composejoyride.data.entitites.Note
 
-@Database(entities = [Note::class], version = 3, exportSchema = false)
+@Database(entities = [Note::class], version = 4, exportSchema = false)
 abstract class NotesDatabase : RoomDatabase() {
     abstract fun notesDao(): NotesDao
 

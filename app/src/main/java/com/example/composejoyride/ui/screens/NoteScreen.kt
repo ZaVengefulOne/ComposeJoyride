@@ -24,6 +24,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -42,7 +43,7 @@ import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Dimens
 import com.example.composejoyride.ui.theme.composables.RichTextFormattingToolbar
-import com.example.composejoyride.ui.theme.ttFamily
+import com.example.composejoyride.ui.theme.TheFont
 import com.example.composejoyride.ui.viewModels.NoteViewModel
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
@@ -60,8 +61,9 @@ fun Note(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val richState = rememberRichTextState()
-    richState.setHtml(note.note_content_html)
-
+    LaunchedEffect(Unit) {
+        richState.setHtml(note.note_content_html)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -102,13 +104,13 @@ fun Note(
 
 
         OutlinedTextField(
-            value = note.note_name ?: "",
+            value = note.note_name,
             onValueChange = { noteViewModel.updateNoteName(it) },
             label = { Text(stringResource(R.string.newNote)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .onFocusChanged { if (it.isFocused) isBottomBarVisible.value = false },
-            textStyle = TextStyle(fontFamily = ttFamily, fontSize = 22.sp),
+            textStyle = TextStyle(fontFamily = TheFont, fontSize = 22.sp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = {
@@ -120,7 +122,7 @@ fun Note(
         RichTextFormattingToolbar(richState)
         OutlinedRichTextEditor(
             state = richState,
-            textStyle = TextStyle(fontFamily = ttFamily, fontSize = 18.sp),
+            textStyle = TextStyle(fontFamily = TheFont, fontSize = 18.sp),
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
@@ -137,34 +139,9 @@ fun Note(
             placeholder = {
                 Text(
                     stringResource(R.string.enter_note_text),
-                    style = TextStyle(fontFamily = ttFamily,
+                    style = TextStyle(fontFamily = TheFont,
                         fontSize = 18.sp))},
         )
-
-//        TextField(
-//            value = note.note_text ?: "",
-//            onValueChange = { noteViewModel.updateNoteText(it) },
-//            textStyle = TextStyle(fontFamily = ttFamily, fontSize = 18.sp),
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .weight(1f)
-//                .background(MaterialTheme.colorScheme.background)
-//                .padding(12.dp)
-//                .onFocusChanged {
-//                    if (it.isFocused) isBottomBarVisible.value = false
-//                },
-//            keyboardOptions =
-//                KeyboardOptions(
-//                    keyboardType = KeyboardType.Text,
-//                    imeAction = ImeAction.Default
-//                ),
-//            placeholder = {
-//                Text(
-//                    stringResource(R.string.enter_note_text),
-//                    style = TextStyle(fontFamily = ttFamily,
-//                        fontSize = 18.sp))}
-//
-//            )
 
         BackHandler {
             isBottomBarVisible.value = true

@@ -7,14 +7,24 @@ import com.example.composejoyride.data.repositories.NotesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NotesViewModel @Inject constructor(private val repository: NotesRepository) : ViewModel() {
-    private val _allNotes = MutableStateFlow<List<Note>>(emptyList())
-    val allNotes: StateFlow<List<Note>> get() = _allNotes
+
+//    private val _allNotes = MutableStateFlow<List<Note>>(emptyList())
+//    val allNotes: StateFlow<List<Note>> get() = _allNotes
+
+    val allNotes: StateFlow<List<Note>> = repository.allNotes
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
+        )
 
     private val _searchResults = MutableStateFlow<List<Note>>(emptyList())
     val searchResults: StateFlow<List<Note>> get() = _searchResults
@@ -26,16 +36,16 @@ class NotesViewModel @Inject constructor(private val repository: NotesRepository
         }
     }
 
-    private suspend fun getNotes(): List<Note>{
-            val notes = repository.getNotes()
-        return notes
-    }
-
-    fun loadNotes(){
-        viewModelScope.launch(Dispatchers.IO) {
-            _allNotes.value = getNotes()
-        }
-    }
+//    private suspend fun getNotes(): List<Note>{
+//            val notes = repository.getNotes()
+//        return notes
+//    }
+//
+//    fun loadNotes(){
+//        viewModelScope.launch(Dispatchers.IO) {
+//            _allNotes.value = getNotes()
+//        }
+//    }
 
 
 }
