@@ -4,6 +4,8 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
     id("dagger.hilt.android.plugin")
+    id("org.jlleitschuh.gradle.ktlint")
+    id("io.gitlab.arturbosch.detekt")
     alias(libs.plugins.kotlin.compose)
 }
 
@@ -25,6 +27,18 @@ android {
 
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
+        }
+
+        ktlint {
+            version.set("0.50.0") // Можно явно указать версию CLI
+            android.set(true)     // Включает правила для Android
+            outputColorName.set("RED")
+        }
+
+        detekt {
+            buildUponDefaultConfig = true
+            allRules = false
+            autoCorrect = true
         }
     }
 
@@ -63,6 +77,7 @@ allprojects {
         }
     }
 }
+
 
 
 dependencies {
