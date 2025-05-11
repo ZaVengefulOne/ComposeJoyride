@@ -155,6 +155,7 @@ fun BottomNavigationBar(navController: NavHostController, visibility: MutableSta
             ), // Округление краёв
             shadowElevation = 8.dp, // Тень
             color = colorScheme.surface,
+
             modifier = Modifier.background(color = colorScheme.background)
         ) {
             BottomNavigation(
