@@ -19,9 +19,6 @@ import javax.inject.Inject
 @HiltViewModel
 class LibraryViewModel @Inject constructor(private val repository: ArticlesRepository) : ViewModel() {
 
-//    private val _chosenArticleURL = MutableStateFlow("")
-//    val chosenArticleURL: StateFlow<String> get() = _chosenArticleURL
-
     private val _articleItems = MutableStateFlow<List<Article>>(emptyList())
     val articleItems: StateFlow<List<Article>> get() = _articleItems
 

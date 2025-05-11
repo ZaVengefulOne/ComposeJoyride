@@ -2,10 +2,8 @@ package com.example.composejoyride.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import com.example.composejoyride.data.entitites.Note
 import com.example.composejoyride.data.repositories.NotesRepository
-import com.example.composejoyride.data.utils.NoteGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NoteViewModel @Inject constructor(private val repository: NotesRepository): ViewModel() {
 
-    private val _note = MutableStateFlow(Note())
+    val _note = MutableStateFlow(Note())
     val note: StateFlow<Note> get() = _note
 
     private suspend fun findNote(id: Int) {
