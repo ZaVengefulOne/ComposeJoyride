@@ -23,12 +23,19 @@ jobs:
       - name: Build APK
         run: ./gradlew assembleDebug
 
+      - name: Rename APK with version tag
+ 	run: |
+    VERSION_NAME=${{ github.ref_name }}
+    mv app/build/outputs/apk/debug/app-debug.apk PoetryHelper-$VERSION_NAME.apk
+
+
+
       - name: List APKs (debug)
         run: ls -R app/build/outputs/apk
 
       - name: Upload APK to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: app/build/outputs/apk/debug/app-debug.apk
+          files: PoetryHelper-${{ github.ref_name }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
