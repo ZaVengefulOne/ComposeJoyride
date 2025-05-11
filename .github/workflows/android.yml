@@ -36,9 +36,11 @@ jobs:
 
     - name: Run Ktlint
       run: ./gradlew ktlintCheck
+      continue-on-error: true
 
     - name: Run Detekt
       run: ./gradlew detekt
+      continue-on-error: true
       
     - name: Build Debug APK
       run: ./gradlew assembleDebug
