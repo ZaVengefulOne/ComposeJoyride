@@ -1,9 +1,6 @@
 package com.example.composejoyride.ui.viewModels
 
 import android.content.SharedPreferences
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,7 +22,7 @@ class LibraryViewModel @Inject constructor(private val repository: ArticlesRepos
 //    private val _chosenArticleURL = MutableStateFlow("")
 //    val chosenArticleURL: StateFlow<String> get() = _chosenArticleURL
 
-    private val _articleItems = MutableStateFlow(listOf(Article("", null, "")))
+    private val _articleItems = MutableStateFlow<List<Article>>(emptyList())
     val articleItems: StateFlow<List<Article>> get() = _articleItems
 
     private val _isLoaded = MutableStateFlow(false)

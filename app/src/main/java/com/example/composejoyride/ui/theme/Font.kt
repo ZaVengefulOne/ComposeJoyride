@@ -5,8 +5,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import com.example.composejoyride.R
 
-var TheFont = FontFamily(Font(R.font.schist_regular, FontWeight.Normal),)
-
 val SchistFont = FontFamily(
     Font(R.font.schist_regular, FontWeight.Normal)
 )
@@ -30,6 +28,8 @@ val EBGaramondFont = FontFamily(
 val RobotoFont = FontFamily(
     Font(R.font.roboto, FontWeight.Normal)
 )
+
+var TheFont = RobotoFont
 
 val fontOptions = listOf(
     "Roboto" to RobotoFont,

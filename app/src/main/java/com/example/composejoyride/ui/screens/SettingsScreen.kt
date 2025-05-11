@@ -22,11 +22,11 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
-import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
@@ -42,29 +42,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.core.content.edit
 import androidx.navigation.NavController
 import com.example.composejoyride.R
 import com.example.composejoyride.data.utils.Constants
 import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.data.utils.sharedViewModel
 import com.example.composejoyride.ui.theme.Dimens
+import com.example.composejoyride.ui.theme.Dimens.buttonWidth
 import com.example.composejoyride.ui.theme.LocalTheme
 import com.example.composejoyride.ui.theme.TheFont
-import com.example.composejoyride.ui.viewModels.SettingsViewModel
-import androidx.core.content.edit
-import com.example.composejoyride.ui.theme.Dimens.buttonWidth
 import com.example.composejoyride.ui.theme.fontOptions
+import com.example.composejoyride.ui.viewModels.SettingsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun Settings(navController: NavController, preferences: SharedPreferences) {
     val viewModel = sharedViewModel<SettingsViewModel>(navController)
     val isInfoOpen = rememberSaveable { mutableStateOf(false) }
-    val context = LocalContext.current
 
 
     var fontMenuExpanded by remember { mutableStateOf(false) }
@@ -99,7 +96,25 @@ fun Settings(navController: NavController, preferences: SharedPreferences) {
 
                 }
             )
-        }
+        },
+        floatingActionButton = {
+            if(isInfoOpen.value){
+            OutlinedIconButton(
+            onClick = { isInfoOpen.value = false },
+            modifier = Modifier
+                .size(75.dp)
+                .padding(10.dp),
+            shape = CircleShape,
+            border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary)
+        ) {
+            Icon(
+                Icons.Default.Close,
+                contentDescription = "Закрыть",
+                tint = MaterialTheme.colorScheme.tertiary
+            )
+        }}
+        },
+        floatingActionButtonPosition = FabPosition.End
     ) { padding ->
         Column(
             modifier = Modifier
@@ -173,7 +188,6 @@ fun Settings(navController: NavController, preferences: SharedPreferences) {
                                         selectedFont = font
                                         fontMenuExpanded = false
                                         viewModel.setFont(font)
-                                        navController.navigate(NoteGraph.MAIN_SCREEN)
                                     },
                                     colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.tertiary)
                                 )
@@ -189,7 +203,7 @@ fun Settings(navController: NavController, preferences: SharedPreferences) {
                     Text(
                         text = stringResource(R.string.about_app_button),
                         fontFamily = selectedFont,
-                        color = MaterialTheme.colorScheme.tertiary
+                        color = MaterialTheme.colorScheme.tertiary,
                     )
                     OutlinedButton(
                         onClick = { isInfoOpen.value = true},
@@ -213,7 +227,7 @@ fun Settings(navController: NavController, preferences: SharedPreferences) {
                 // Экран "О приложении"
                 Text(
                     text = stringResource(id = R.string.aboutApp),
-                    textAlign = TextAlign.Start,
+                    textAlign = TextAlign.Justify,
                     fontFamily = selectedFont,
                     modifier = Modifier.padding(Dimens.paddingMedium),
                     color = MaterialTheme.colorScheme.tertiary
@@ -221,20 +235,6 @@ fun Settings(navController: NavController, preferences: SharedPreferences) {
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                OutlinedIconButton(
-                    onClick = { isInfoOpen.value = false },
-                    modifier = Modifier
-                        .size(75.dp)
-                        .padding(10.dp),
-                    shape = CircleShape,
-                    border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary)
-                ) {
-                    Icon(
-                        Icons.Default.Close,
-                        contentDescription = "Закрыть",
-                        tint = MaterialTheme.colorScheme.tertiary
-                    )
-                }
             }
         }
     }

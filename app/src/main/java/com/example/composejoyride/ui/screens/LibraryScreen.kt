@@ -78,13 +78,16 @@ fun Library(
 
     val viewModel: LibraryViewModel = sharedViewModel(navController)
     val articleViewModel: ArticleViewModel = sharedViewModel(navController)
-    viewModel.getArticles()
+
     val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(imeVisible) {
         isBottomBarVisible.value = !imeVisible
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.getArticles()
+    }
 
     val buttonColor = MaterialTheme.colorScheme.secondary
     val buttonText = MaterialTheme.colorScheme.tertiary
