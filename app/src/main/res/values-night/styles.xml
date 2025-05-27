@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="RhymeStyle">
+        <item name="action"></item>
+
+    </style>
+
+    <style name="FirebaseUI.Dark" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#31a0a3</item>
+        <item name="colorOnPrimary">#ffffff</item>
+        <item name="colorPrimaryVariant">#015B6C</item>
+        <item name="android:colorBackground">#015B6C</item>
+        <item name="android:textColorPrimary">#ffffff</item>
+        <item name="colorSurface">#015B6C</item>
+        <item name="colorOnSurface">#ffffff</item>
+        <item name="colorError">#ff0000</item>
+    </style>
+
+
+</resources>

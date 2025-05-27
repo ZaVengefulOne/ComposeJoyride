@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "639304735020",
+    "project_id": "poet-s-assistant",
+    "storage_bucket": "poet-s-assistant.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:639304735020:android:be3b80ae259fb274b9b489",
+        "android_client_info": {
+          "package_name": "com.example.composejoyride"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDI5g0lpKzVdEhJ1JdxR4kZPNV7T1Gqoig"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

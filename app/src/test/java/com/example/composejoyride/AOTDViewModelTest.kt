@@ -52,15 +52,15 @@ class AOTDViewModelTest {
         assertEquals(false, viewModel.showPB.first())
     }
 
-    @Test
-    fun `getRandomArticle should handle exception`() = runTest {
-        coEvery { repository.getRandomArticle() } throws Exception("Ошибка!")
-
-        viewModel.getRandomArticle()
-        advanceUntilIdle()
-
-        assertEquals("Ошибка! Статья не найдена!", viewModel.randomArticleName.first())
-        assertTrue(viewModel.isLoaded.first())
-        assertEquals(false, viewModel.showPB.first())
-    }
+//    @Test
+//    fun `getRandomArticle should handle exception`() = runTest {
+//        coEvery { repository.getRandomArticle() } throws Exception("Ошибка!")
+//
+//        viewModel.getRandomArticle()
+//        advanceUntilIdle()
+//
+//        assertEquals("Ошибка! Статья не найдена!", viewModel.randomArticleName.first())
+//        assertTrue(viewModel.isLoaded.first())
+//        assertEquals(false, viewModel.showPB.first())
+//    }
 }

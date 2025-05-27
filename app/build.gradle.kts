@@ -7,6 +7,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint")
     id("io.gitlab.arturbosch.detekt")
     alias(libs.plugins.kotlin.compose)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -120,9 +121,17 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.material)
     implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc12")
+    implementation(libs.google.material)
 
     //Core
     implementation(libs.core.ktx)
+
+    //Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.ui.auth)
+
 
     //Tests
     testImplementation(libs.junit)
