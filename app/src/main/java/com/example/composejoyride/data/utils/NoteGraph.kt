@@ -9,4 +9,6 @@ object NoteGraph {
     const val NOTES_SCREEN = "notes"
     const val NOTE_SCREEN = "note"
     const val ARTICLE_SCREEN = "article"
+    const val AUTH_SCREEN = "auth"
+    const val PROFILE_SCREEN = "profile"
 }

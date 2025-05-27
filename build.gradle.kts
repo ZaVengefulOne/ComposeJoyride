@@ -7,4 +7,5 @@ plugins {
     alias(libs.plugins.kotlin.compose) apply false
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
     id("io.gitlab.arturbosch.detekt") version "1.23.1"
+    id("com.google.gms.google-services") version "4.4.2" apply false
 }

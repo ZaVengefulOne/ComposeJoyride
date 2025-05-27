@@ -2,6 +2,7 @@ package com.example.composejoyride.data.utils
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Abc
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.ContactPage
 import androidx.compose.material.icons.filled.EditNote
@@ -35,6 +36,11 @@ object Constants {
             label = "Библиотека",
             icon = Icons.Filled.AutoStories,
             route = NoteGraph.LIBRARY_SCREEN
+        ),
+        BottomNavItem(
+            label = "Аккаунт",
+            icon = Icons.Filled.AccountBox,
+            route = NoteGraph.PROFILE_SCREEN
         )
 
     )

@@ -4,4 +4,17 @@
         <item name="action"></item>
 
     </style>
+
+    <style name="FirebaseUI.Light" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#7289da</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorPrimaryVariant">#485ca2</item>
+        <item name="android:colorBackground">#b8c4ec</item>
+        <item name="android:textColorPrimary">#000000</item>
+        <item name="colorSurface">#b8c4ec</item>
+        <item name="colorOnSurface">#000000</item>
+        <item name="colorError">#ff0000</item>
+    </style>
+
+
 </resources>

@@ -17,6 +17,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 //noinspection UsingMaterialAndMaterial3Libraries
@@ -52,7 +53,10 @@ import com.example.composejoyride.ui.screens.Notes
 import com.example.composejoyride.ui.screens.RhymeScreen
 import com.example.composejoyride.ui.screens.Settings
 import com.example.composejoyride.ui.screens.ArticleScreen
+import com.example.composejoyride.ui.screens.AuthScreen
+import com.example.composejoyride.ui.screens.ProfileScreen
 import com.example.composejoyride.ui.theme.ComposeJoyrideTheme
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -99,9 +103,12 @@ fun NavHostContainer(
     bottomBarVisibility: MutableState<Boolean>
 ) {
 
+    val auth = FirebaseAuth.getInstance()
+    val isAuthenticated = auth.currentUser != null
+
     NavHost(
         navController = navController,
-        startDestination = NoteGraph.MAIN_SCREEN,
+        startDestination = if (isAuthenticated) NoteGraph.MAIN_SCREEN else NoteGraph.AUTH_SCREEN,
         modifier = Modifier
             .padding(paddingValues = padding)
             .background(colorScheme.background),
@@ -111,6 +118,10 @@ fun NavHostContainer(
                 Main(navController, preferences)
             }
 
+            composable(NoteGraph.AUTH_SCREEN) {
+                AuthScreen(navController, bottomBarVisibility)
+            }
+
             composable(NoteGraph.AOTD_SCREEN) {
                 AOTD(navController)
             }
@@ -118,6 +129,10 @@ fun NavHostContainer(
             composable(NoteGraph.GENERATOR_SCREEN) {
                 RhymeScreen(navController, bottomBarVisibility
                 )
+            }
+
+            composable(NoteGraph.PROFILE_SCREEN) {
+                ProfileScreen(navController)
             }
 
             composable(NoteGraph.LIBRARY_SCREEN) {
@@ -157,7 +172,9 @@ fun BottomNavigationBar(navController: NavHostController, visibility: MutableSta
 
             color = colorScheme.surface,
 
-            modifier = Modifier.background(color = colorScheme.background)
+            modifier = Modifier
+                .background(color = colorScheme.background)
+                .navigationBarsPadding()
         ) {
             BottomNavigation(
                 elevation = 5.dp,
