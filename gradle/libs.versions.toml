@@ -8,6 +8,7 @@ coreKtx = "1.16.0"
 espressoCore = "3.6.1"
 firebaseBom = "33.14.0"
 firebaseUiAuth = "8.0.2"
+foundation = "1.8.2"
 hiltCompiler = "2.55"
 hiltNavigationCompose = "1.2.0"
 jsoup = "1.14.2"
@@ -29,9 +30,11 @@ workRuntimeKtx = "2.10.1"
 workRuntimeKtxVersion = "2.8.1"
 kotlin = "2.0.21"
 constraintlayout = "2.2.1"
+firebaseFirestoreKtx = "25.1.4"
 
 [libraries]
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltNavigationCompose" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "material" }
@@ -73,6 +76,7 @@ ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 
 [plugins]
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

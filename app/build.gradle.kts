@@ -89,6 +89,7 @@ dependencies {
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.work.runtime.ktx.v281)
     implementation(libs.work.runtime.ktx)
+    implementation(libs.firebase.firestore.ktx)
     ksp(libs.hilt.compiler)
 
     implementation(libs.lifecycle.viewmodel.android)
@@ -122,6 +123,7 @@ dependencies {
     implementation(libs.material)
     implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc12")
     implementation(libs.google.material)
+    implementation(libs.androidx.foundation)
 
     //Core
     implementation(libs.core.ktx)
