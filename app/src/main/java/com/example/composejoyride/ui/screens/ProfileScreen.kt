@@ -79,7 +79,7 @@ fun ProfileScreen(
         Text(
             modifier = Modifier
                 .padding(start = Dimens.paddingMedium, top = Dimens.paddingMedium),
-            text = if (user?.isAnonymous == true) "Добро пожаловать, гость!" else "Добро пожаловать, ${user?.displayName}",
+            text = if (user?.isAnonymous == true) "" else "Добро пожаловать, ${user?.displayName}",
             fontSize = 20.sp,
             color = textColor,
             fontFamily = TheFont,

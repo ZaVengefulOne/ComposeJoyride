@@ -8,17 +8,20 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.composejoyride.data.entitites.CacheArticle
 import com.example.composejoyride.di.models.Article
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 inline fun <reified VM : ViewModel> sharedViewModel(
     navController: NavController,
 ): VM {
-    val parentEntry = remember { navController.getBackStackEntry(NoteGraph.MAIN_SCREEN) }
+    val parentEntry = remember { navController.getBackStackEntry(NoteGraph.ROOT) }
     return hiltViewModel(parentEntry)
 }
 
-inline fun List<CacheArticle>.toArticles(): List<Article>{
+fun List<CacheArticle>.toArticles(): List<Article>{
     return map { cacheItem ->
         Article(
             articleTitle = cacheItem.articleTitle,
@@ -28,7 +31,7 @@ inline fun List<CacheArticle>.toArticles(): List<Article>{
     }
 }
 
-inline fun List<Article>.toCacheArticles(): List<CacheArticle> {
+fun List<Article>.toCacheArticles(): List<CacheArticle> {
     return mapIndexed { index, articleItem ->
         CacheArticle(
             id = index + 1,
@@ -36,6 +39,17 @@ inline fun List<Article>.toCacheArticles(): List<CacheArticle> {
             articleText = articleItem.articleText ?: "",
             articleLink = articleItem.articleLink
         )
+    }
+}
+
+fun formatTimestamp(timestamp: Any?): String {
+    return try {
+        val millis = (timestamp as? Long) ?: return "Неизвестно"
+        val date = Date(millis)
+        val format = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+        format.format(date)
+    } catch (e: Exception) {
+        "Неизвестно"
     }
 }
 

@@ -1,6 +1,7 @@
 package com.example.composejoyride.ui.screens
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +34,7 @@ import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.ui.theme.Dimens
 import com.example.composejoyride.ui.theme.LocalTheme
 import com.example.composejoyride.ui.theme.TheFont
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun Main(navController: NavController, preferences: SharedPreferences)  {
@@ -62,6 +64,8 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
                 lineHeight = 65.sp
             )
         )
+
+        Log.d("VENGEFUL", FirebaseAuth.getInstance().currentUser?.email.toString())
 
         Spacer(modifier = Modifier.height(48.dp))
 
