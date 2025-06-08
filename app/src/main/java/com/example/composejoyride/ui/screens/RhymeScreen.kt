@@ -61,8 +61,7 @@ import com.example.composejoyride.ui.viewModels.RhymeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RhymeScreen(navController: NavController, isBottomBarVisible: MutableState<Boolean>)
-{
+fun RhymeScreen(navController: NavController, isBottomBarVisible: MutableState<Boolean>) {
     val context = LocalContext.current
     val viewModel: RhymeViewModel = sharedViewModel(navController)
     val message = viewModel.input.collectAsState().value
@@ -84,6 +83,7 @@ fun RhymeScreen(navController: NavController, isBottomBarVisible: MutableState<B
                     Text(
                         text = "Генератор рифм",
                         style = MaterialTheme.typography.titleLarge,
+                        fontFamily = TheFont,
                         color = MaterialTheme.colorScheme.tertiary,
                         textAlign = TextAlign.Center
                     )
@@ -102,107 +102,124 @@ fun RhymeScreen(navController: NavController, isBottomBarVisible: MutableState<B
             )
         }
     ) { padding ->
-    Column (modifier = Modifier
-        .fillMaxSize().padding(padding),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        OutlinedTextField(
-            modifier = Modifier.padding(16.dp)
-                .onFocusChanged { isBottomBarVisible.value = !it.isFocused },
-            value = message,
-            onValueChange = { newText -> viewModel.setInput(newText) },
-            placeholder = {
-                Text(
-                    "Поиск...",
-                    color = Color.Black,
-                    fontFamily = TheFont
-                )
-            },
-            colors = TextFieldDefaults.colors(
-                unfocusedIndicatorColor = Color.Black,
-                focusedIndicatorColor = Color.Black,
-                focusedPlaceholderColor = Color.Black,
-                focusedTextColor = Color.Black,
-                focusedTrailingIconColor = Color.Black,
-                unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                focusedContainerColor = MaterialTheme.colorScheme.background
-            ),
-            shape = RoundedCornerShape(16.dp),
-            singleLine = true,
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    isBottomBarVisible.value = true
-                    keyboardController?.hide()
-                    showDialog = true
-                    focusManager.clearFocus()
-                }
-            ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done
-            ),
-            trailingIcon = {Icon(Icons.Filled.Clear,
-                contentDescription = "Clear",
-                modifier = Modifier.clickable {
-                    viewModel.setInput("")
-                    isBottomBarVisible.value = true
-                    keyboardController?.hide()
-                                              },
-                tint = Color.Black)}
-        )
-
-
-        if (showDialog) {
-            VowelSelectionDialog(
-                word = message,
-                onDismissRequest = { showDialog = false },
-                onVowelSelected = { index ->
-                    selectedIndex = index
-                    viewModel.findRhymes(index)
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .onFocusChanged { isBottomBarVisible.value = !it.isFocused },
+                value = message,
+                onValueChange = { newText -> viewModel.setInput(newText) },
+                placeholder = {
+                    Text(
+                        "Поиск...",
+                        color = Color.Black,
+                        fontFamily = TheFont
+                    )
+                },
+                colors = TextFieldDefaults.colors(
+                    unfocusedIndicatorColor = Color.Black,
+                    focusedIndicatorColor = Color.Black,
+                    focusedPlaceholderColor = Color.Black,
+                    focusedTextColor = Color.Black,
+                    focusedTrailingIconColor = Color.Black,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    focusedContainerColor = MaterialTheme.colorScheme.background
+                ),
+                shape = RoundedCornerShape(16.dp),
+                singleLine = true,
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        isBottomBarVisible.value = true
+                        keyboardController?.hide()
+                        showDialog = true
+                        focusManager.clearFocus()
+                    }
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
+                trailingIcon = {
+                    Icon(
+                        Icons.Filled.Clear,
+                        contentDescription = "Clear",
+                        modifier = Modifier.clickable {
+                            viewModel.setInput("")
+                            isBottomBarVisible.value = true
+                            keyboardController?.hide()
+                        },
+                        tint = Color.Black
+                    )
                 }
             )
-        }
 
-        Text(text = "Найдено слов: ${resultArray.size}", modifier = Modifier
-            .fillMaxWidth()
-            .padding(Dimens.paddingMedium)
-            .align(Alignment.CenterHorizontally)
-            .fillMaxWidth(),
-            color = MaterialTheme.colorScheme.tertiary,
-            fontFamily = TheFont,
-            fontSize = 28.sp,
-            textAlign = TextAlign.Center)
-        LazyColumn (
-            content = {
-                items(resultArray) { rhymeItem ->
-                    Card(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(4.dp), elevation = CardDefaults.cardElevation(
-                        defaultElevation = 12.dp
-                    ),  border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
-                    ) {
-                        Row {
-                            Text(text = rhymeItem,
-                                color = MaterialTheme.colorScheme.tertiary,
-                                fontFamily = TheFont,
-                                fontSize = 28.sp,
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .weight(0.9f)
-                                    .padding(start = 10.dp))
-                            IconButton(onClick = { viewModel.copyToClipBoard(context, rhymeItem) },
-                                modifier = Modifier.weight(0.1f)) {
-                                Icon(Icons.Filled.ContentCopy,
-                                    contentDescription = "Copy")
-                            }
-                        }
 
+            if (showDialog) {
+                VowelSelectionDialog(
+                    word = message,
+                    onDismissRequest = { showDialog = false },
+                    onVowelSelected = { index ->
+                        selectedIndex = index
+                        viewModel.findRhymes(index)
                     }
-                }
-            }, modifier = Modifier.fillMaxWidth()
-        )
-    }
+                )
+            }
+
+            Text(
+                text = "Найдено слов: ${resultArray.size}", modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(Dimens.paddingMedium)
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth(),
+                color = MaterialTheme.colorScheme.tertiary,
+                fontFamily = TheFont,
+                fontSize = 28.sp,
+                textAlign = TextAlign.Center
+            )
+            LazyColumn(
+                content = {
+                    items(resultArray) { rhymeItem ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(4.dp), elevation = CardDefaults.cardElevation(
+                                defaultElevation = 12.dp
+                            ), border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+                        ) {
+                            Row {
+                                Text(
+                                    text = rhymeItem,
+                                    color = MaterialTheme.colorScheme.tertiary,
+                                    fontFamily = TheFont,
+                                    fontSize = 28.sp,
+                                    modifier = Modifier
+                                        .align(Alignment.CenterVertically)
+                                        .weight(0.9f)
+                                        .padding(start = 10.dp)
+                                )
+                                IconButton(
+                                    onClick = { viewModel.copyToClipBoard(context, rhymeItem) },
+                                    modifier = Modifier.weight(0.1f)
+                                ) {
+                                    Icon(
+                                        Icons.Filled.ContentCopy,
+                                        contentDescription = "Copy"
+                                    )
+                                }
+                            }
+
+                        }
+                    }
+                }, modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }
 

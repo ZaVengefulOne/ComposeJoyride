@@ -40,7 +40,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -64,7 +63,6 @@ fun Settings(navController: NavController, preferences: SharedPreferences) {
     val isInfoOpen = rememberSaveable { mutableStateOf(false) }
 
 
-
     var fontMenuExpanded by remember { mutableStateOf(false) }
     var selectedFont by remember { mutableStateOf(TheFont) }
 
@@ -77,43 +75,45 @@ fun Settings(navController: NavController, preferences: SharedPreferences) {
                     Text(
                         text = if (isInfoOpen.value) "О приложении" else "Настройки",
                         style = MaterialTheme.typography.titleLarge,
+                        fontFamily = TheFont,
                         color = MaterialTheme.colorScheme.tertiary,
                         textAlign = TextAlign.Center
                     )
                 },
                 navigationIcon = {
-                        IconButton(onClick = {
-                            if (isInfoOpen.value) {
-                                isInfoOpen.value = false
-                            } else {
-                                navController.navigate(NoteGraph.MAIN_SCREEN)
-                            }
-                        }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Назад"
-                            )
+                    IconButton(onClick = {
+                        if (isInfoOpen.value) {
+                            isInfoOpen.value = false
+                        } else {
+                            navController.navigate(NoteGraph.MAIN_SCREEN)
                         }
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Назад"
+                        )
+                    }
 
                 }
             )
         },
         floatingActionButton = {
-            if(isInfoOpen.value){
-            OutlinedIconButton(
-            onClick = { isInfoOpen.value = false },
-            modifier = Modifier
-                .size(75.dp)
-                .padding(10.dp),
-            shape = CircleShape,
-            border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary)
-        ) {
-            Icon(
-                Icons.Default.Close,
-                contentDescription = "Закрыть",
-                tint = MaterialTheme.colorScheme.tertiary
-            )
-        }}
+            if (isInfoOpen.value) {
+                OutlinedIconButton(
+                    onClick = { isInfoOpen.value = false },
+                    modifier = Modifier
+                        .size(75.dp)
+                        .padding(10.dp),
+                    shape = CircleShape,
+                    border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.tertiary)
+                ) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "Закрыть",
+                        tint = MaterialTheme.colorScheme.tertiary
+                    )
+                }
+            }
         },
         floatingActionButtonPosition = FabPosition.End
     ) { padding ->
@@ -127,8 +127,10 @@ fun Settings(navController: NavController, preferences: SharedPreferences) {
         ) {
             if (!isInfoOpen.value) {
                 // Темная/Светлая тема
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Text(
                         text = stringResource(R.string.theme_switcher),
                         fontFamily = selectedFont,
@@ -138,7 +140,7 @@ fun Settings(navController: NavController, preferences: SharedPreferences) {
                         onClick = {
                             LocalTheme.value = !LocalTheme.value
                             preferences.edit { putBoolean(Constants.EDIT_KEY, LocalTheme.value) }
-                                  },
+                        },
                         border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary),
                         shape = ButtonDefaults.squareShape,
                         modifier = Modifier.width(buttonWidth)
@@ -154,8 +156,10 @@ fun Settings(navController: NavController, preferences: SharedPreferences) {
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Выбор шрифта
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Text(
                         text = "Выберите шрифт:",
                         fontFamily = selectedFont,
@@ -200,14 +204,18 @@ fun Settings(navController: NavController, preferences: SharedPreferences) {
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Пункт "О приложении"
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Text(
                         text = stringResource(R.string.about_app_button),
                         fontFamily = selectedFont,
                         color = MaterialTheme.colorScheme.tertiary,
                     )
                     OutlinedButton(
-                        onClick = { isInfoOpen.value = true},
+                        onClick = { isInfoOpen.value = true },
                         border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary),
                         shape = ButtonDefaults.squareShape,
                         modifier = Modifier.width(buttonWidth)
@@ -219,9 +227,6 @@ fun Settings(navController: NavController, preferences: SharedPreferences) {
                         )
                     }
                 }
-
-
-
 
 
             } else {

@@ -57,8 +57,7 @@ import com.example.composejoyride.ui.viewModels.NotesViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("SuspiciousIndentation", "UnrememberedGetBackStackEntry")
 @Composable
-fun Notes(navController: NavController)
-{
+fun Notes(navController: NavController) {
     val notesViewModel: NotesViewModel = sharedViewModel(navController)
     val noteViewModel: NoteViewModel = sharedViewModel(navController)
 
@@ -88,13 +87,14 @@ fun Notes(navController: NavController)
                     Text(
                         text = "Заметки",
                         style = MaterialTheme.typography.titleLarge,
+                        fontFamily = TheFont,
                         color = MaterialTheme.colorScheme.tertiary,
                         textAlign = TextAlign.Center
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                            navController.navigate(NoteGraph.MAIN_SCREEN)
+                        navController.navigate(NoteGraph.MAIN_SCREEN)
                     }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -106,7 +106,9 @@ fun Notes(navController: NavController)
             )
         }
     ) { padding ->
-        Column(modifier = Modifier.fillMaxSize().padding(padding)) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)) {
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Adaptive(128.dp),
                 contentPadding = PaddingValues(

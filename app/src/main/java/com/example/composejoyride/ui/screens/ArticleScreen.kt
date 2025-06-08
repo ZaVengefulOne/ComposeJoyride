@@ -33,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,12 +46,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.shadow
 import com.example.composejoyride.data.utils.NoteGraph
 import com.example.composejoyride.data.utils.sharedViewModel
+import com.example.composejoyride.ui.theme.TheFont
 import com.example.composejoyride.ui.viewModels.ArticleViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArticleScreen(navController: NavController){
+fun ArticleScreen(navController: NavController) {
 
     val articleViewModel = sharedViewModel<ArticleViewModel>(navController)
 
@@ -74,59 +74,59 @@ fun ArticleScreen(navController: NavController){
         showScrollUpButton = scrollState.value > 400
     }
     Scaffold(
-    topBar = {
-        AnimatedVisibility(
-            visible = showTopBar,
-            enter = slideInVertically(initialOffsetY = { -it }),
-            exit = slideOutVertically(targetOffsetY = { -it })
-        ) {
-        TopAppBar(
-            title = {
-                Text(
-                text = articleTitle,
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 26.sp
-                ),
-                color = textColor,
-            ) },
-            navigationIcon = {
-                IconButton(onClick = {
-                    navController.navigate(NoteGraph.LIBRARY_SCREEN)
-                    articleViewModel.articleDrop()
-                }) {
+        topBar = {
+            AnimatedVisibility(
+                visible = showTopBar,
+                enter = slideInVertically(initialOffsetY = { -it }),
+                exit = slideOutVertically(targetOffsetY = { -it })
+            ) {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = articleTitle,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontFamily = TheFont,
+                            color = textColor,
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            navController.navigate(NoteGraph.LIBRARY_SCREEN)
+                            articleViewModel.articleDrop()
+                        }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Назад"
+                            )
+                        }
+                    }
+                )
+            }
+        },
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = showScrollUpButton,
+                enter = scaleIn(),
+                exit = scaleOut()
+            ) {
+                FloatingActionButton(
+                    onClick = {
+                        coroutineScope.launch {
+                            scrollState.animateScrollTo(0)
+                        }
+                    },
+                    shape = CircleShape,
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.shadow(10.dp, CircleShape)
+                ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Назад"
+                        imageVector = Icons.Default.KeyboardArrowUp,
+                        contentDescription = "Up"
                     )
                 }
             }
-        )}
-    },
-    floatingActionButton = {
-        AnimatedVisibility(
-            visible = showScrollUpButton,
-            enter = scaleIn(),
-            exit = scaleOut()
-        ) {
-            FloatingActionButton(
-                onClick = {
-                    coroutineScope.launch {
-                        scrollState.animateScrollTo(0)
-                    }
-                },
-                shape = CircleShape,
-                containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.tertiary,
-                modifier = Modifier.shadow(10.dp, CircleShape)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowUp,
-                    contentDescription = "Up"
-                )
-            }
         }
-    }
     ) { paddingValues ->
         Column(
             modifier = Modifier

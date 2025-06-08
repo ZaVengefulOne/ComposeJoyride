@@ -10,8 +10,8 @@ val DarkerCyan = Color(0xff015B6C)
 val White = Color(0xffffffff)
 val Red = Color(0xffff0000)
 
-val LightPrimary = Color(0xff485ca2 )
-val LightBackground = Color(0xffb8c4ec )
+val LightPrimary = Color(0xff485ca2)
+val LightBackground = Color(0xffb8c4ec)
 val LightSecondary = Color(0xff7289da)
-val LightTertiary = Color(0xff000000 )
+val LightTertiary = Color(0xff000000)
 

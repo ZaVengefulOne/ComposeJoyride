@@ -11,7 +11,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ArticleViewModel @Inject constructor(private val repository: ArticlesRepository) : ViewModel() {
+class ArticleViewModel @Inject constructor(private val repository: ArticlesRepository) :
+    ViewModel() {
 
     private val _articleName = MutableStateFlow("Статья загружается, пожалуйста, подождите...")
     val articleName: StateFlow<String> get() = _articleName
@@ -19,13 +20,13 @@ class ArticleViewModel @Inject constructor(private val repository: ArticlesRepos
     private val _articleText = MutableStateFlow("")
     val articleText: StateFlow<String> get() = _articleText
 
-    fun getArticle(url: String){
+    fun getArticle(url: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val article = repository.getArticle(url)
                 _articleName.value = article.articleTitle
                 _articleText.value = article.articleText ?: ""
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 val article = repository.getSavedArticle(url)
                 _articleName.value = article.articleTitle
                 _articleText.value = article.articleText
@@ -33,7 +34,7 @@ class ArticleViewModel @Inject constructor(private val repository: ArticlesRepos
         }
     }
 
-    fun articleDrop(){
+    fun articleDrop() {
         _articleName.value = "Статья загружается, пожалуйста, подождите..."
         _articleText.value = ""
     }

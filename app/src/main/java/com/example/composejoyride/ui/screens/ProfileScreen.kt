@@ -51,6 +51,7 @@ fun ProfileScreen(
                 Text(
                     text = "Аккаунт",
                     style = MaterialTheme.typography.titleLarge,
+                    fontFamily = TheFont,
                     color = MaterialTheme.colorScheme.tertiary,
                     textAlign = TextAlign.Center
                 )

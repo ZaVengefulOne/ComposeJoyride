@@ -7,7 +7,6 @@ import android.content.Context.CLIPBOARD_SERVICE
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.composejoyride.data.entitites.Note
 import com.example.composejoyride.data.repositories.RhymeRepository
 import com.example.composejoyride.di.models.Rhyme
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,12 +14,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
-import org.jsoup.Jsoup
 import javax.inject.Inject
 
 @HiltViewModel
-class RhymeViewModel @Inject constructor(private val repository: RhymeRepository): ViewModel() {
+class RhymeViewModel @Inject constructor(private val repository: RhymeRepository) : ViewModel() {
 
     private val _input = MutableStateFlow("")
     val input: StateFlow<String> get() = _input
@@ -29,7 +26,7 @@ class RhymeViewModel @Inject constructor(private val repository: RhymeRepository
     val result: StateFlow<List<String>> get() = _result
 
 
-    fun setInput(newInput: String){
+    fun setInput(newInput: String) {
         _input.value = newInput
     }
 

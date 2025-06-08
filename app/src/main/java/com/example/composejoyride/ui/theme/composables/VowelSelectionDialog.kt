@@ -46,8 +46,7 @@ fun VowelSelectionDialog(
             Column(
                 modifier = Modifier
                     .padding(24.dp)
-                    .wrapContentHeight()
-                ,
+                    .wrapContentHeight(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -85,7 +84,8 @@ fun VowelSelectionDialog(
                     }
                 }
                 TextButton(onClick = onDismissRequest) {
-                    Text(text = stringResource(R.string.cancel),
+                    Text(
+                        text = stringResource(R.string.cancel),
                         color = MaterialTheme.colorScheme.tertiary,
                         fontFamily = TheFont
                     )

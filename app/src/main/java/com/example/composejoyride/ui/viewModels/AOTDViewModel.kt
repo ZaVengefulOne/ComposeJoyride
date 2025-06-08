@@ -28,7 +28,7 @@ class AOTDViewModel @Inject constructor(private val repository: ArticlesReposito
     private val _showPB = MutableStateFlow(false)
     val showPB: StateFlow<Boolean> get() = _showPB
 
-    fun getRandomArticle(){
+    fun getRandomArticle() {
         _showPB.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -36,8 +36,7 @@ class AOTDViewModel @Inject constructor(private val repository: ArticlesReposito
                 _randomArticleName.value = randomArticle.articleTitle
                 _randomArticleText.value = randomArticle.articleText ?: ""
                 _randomArticleLink.value = randomArticle.articleLink
-            } catch (e: Exception)
-            {
+            } catch (e: Exception) {
                 _randomArticleName.value = "Ошибка! Статья не найдена!"
             }
             _isLoaded.value = true

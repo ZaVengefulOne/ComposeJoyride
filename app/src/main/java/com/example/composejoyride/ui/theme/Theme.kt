@@ -27,8 +27,7 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun ComposeJoyrideTheme(
     content: @Composable () -> Unit
-)
-{
+) {
 
     MaterialTheme(
         colorScheme = if (!LocalTheme.value) DarkColorScheme else LightColorScheme,

@@ -37,11 +37,11 @@ import com.example.composejoyride.ui.theme.TheFont
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun Main(navController: NavController, preferences: SharedPreferences)  {
+fun Main(navController: NavController, preferences: SharedPreferences) {
 
     val buttonColor = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
     val buttonText = MaterialTheme.colorScheme.tertiary
-    LocalTheme.value = preferences.getBoolean(Constants.EDIT_KEY,false)
+    LocalTheme.value = preferences.getBoolean(Constants.EDIT_KEY, false)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -70,96 +70,112 @@ fun Main(navController: NavController, preferences: SharedPreferences)  {
         Spacer(modifier = Modifier.height(48.dp))
 
         Column {
-        Button(
-            onClick = { navController.navigate(NoteGraph.AOTD_SCREEN) },
-            colors = buttonColor,
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth().height(48.dp).padding(vertical = Dimens.paddingSmall)
-        ) {
-            Icon(
-                Icons.Filled.ContactPage,
-                contentDescription = "AOTD Button",
-                tint = MaterialTheme.colorScheme.tertiary
-            )
-            Text(
-                text = stringResource(id = R.string.aotd),
-                modifier = Modifier.fillMaxWidth().padding(start = Dimens.paddingLarge),
-                fontFamily = TheFont,
-                color = buttonText,
-                fontSize = 22.sp
-            )
+            Button(
+                onClick = { navController.navigate(NoteGraph.AOTD_SCREEN) },
+                colors = buttonColor,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .padding(vertical = Dimens.paddingSmall)
+            ) {
+                Icon(
+                    Icons.Filled.ContactPage,
+                    contentDescription = "AOTD Button",
+                    tint = MaterialTheme.colorScheme.tertiary
+                )
+                Text(
+                    text = stringResource(id = R.string.aotd),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = Dimens.paddingLarge),
+                    fontFamily = TheFont,
+                    color = buttonText,
+                    fontSize = 22.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(Dimens.paddingSpacer))
+
+            Button(
+                onClick = { navController.navigate(NoteGraph.GENERATOR_SCREEN) },
+                colors = buttonColor,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .padding(vertical = 4.dp)
+            ) {
+                Icon(
+                    Icons.Filled.Abc,
+                    contentDescription = "Rhyme Button",
+                    tint = MaterialTheme.colorScheme.tertiary
+                )
+                Text(
+                    text = stringResource(id = R.string.generator),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = Dimens.paddingLarge),
+                    fontFamily = TheFont,
+                    color = buttonText,
+                    fontSize = 22.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(Dimens.paddingSpacer))
+
+            Button(
+                onClick = { navController.navigate(NoteGraph.LIBRARY_SCREEN) },
+                colors = buttonColor,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .padding(vertical = Dimens.paddingSmall)
+            ) {
+                Icon(
+                    Icons.Filled.AutoStories,
+                    contentDescription = "Library Button",
+                    tint = MaterialTheme.colorScheme.tertiary
+                )
+                Text(
+                    text = stringResource(id = R.string.library),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = Dimens.paddingLarge),
+                    fontFamily = TheFont,
+                    color = buttonText,
+                    fontSize = 22.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(Dimens.paddingSpacer))
+
+            Button(
+                onClick = { navController.navigate(NoteGraph.SETTINGS_SCREEN) },
+                colors = buttonColor,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .padding(vertical = Dimens.paddingSmall)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_settings_24),
+                    contentDescription = "Settings Button",
+                    tint = MaterialTheme.colorScheme.tertiary
+                )
+                Text(
+                    text = stringResource(id = R.string.settings),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = Dimens.paddingLarge),
+                    fontFamily = TheFont,
+                    color = buttonText,
+                    fontSize = 22.sp
+                )
+            }
+
         }
-
-        Spacer(modifier = Modifier.height(Dimens.paddingSpacer))
-
-        Button(
-            onClick = { navController.navigate(NoteGraph.GENERATOR_SCREEN) },
-            colors = buttonColor,
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth().height(48.dp).padding(vertical = 4.dp)
-        ) {
-            Icon(
-                Icons.Filled.Abc,
-                contentDescription = "Rhyme Button",
-                tint = MaterialTheme.colorScheme.tertiary
-            )
-            Text(
-                text = stringResource(id = R.string.generator),
-                modifier = Modifier.fillMaxWidth().padding(start = Dimens.paddingLarge),
-                fontFamily = TheFont,
-                color = buttonText,
-                fontSize = 22.sp
-            )
-        }
-
-        Spacer(modifier = Modifier.height(Dimens.paddingSpacer))
-
-        Button(
-            onClick = { navController.navigate(NoteGraph.LIBRARY_SCREEN) },
-            colors = buttonColor,
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth().height(48.dp).padding(vertical = Dimens.paddingSmall)
-        ) {
-            Icon(
-                Icons.Filled.AutoStories,
-                contentDescription = "Library Button",
-                tint = MaterialTheme.colorScheme.tertiary
-            )
-            Text(
-                text = stringResource(id = R.string.library),
-                modifier = Modifier.fillMaxWidth().padding(start = Dimens.paddingLarge),
-                fontFamily = TheFont,
-                color = buttonText,
-                fontSize = 22.sp
-            )
-        }
-
-        Spacer(modifier = Modifier.height(Dimens.paddingSpacer))
-
-        Button(
-            onClick = { navController.navigate(NoteGraph.SETTINGS_SCREEN) },
-            colors = buttonColor,
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth().height(48.dp).padding(vertical = Dimens.paddingSmall)
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.baseline_settings_24),
-                contentDescription = "Settings Button",
-                tint = MaterialTheme.colorScheme.tertiary
-            )
-            Text(
-                text = stringResource(id = R.string.settings),
-                modifier = Modifier.fillMaxWidth().padding(start = Dimens.paddingLarge),
-                fontFamily = TheFont,
-                color = buttonText,
-                fontSize = 22.sp
-            )
-        }
-
-    }
     }
 }

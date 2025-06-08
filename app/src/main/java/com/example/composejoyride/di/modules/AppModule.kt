@@ -2,8 +2,6 @@ package com.example.composejoyride.di.modules
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.composejoyride.data.Interactors.ParseInteractor
 import com.example.composejoyride.data.dao.ArticlesDao
 import com.example.composejoyride.data.dao.NotesDao
@@ -26,7 +24,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNotesDatabase(@ApplicationContext context: Context): NotesDatabase{
+    fun provideNotesDatabase(@ApplicationContext context: Context): NotesDatabase {
         return Room.databaseBuilder(
             context,
             NotesDatabase::class.java,
@@ -35,7 +33,7 @@ object AppModule {
     }
 
     @Provides
-    fun provideNotesDao(database: NotesDatabase): NotesDao{
+    fun provideNotesDao(database: NotesDatabase): NotesDao {
         return database.notesDao()
     }
 
@@ -47,17 +45,17 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRhymeRepository(interactor: ParseInteractor): RhymeRepository{
+    fun provideRhymeRepository(interactor: ParseInteractor): RhymeRepository {
         return RhymeRepository(interactor)
     }
 
     @Provides
     @Singleton
-    fun provideInteractor(): ParseInteractor{
+    fun provideInteractor(): ParseInteractor {
         return ParseInteractor()
     }
 
-    
+
     @Provides
     @Singleton
     fun provideArticlesDatabase(@ApplicationContext context: Context): ArticlesDatabase {
@@ -69,7 +67,7 @@ object AppModule {
     }
 
     @Provides
-    fun provideArticlesDao(database: ArticlesDatabase): ArticlesDao{
+    fun provideArticlesDao(database: ArticlesDatabase): ArticlesDao {
         return database.articlesDao()
     }
 
@@ -78,7 +76,7 @@ object AppModule {
     fun provideArticlesRepository(
         interactor: ParseInteractor,
         articlesDao: ArticlesDao
-    ) : ArticlesRepository{
+    ): ArticlesRepository {
         return ArticlesRepository(interactor, articlesDao)
     }
 

@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NoteViewModel @Inject constructor(private val repository: NotesRepository): ViewModel() {
+class NoteViewModel @Inject constructor(private val repository: NotesRepository) : ViewModel() {
 
     val _note = MutableStateFlow(Note())
     val note: StateFlow<Note> get() = _note
@@ -57,8 +57,10 @@ class NoteViewModel @Inject constructor(private val repository: NotesRepository)
 
     fun updateNote() {
         viewModelScope.launch(Dispatchers.IO) {
-                repository.updateNote(_note.value.id,
-                    _note.value.note_name, _note.value.note_content_html)
-            }
+            repository.updateNote(
+                _note.value.id,
+                _note.value.note_name, _note.value.note_content_html
+            )
         }
+    }
 }

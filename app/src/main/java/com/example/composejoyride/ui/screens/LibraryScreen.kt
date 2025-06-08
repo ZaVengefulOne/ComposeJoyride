@@ -74,7 +74,8 @@ import com.example.composejoyride.ui.viewModels.LibraryViewModel
 fun Library(
     navController: NavController,
     preferences: SharedPreferences,
-    isBottomBarVisible: MutableState<Boolean>) {
+    isBottomBarVisible: MutableState<Boolean>
+) {
 
     val viewModel: LibraryViewModel = sharedViewModel(navController)
     val articleViewModel: ArticleViewModel = sharedViewModel(navController)
@@ -134,6 +135,7 @@ fun Library(
                     Text(
                         text = "Библиотека статей",
                         style = MaterialTheme.typography.titleLarge,
+                        fontFamily = TheFont,
                         color = MaterialTheme.colorScheme.tertiary,
                         textAlign = TextAlign.Center
                     )
@@ -153,7 +155,9 @@ fun Library(
         }
     ) { padding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(padding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -162,121 +166,126 @@ fun Library(
                     CircularProgressIndicator(color = MaterialTheme.colorScheme.secondary)
                 }
             } else {
-            Row {
-                OutlinedTextField(
-                    value = searchText.value,
-                    onValueChange = {
-                        searchText.value = it
-                    },
-                    modifier = Modifier.padding(16.dp)
-                        .onFocusChanged { isBottomBarVisible.value = !it.isFocused }
-                    ,
-                    placeholder = {
-                        Text(
-                            "Поиск...",
-                            modifier = Modifier.clickable { expanded.value = true },
-                            color = MaterialTheme.colorScheme.primary,
-                            fontFamily = TheFont
-                        )
-                    },
-                    colors = TextFieldDefaults.colors(
-                        unfocusedIndicatorColor = Color.Black,
-                        focusedIndicatorColor = Color.Cyan,
-                        focusedPlaceholderColor = Color.Cyan,
-                        focusedTextColor = Color.Black,
-                        focusedTrailingIconColor = Color.Cyan,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                        focusedContainerColor = MaterialTheme.colorScheme.background
-                    ),
-                    shape = RoundedCornerShape(16.dp),
-                    singleLine = true,
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            if (searchText.value.isEmpty()) {
-                                filteredArticleList.value = articles
-                            } else {
-                                filteredArticleList.value = articles.filter {
-                                    it.articleTitle.contains(searchText.value, true)
+                Row {
+                    OutlinedTextField(
+                        value = searchText.value,
+                        onValueChange = {
+                            searchText.value = it
+                        },
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .onFocusChanged { isBottomBarVisible.value = !it.isFocused },
+                        placeholder = {
+                            Text(
+                                "Поиск...",
+                                modifier = Modifier.clickable { expanded.value = true },
+                                color = MaterialTheme.colorScheme.primary,
+                                fontFamily = TheFont
+                            )
+                        },
+                        colors = TextFieldDefaults.colors(
+                            unfocusedIndicatorColor = Color.Black,
+                            focusedIndicatorColor = Color.Cyan,
+                            focusedPlaceholderColor = Color.Cyan,
+                            focusedTextColor = Color.Black,
+                            focusedTrailingIconColor = Color.Cyan,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                            focusedContainerColor = MaterialTheme.colorScheme.background
+                        ),
+                        shape = RoundedCornerShape(16.dp),
+                        singleLine = true,
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                if (searchText.value.isEmpty()) {
+                                    filteredArticleList.value = articles
+                                } else {
+                                    filteredArticleList.value = articles.filter {
+                                        it.articleTitle.contains(searchText.value, true)
+                                    }
+                                    viewModel.saveSearchHistory(searchText.value, preferences)
+                                    localItems.value =
+                                        preferences.getStringSet(
+                                            Constants.SEARCH_KEY,
+                                            mutableSetOf()
+                                        )
+                                            ?.toMutableSet()
+                                            ?: mutableSetOf()
                                 }
-                                viewModel.saveSearchHistory(searchText.value, preferences)
-                                localItems.value =
-                                    preferences.getStringSet(Constants.SEARCH_KEY, mutableSetOf())
-                                        ?.toMutableSet()
-                                        ?: mutableSetOf()
+                                isBottomBarVisible.value = true
+                                keyboardController?.hide()
                             }
-                            isBottomBarVisible.value = true
-                            keyboardController?.hide()
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done
+                        ),
+                        trailingIcon = trailingIconView
+                    )
+                    DropdownMenu(
+                        expanded = expanded.value,
+                        onDismissRequest = { expanded.value = false },
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        shadowElevation = 5.dp
+                    ) {
+                        localItems.value.forEach { item ->
+                            DropdownMenuItem(text = {
+                                Text(text = item)
+                            }, onClick = {
+                                searchText.value = item
+                                expanded.value = false
+                            })
                         }
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Done
-                    ),
-                    trailingIcon = trailingIconView
-                )
-                DropdownMenu(
-                    expanded = expanded.value,
-                    onDismissRequest = { expanded.value = false },
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    shadowElevation = 5.dp) {
-                    localItems.value.forEach { item ->
-                        DropdownMenuItem(text = {
-                            Text(text = item)
-                        }, onClick = {
-                            searchText.value = item
-                            expanded.value = false
-                        })
                     }
                 }
-            }
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Top,
-                content = {
-                    items(filteredArticleList.value.ifEmpty { articles }) { articleItem ->
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(4.dp)
-                                .clickable {
-                                    articleViewModel.getArticle(articleItem.articleLink)
-                                    navController.navigate(NoteGraph.ARTICLE_SCREEN)
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Top,
+                    content = {
+                        items(filteredArticleList.value.ifEmpty { articles }) { articleItem ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(4.dp)
+                                    .clickable {
+                                        articleViewModel.getArticle(articleItem.articleLink)
+                                        navController.navigate(NoteGraph.ARTICLE_SCREEN)
+                                    }
+                                    .size(80.dp),
+                                shape = CardDefaults.elevatedShape,
+                                elevation = CardDefaults.cardElevation(12.dp),
+                                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    Icon(
+                                        Icons.Filled.AutoStories,
+                                        contentDescription = "Article Icon",
+                                        modifier = Modifier
+                                            .size(40.dp)
+                                            .background(buttonColor)
+                                            .padding(start = Dimens.paddingMedium),
+                                        tint = MaterialTheme.colorScheme.background
+                                    )
+                                    Text(
+                                        modifier = Modifier
+                                            .padding(start = Dimens.paddingMedium),
+                                        text = articleItem.articleTitle,
+                                        fontSize = 20.sp,
+                                        color = buttonText,
+                                        fontFamily = TheFont,
+                                        textAlign = TextAlign.Start
+                                    )
                                 }
-                                .size(80.dp)
-                            ,
-                            shape = CardDefaults.elevatedShape,
-                            elevation = CardDefaults.cardElevation(12.dp),
-                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
-                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxSize()) {
-                                Icon(
-                                    Icons.Filled.AutoStories,
-                                    contentDescription = "Article Icon",
-                                    modifier = Modifier
-                                        .size(40.dp)
-                                        .background(buttonColor)
-                                        .padding(start = Dimens.paddingMedium)
-                                    ,
-                                    tint = MaterialTheme.colorScheme.background
-                                )
-                                Text(
-                                    modifier = Modifier
-                                        .padding(start = Dimens.paddingMedium),
-                                    text = articleItem.articleTitle,
-                                    fontSize = 20.sp,
-                                    color = buttonText,
-                                    fontFamily = TheFont,
-                                    textAlign = TextAlign.Start
-                                )
-                            }
 
+                            }
                         }
                     }
-                }
-            )
+                )
+            }
         }
-    }
     }
 }
 

@@ -8,15 +8,15 @@ import com.example.composejoyride.data.dao.ArticlesDao
 import com.example.composejoyride.data.entitites.CacheArticle
 
 @Database(entities = [CacheArticle::class], version = 1, exportSchema = false)
-abstract class ArticlesDatabase: RoomDatabase()  {
+abstract class ArticlesDatabase : RoomDatabase() {
     abstract fun articlesDao(): ArticlesDao
 
-    companion object{
+    companion object {
 
         private var Instance: ArticlesDatabase? = null
 
         fun getDatabase(context: Context): ArticlesDatabase {
-            synchronized(this){
+            synchronized(this) {
                 var instance = Instance
                 if (instance == null) {
                     instance = Room.databaseBuilder(

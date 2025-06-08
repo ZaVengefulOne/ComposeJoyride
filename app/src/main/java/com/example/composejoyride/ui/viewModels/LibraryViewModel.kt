@@ -17,7 +17,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LibraryViewModel @Inject constructor(private val repository: ArticlesRepository) : ViewModel() {
+class LibraryViewModel @Inject constructor(private val repository: ArticlesRepository) :
+    ViewModel() {
 
     private val _articleItems = MutableStateFlow<List<Article>>(emptyList())
     val articleItems: StateFlow<List<Article>> get() = _articleItems
@@ -26,8 +27,7 @@ class LibraryViewModel @Inject constructor(private val repository: ArticlesRepos
     val isLoaded: StateFlow<Boolean> get() = _isLoaded
 
 
-
-    fun getArticles(){
+    fun getArticles() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 //repository.clearCache()
@@ -44,7 +44,7 @@ class LibraryViewModel @Inject constructor(private val repository: ArticlesRepos
         }
     }
 
-    private fun cacheArticles(articlesList: List<Article>){
+    private fun cacheArticles(articlesList: List<Article>) {
         viewModelScope.launch(Dispatchers.IO) {
             val fullArticles: ArrayList<Article> = arrayListOf()
             articlesList.forEach {
@@ -54,10 +54,10 @@ class LibraryViewModel @Inject constructor(private val repository: ArticlesRepos
             fullArticles.toList()
             val finalArticles = fullArticles.toCacheArticles()
             repository.cacheArticles(finalArticles)
-            }
         }
+    }
 
-    private suspend fun getCache(): List<Article>{
+    private suspend fun getCache(): List<Article> {
         val articles = repository.getSavedArticles()
         return articles.toArticles()
     }

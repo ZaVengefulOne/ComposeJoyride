@@ -2,7 +2,6 @@ package com.example.composejoyride.ui.screens
 
 import android.app.Activity.RESULT_OK
 import android.content.Context
-import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -209,7 +208,12 @@ fun AuthScreen(
 
                 AlertDialog(
                     onDismissRequest = { showAdminDialog.value = false },
-                    title = { Text("Вход администратора", color = MaterialTheme.colorScheme.tertiary) },
+                    title = {
+                        Text(
+                            "Вход администратора",
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                    },
                     containerColor = MaterialTheme.colorScheme.background,
                     text = {
                         Column {
@@ -227,29 +231,40 @@ fun AuthScreen(
                         }
                     },
                     confirmButton = {
-                        TextButton(onClick = {
-                            if (login == "admin" && password == "admin") {
-                                showAdminDialog.value = false
-                                signInAnonymously(
-                                    onSuccess = { onSuccess(navController, isBottomBarVisible) },
-                                    onError = { onError(it, context) },
-                                    true
-                                )
-                                viewmodel.fetchAdminStatus()
-                                navController.navigate(NoteGraph.ADMIN_SCREEN)
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "Неверный логин или пароль",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }, colors = ButtonDefaults.textButtonColors(MaterialTheme.colorScheme.secondary)) {
+                        TextButton(
+                            onClick = {
+                                if (login == "admin" && password == "admin") {
+                                    showAdminDialog.value = false
+                                    signInAnonymously(
+                                        onSuccess = {
+                                            onSuccess(
+                                                navController,
+                                                isBottomBarVisible
+                                            )
+                                        },
+                                        onError = { onError(it, context) },
+                                        true
+                                    )
+                                    viewmodel.fetchAdminStatus()
+                                    navController.navigate(NoteGraph.ADMIN_SCREEN)
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Неверный логин или пароль",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            },
+                            colors = ButtonDefaults.textButtonColors(MaterialTheme.colorScheme.secondary)
+                        ) {
                             Text("Войти", color = MaterialTheme.colorScheme.tertiary)
                         }
                     },
                     dismissButton = {
-                        TextButton(onClick = { showAdminDialog.value = false }, colors = ButtonDefaults.textButtonColors(MaterialTheme.colorScheme.secondary)) {
+                        TextButton(
+                            onClick = { showAdminDialog.value = false },
+                            colors = ButtonDefaults.textButtonColors(MaterialTheme.colorScheme.secondary)
+                        ) {
                             Text("Отмена", color = MaterialTheme.colorScheme.tertiary)
                         }
                     }

@@ -11,7 +11,7 @@ import javax.inject.Inject
 class ArticlesRepository @Inject constructor(
     private val interactor: ParseInteractor,
     private val dao: ArticlesDao
-): IArticlesRepository {
+) : IArticlesRepository {
 
     override suspend fun getRandomArticle(): Article {
         return interactor.getRandomArticle()

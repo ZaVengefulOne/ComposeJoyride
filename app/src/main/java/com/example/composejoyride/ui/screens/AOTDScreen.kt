@@ -114,103 +114,106 @@ fun AOTD(navController: NavController) {
                 )
             }
         }
-    }
-        else if (isLoaded && !showPB) {
-                LaunchedEffect(scrollState.value) {
-                    showTopBar = scrollState.value <= previousScrollPosition || scrollState.value <= 20
-                    previousScrollPosition = scrollState.value
-                    showScrollUpButton = scrollState.value > 400
-                }
-                Scaffold(
-                    topBar = {
-                        AnimatedVisibility(
-                            visible = showTopBar,
-                            enter = slideInVertically(initialOffsetY = { -it }),
-                            exit = slideOutVertically(targetOffsetY = { -it })
-                        ) {
-                            TopAppBar(
-                                title = {
-                                    Text(
-                                        text = articleName,
-                                        style = MaterialTheme.typography.titleLarge.copy(
-                                            fontWeight = FontWeight.SemiBold,
-                                            fontSize = 22.sp
-                                        ),
-                                        color = buttonText,
-                                    ) },
-                                navigationIcon = {
-                                    IconButton(onClick = {
-                                        viewModel.getRandomArticle()
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Refresh,
-                                            contentDescription = "Перезапуск"
-                                        )
-                                    }
-                                }
+    } else if (isLoaded && !showPB) {
+        LaunchedEffect(scrollState.value) {
+            showTopBar = scrollState.value <= previousScrollPosition || scrollState.value <= 20
+            previousScrollPosition = scrollState.value
+            showScrollUpButton = scrollState.value > 400
+        }
+        Scaffold(
+            topBar = {
+                AnimatedVisibility(
+                    visible = showTopBar,
+                    enter = slideInVertically(initialOffsetY = { -it }),
+                    exit = slideOutVertically(targetOffsetY = { -it })
+                ) {
+                    TopAppBar(
+                        title = {
+                            Text(
+                                text = articleName,
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 22.sp
+                                ),
+                                color = buttonText,
                             )
-                        }
-                    },
-                    floatingActionButton = {
-                       AnimatedVisibility(
-                            visible = showScrollUpButton,
-                            enter = scaleIn(),
-                            exit = scaleOut()
-                        ) {
-                            FloatingActionButton(
-                                onClick = {
-                                    coroutineScope.launch {
-                                        scrollState.animateScrollTo(0)
-                                    }
-                                },
-                                shape = CircleShape,
-                                containerColor = MaterialTheme.colorScheme.secondary,
-                                contentColor = MaterialTheme.colorScheme.tertiary,
-                                modifier = Modifier.shadow(10.dp, CircleShape)
-                            ) {
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = {
+                                viewModel.getRandomArticle()
+                            }) {
                                 Icon(
-                                    imageVector = Icons.Default.KeyboardArrowUp,
-                                    contentDescription = "Up"
+                                    imageVector = Icons.Filled.Refresh,
+                                    contentDescription = "Перезапуск"
                                 )
                             }
                         }
-                    }
-                ) { paddingValues ->
-                    Column(
-                        modifier = Modifier
-                            .padding(paddingValues)
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.background)
-                            .padding(horizontal = 8.dp, vertical = 8.dp)
-                            .verticalScroll(scrollState),
-                        verticalArrangement = Arrangement.Top
+                    )
+                }
+            },
+            floatingActionButton = {
+                AnimatedVisibility(
+                    visible = showScrollUpButton,
+                    enter = scaleIn(),
+                    exit = scaleOut()
+                ) {
+                    FloatingActionButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                scrollState.animateScrollTo(0)
+                            }
+                        },
+                        shape = CircleShape,
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.shadow(10.dp, CircleShape)
                     ) {
-                        Surface(
-                            shape = RoundedCornerShape(12.dp),
-                            tonalElevation = 2.dp,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                text = articleText,
-                                textAlign = TextAlign.Justify,
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    lineHeight = 24.sp
-                                ),
-                                color = buttonText,
-                                modifier = Modifier
-                                    .padding(16.dp)
-                            )
-                        }
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowUp,
+                            contentDescription = "Up"
+                        )
                     }
                 }
-                BackHandler {
-                    navController.navigate(NoteGraph.MAIN_SCREEN)
+            }
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(horizontal = 8.dp, vertical = 8.dp)
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.Top
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    tonalElevation = 2.dp,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = articleText,
+                        textAlign = TextAlign.Justify,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            lineHeight = 24.sp
+                        ),
+                        color = buttonText,
+                        modifier = Modifier
+                            .padding(16.dp)
+                    )
                 }
-        }
-        else {
-            Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally)
-            {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.secondary)
             }
         }
+        BackHandler {
+            navController.navigate(NoteGraph.MAIN_SCREEN)
+        }
+    } else {
+        Column(
+            Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        )
+        {
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.secondary)
+        }
     }
+}

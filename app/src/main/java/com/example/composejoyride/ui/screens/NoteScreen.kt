@@ -55,7 +55,7 @@ fun Note(
     navController: NavController,
     onDone: () -> Unit,
     isBottomBarVisible: MutableState<Boolean>
-    ) {
+) {
     val noteViewModel: NoteViewModel = sharedViewModel(navController)
     val note by noteViewModel.note.collectAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -95,8 +95,10 @@ fun Note(
                     isBottomBarVisible.value = true
                     onDone()
                 },
-                colors = ButtonDefaults.outlinedButtonColors(contentColor =
-                    MaterialTheme.colorScheme.error),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor =
+                        MaterialTheme.colorScheme.error
+                ),
             ) {
                 Icon(imageVector = Icons.Filled.Delete, contentDescription = null)
             }
@@ -111,8 +113,10 @@ fun Note(
                 .fillMaxWidth()
                 .onFocusChanged { if (it.isFocused) isBottomBarVisible.value = false },
             textStyle = TextStyle(fontFamily = TheFont, fontSize = 22.sp),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
             keyboardActions = KeyboardActions(onDone = {
                 isBottomBarVisible.value = true
                 keyboardController?.hide()
@@ -139,14 +143,18 @@ fun Note(
             placeholder = {
                 Text(
                     stringResource(R.string.enter_note_text),
-                    style = TextStyle(fontFamily = TheFont,
-                        fontSize = 18.sp))},
+                    style = TextStyle(
+                        fontFamily = TheFont,
+                        fontSize = 18.sp
+                    )
+                )
+            },
         )
 
         BackHandler {
             isBottomBarVisible.value = true
             noteViewModel.updateNote()
         }
-        }
     }
+}
 

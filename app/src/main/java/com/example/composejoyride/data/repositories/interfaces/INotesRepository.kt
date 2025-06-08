@@ -5,8 +5,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface INotesRepository {
     val allNotes: Flow<List<Note>>
-//    val searchResults: MutableLiveData<Note>
+
+    //    val searchResults: MutableLiveData<Note>
     suspend fun insertNote(newNote: Note): Long
+
     //suspend fun getNotes(): List<Note>
     suspend fun updateNote(id: Int, newName: String, newText: String)
     suspend fun findNote(id: Int): Note?

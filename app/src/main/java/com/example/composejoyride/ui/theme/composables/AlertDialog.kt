@@ -20,7 +20,11 @@ fun AlertDialog(
     icon: ImageVector,
 ) {
     AlertDialog(
-        properties = DialogProperties(usePlatformDefaultWidth = true, dismissOnClickOutside = true, dismissOnBackPress = true),
+        properties = DialogProperties(
+            usePlatformDefaultWidth = true,
+            dismissOnClickOutside = true,
+            dismissOnBackPress = true
+        ),
 
         icon = {
             Icon(icon, contentDescription = "Dialog Icon")
